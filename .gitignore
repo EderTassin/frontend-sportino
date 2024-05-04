@@ -1,18 +1,40 @@
-# Node modules
-node_modules/
-
 # Compiled output
-dist/
 
-# Logs
-logs/
-*.log
+/dist
+/tmp
+/out-tsc
+/bazel-out
 
-# Dependency directories
-bower_components/
+# Node
 
-# dotenv environment variables file
-.env
+/node_modules
+npm-debug.log
+yarn-error.log
 
-# TypeScript configuration
-tsconfig.json
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+
+.DS_Store
+Thumbs.db
+
+# angular
+
+.angular/
+package-lock.json
+.vscode
+dist
