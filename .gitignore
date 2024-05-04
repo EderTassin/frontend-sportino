@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+bower_components/
+
+# dotenv environment variables file
+.env
+
+# TypeScript configuration
+tsconfig.json
