@@ -7,7 +7,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   installPromptEvent: any;
-  showInstallButton: boolean = false;
+  showInstallButton: boolean = true;
 
   constructor() { }
 
