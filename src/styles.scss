@@ -1,5 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+
+$color-orange: #ff7300;
+$color-green:  #7ed957;
+
 *{
-    background-color: #ddd;
-    font-family: 'Poppins';
+    font-family: 'Cabin';
+}
+
+.material-symbols-outlined{
+    font-family: 'Material Icons';
 }
