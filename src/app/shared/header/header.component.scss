@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    background-color: black;
+    height: 4rem;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    color: white;
+    padding: 10px;
+    background-color: transparent;
+    h1,span{
+      font-size: 2rem !important;
+      background-color: transparent;
+      margin: 0px;
+    }
+    
+  }
+  
+  .buttons {
+    display: flex;
+    span{
+      background: black;
+      font-size: 36px;
+      color: white;
+      padding: 10px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .container {
+      height: 5rem;
+    }
+  
+    .title {
+      font-size: 1.2rem;
+    }
+  }
+  
