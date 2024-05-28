@@ -1,0 +1,9 @@
+{
+    "/api": {
+      "target": "https://x9pjmh7w-8050.brs.devtunnels.ms",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+  }
+  

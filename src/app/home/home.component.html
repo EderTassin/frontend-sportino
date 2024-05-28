@@ -1,32 +1,108 @@
 
-<!-- <button *ngIf="showInstallButton" (click)="installPWA()">Instalar PWA</button> -->
-
 <div class="img-portada">
     <div class="img" style="background-image: url('../../assets/img/portada.webp');">
-    
         <div class="container-logo">
-            <img src="../../assets/logo_spotino.webp" alt="" class="logo">
-            <h3 style="font-size: 4rem; margin-left: 8px;">Sportino</h3>
+            <img src="../../assets/logo_spotino.webp" alt="" class="logo" loading="lazy">
+            <h3 style="font-size: 4rem; margin-left: 8px;">sportino</h3>
         </div>
         <br>
         <p style="font-size: 1.5rem;">Espacio Deportivo Recreativo</p>
-
         <div class="container-button">
-            <button>
+            <button (click)="scrollToTitleCarousel()">
                 <span class="material-symbols-outlined">
                     expand_more
                 </span>
                 Conoce más
             </button>
+        </div>
     </div>
-</div>
-  
-
-
+</div> 
 
 <div class="card">
+   
+    <app-tabla-fixture></app-tabla-fixture>
+    <app-tabla-jugadores></app-tabla-jugadores>
+
+</div>
 
 
+<div class="title-carousel" #titleCarousel>
+
+    <div class="title-information">
+        <h2 style="margin: .5rem;">Información sobre nosotros</h2>
+      </div>
+
+    <p class="p-1">Predio deportivo con todas las comodidades, incluyendo 8 canchas de fútbol 11 con medidas reglamentarias.</p>
+
+    <p class="p-1">Ubicado en: &nbsp;
+        <a href="https://www.google.com/maps/search/?api=1&query=Sportino+Espacio+Deportivo+Recreativo,+11+de+Septiembre+5113,+Córdoba" target="_blank"> 
+            <span class="material-symbols-outlined">
+                location_on
+            </span>
+            11 de Sep 5113, Córdoba
+        </a>
+    </p>
+
+    <div class="contacto">
+        <h2 class="h2-1">Contacto:</h2>
+        <p>Para inscripciones en el <strong>torneo</strong>, contacta al: 
+            <a href="https://wa.me/5493516470782" target="_blank"><strong>3516470782</strong></a>.
+        </p>
+        <p>Para alquiler de <strong>cancha</strong>, contacta al: 
+            <a href="https://wa.me/5493512921921" target="_blank"><strong>3512921921</strong></a>.
+        </p>
+    </div>
+
+    <p class="p-2"><strong>CATEGORÍAS:</strong> Libre, Seniors, Maxi Senior, Super Maxi.</p>
+
+</div>
+
+<div class="carousel">
+    
+    <div class="navigation-wrapper">
+        <div class="keen-slider keen-slider--vertical" #sliderRef>
+            <div class="keen-slider__slide"> <img src="../../assets/carousel/3.jpeg" alt=""></div>
+            <div class="keen-slider__slide"> <img src="../../assets/carousel/4.jpeg" alt=""></div>
+            <div class="keen-slider__slide"> <img src="../../assets/carousel/5.jpeg" alt=""></div>
+            <div class="keen-slider__slide"> <img src="../../assets/carousel/6.jpeg" alt=""></div>
+        </div>
+        <svg
+        [ngClass]="
+        'arrow arrow--left ' + (currentSlide === 0 ? 'arrow--disabled' : '')
+        "
+      (click)="slider.prev()"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      >
+      <path
+      d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"
+      />
+    </svg>
+    <svg
+    *ngIf="slider"
+    [ngClass]="
+        'arrow arrow--right ' +
+        (slider.track.details.slides.length - 1 === currentSlide
+        ? 'arrow--disabled'
+        : '')
+        "
+      (click)="slider.next()"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      >
+      <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
+    </svg>
+</div>
+<div class="dots">
+    <button
+    (click)="slider.moveToIdx(i)"
+    *ngFor="let slide of dotHelper; let i = index"
+    [class]="'dot ' + (i === currentSlide ? 'active' : '')"
+    ></button>
+</div>
+</div>
 
 
+<div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3402.9015717249817!2d-64.15042312396311!3d-31.47189367423622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432a34b3355dc6b%3A0x69fa15c2e8cdf89!2s11%20de%20Septiembre%205100%20Km%205%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1716336177299!5m2!1ses-419!2sar" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>

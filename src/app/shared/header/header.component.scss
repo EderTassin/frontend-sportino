@@ -1,48 +1,59 @@
 body {
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    background-color: black;
-    height: 4rem;
-    width: 100%;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .title {
-    color: white;
-    padding: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.container-header {
+  background-color: #161616;
+  height: 3rem;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-header {
+  color: white;
+  padding: 12px;
+  background-color: transparent;
+
+  h1,
+  span {
+    font-family: 'Ubuntu Sans';
+    font-style: italic;
+    font-weight: 700;
     background-color: transparent;
-    h1,span{
-      font-size: 2rem !important;
-      background-color: transparent;
-      margin: 0px;
-    }
-    
+    margin: 0px;
   }
-  
-  .buttons {
+
+}
+
+
+@media (max-width: 600px) {
+  .container-header {
+    height: 3rem;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  border: 0px !important;
+  height: 3rem;
+  span {
+    font-size: 30px;
+    color:white;
+    padding: 12px;
     display: flex;
-    span{
-      background: black;
-      font-size: 36px;
-      color: white;
-      padding: 10px;
-    }
+    justify-content: center;
+    border-radius: 100%;
+    align-items: center;
+    margin-right: 1rem;
+    cursor: pointer;
   }
-  
-  @media (max-width: 600px) {
-    .container {
-      height: 5rem;
-    }
-  
-    .title {
-      font-size: 1.2rem;
-    }
-  }
-  
+}

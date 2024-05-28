@@ -1,13 +1,18 @@
-<div class="container">
+<div class="container-header">
 
-  <div class="title">
-    <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#ff7300">o</span></h1>
+  <div class="title-header" (click)="redirect()">
+    <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#7ed957">o</span></h1>
   </div>
 
-  <div class="buttons">
+  <button class="buttons" mat-button [matMenuTriggerFor]="menu" style="background: #161616; color: white">
     <span class="material-symbols-outlined">
       menu
     </span>
-  </div>
+  </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/login">Login</button>
+      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">Instalar Aplicacion</button>
+    </mat-menu>
 
 </div>

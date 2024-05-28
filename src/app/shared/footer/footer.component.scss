@@ -1,0 +1,40 @@
+.footer-content {
+    background-color: #161616;
+    color: white;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+
+    .logo {
+        height: 60px;
+    }
+
+    @media (max-width: 500px) {
+        flex-direction: column;
+        .logo{
+            margin-bottom: 16px;
+        }
+    }
+}
+
+.form {
+    flex-direction: column;
+    display: flex;
+}
+
+.redes {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.redes {
+    img {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        width: 30px;
+        cursor: pointer
+    }
+}
