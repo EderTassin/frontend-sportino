@@ -9,6 +9,16 @@ import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TablaFixtureComponent } from './home/tabla-fixture/tabla-fixture.component';
+
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatMenuModule} from '@angular/material/menu'
+import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.component';
+
+import KeenSlider from 'keen-slider'
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [	
@@ -16,18 +26,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       HomeComponent,
       HeaderComponent,
       FooterComponent,
-      LoginComponent
+      LoginComponent,
+      TablaFixtureComponent,
+      TablaJugadoresComponent
    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatMenuModule,
+    MatTabsModule,
+    CommonModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
