@@ -1,121 +1,157 @@
 .container {
-    background-color: #161616;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 400px;
-    padding-bottom: 2rem;
+  background-color: #161616;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // min-height: 400px;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
 }
 
 .title {
-    background-color: white;
-    border-radius: 8px;
-    width: 94%;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    margin-bottom: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-bottom: 1rem;
 }
 
 .container-tab {
-    background-color: white;
-    border-radius: 8px;
-    width: 94%;
-}
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  width: 500px;
+  font-size: 16px;
+  margin: 10px;
+  font-weight: 500;
 
-
-.tabla-result {
+  .container-select-torneo {
     width: 100%;
-
-    th {
-        font-size: 16px;
-    }
-    td{
-      font-size: 14px;
-    }
-
-    hr{
-      width: 100%;
-    }
-}
-
-.container-select {
+    height: 40px;
     display: flex;
     justify-content: space-around;
-    margin-top: 1rem;
-}
+    align-items: center;
 
-.container-select-1 {
-  margin-top: 1rem;
-  tr{
-    display: flex;
-    justify-content: space-between;
+    select {
+      background: transparent;
+      border-radius: 8px;
+      border: 2px solid black;
+      height: 28px;
+      width: 50%;
+    }
   }
-  th{
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-}
 
-select{
-    border-radius: 5px;
-}
-
-tbody{
-    height: 180px;
-}
-
-.custom-tab{
-    span{
-        color: greenyellow !important;
-    }
-}
-  
-.tab-group {
+  .tabs {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    .tab {
-      cursor: pointer;
-      padding: 10px;
-      background-color: lightgray;
-      &:hover {
-        background-color: gray;
-      }
-    }
-    .content {
-      display: none;
-      padding: 10px;
-      border: 1px solid lightgray;
-    }
+    justify-content: space-around;
+    padding: 8px 0px;
   }
   
-
-  #mat-tab-label-0-0 > span.mdc-tab__content > span {
-    color: #060606;
-    font-weight: 600;
+  .button-tab {
+    background: #ddd;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100px;
+  }
+  
+  .button-tab.selected {
+    background-color: #7ed956;
+    color: #f9f9f9;
+    font-weight: 500;
     font-size: 16px;
   }
+}
 
-  #mat-tab-label-0-0 > span.mdc-tab-indicator > span{
-    border-color: #7dd956;
+.fixture-container {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.match {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  flex-direction: column;
+}
+
+.match:last-child {
+  border-bottom: none;
+}
+
+.team{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.team-logo {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  border-radius: 50px;
+}
+
+.team-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.container-teams {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  flex: 1; 
+}
+
+.match-details {
+  font-size: 12px;
+  color: #888;
+}
+
+.complete-stats-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.complete-stats-button:hover {
+  background-color: #333;
+}
+
+
+@media (max-width: 600px) {
+  .title {
+    width: 375px;
   }
 
-  #mat-tab-label-0-1 > span.mdc-tab__content > span {
-    color: #060606;
-    font-weight: 600;
-    font-size: 16px;
+  .container-tab {
+    width: 375px;
   }
-
-  #mat-tab-label-0-1 > span.mdc-tab-indicator > span{
-    border-color: #7dd956;
-  }
-
-  #mat-tab-label-0-2 > span.mdc-tab__content > span {
-    color: #060606;
-    font-weight: 600;
-    font-size: 16px;
-  }
-
-  #mat-tab-label-0-2 > span.mdc-tab-indicator > span{
-    border-color: #7dd956;
-  }
+}

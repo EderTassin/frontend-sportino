@@ -1,212 +1,59 @@
 <div class="container">
 
   <div class="title">
-    <h2 style="margin: .5rem;">Resultados por Fechas</h2>
+    <h2 style="margin: .5rem;">Estadisticas</h2>
   </div>
 
   <div class="container-tab">
-    <mat-tab-group>
-      <div class="container-select">
-        <div class="select-categoria">
-          <label for="categoria" style="margin-right: .8rem;">Categoria:</label>
-          <select name="categoria" id="categoria">
-            <option value="1" selected>MAXI SENIORS 40</option>
-            <option value="2" selected>SUPER MAXI 45</option>
-            <option value="3" selected>MASTER</option>
-            <option value="4" selected>LIBRE</option>
-          </select>
-        </div>
-        <div class="select-fecha">
-          <label for="fecha" style="margin-right: .8rem;">Fecha:</label>
-          <select name="fecha" id="fecha">
-            <option value="1" selected>17/05/2024</option>
-            <option value="2" selected>25/05/2024</option>
-            <option value="3" selected>30/05/2024</option>
-            <option value="4" selected>05/06/2024</option>
-          </select>
-        </div>
-      </div>
-      <mat-tab label="Resultados">
-        <table class="tabla-result">
-          <thead>
-            <tr>
-              <th scope="col">Goles</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-              <th scope="col">Goles</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">2</td>
-              <td>Maxi El Tanque</td>
-              <td>vs.</td>
-              <td>Maxi Granuja FC</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">2</td>
-          </tr>
-          <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">2</td>
-              <td>Maxi Puente Blanco</td>
-              <td>vs.</td>
-              <td>Maxi Los Carniceros</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">1</td>
-          </tr>
-          <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">1</td>
-              <td>Maxi Academia</td>
-              <td>vs.</td>
-              <td>Maxi El Solar</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">3</td>
-          </tr>
-          <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">2</td>
-              <td>Maxi El Ciclon</td>
-              <td>vs.</td>
-              <td>Maxi Los Algarrobos</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">1</td>
-          </tr>
-          <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">1</td>
-              <td>Maxi Arsenal</td>
-              <td>vs.</td>
-              <td>Maxi La Coope</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">0</td>
-          </tr>
-          <tr>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">1</td>
-              <td>Maxi Olimpo</td>
-              <td>vs.</td>
-              <td>Maxi Rapisur</td>
-              <td style="
-              display: flex;
-              justify-content: center;
-          ">3</td>
-          </tr>
-          </tbody>
-        </table>
-      </mat-tab>
-      <mat-tab label="Posiciones">
-        <div class="container-select-1">
-          <div class="select-categoria">
-            <label for="categoria" style="margin-right: .8rem;">Categoria:</label>
-            <select name="categoria" id="categoria" [(ngModel)]="selectCategoria" (change)="getPosiciones()">
-              <option [value]="'LIBRE'" selected>LIBRE</option>
-              <option [value]="'SUPER MASTER'">SUPER MASTER</option>
-              <option [value]="'MASTER'">MASTER</option>
-              <option [value]="'SUPER MAXI 45'">SUPER MAXI 45</option>
-              <option [value]="'MAXI SENIORS 40'">MAXI SENIORS 40</option>
-              <option [value]="'SENIORS'">SENIORS</option>
-            </select>
-          </div>
-          <table class="tabla-result">
-            <thead>
-              <tr>
-                <th scope="col">Equipo</th>
-                <th scope="col">PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let item of listPosicion">
-                <tr style="padding-left: 5px; padding-right: 5px;">
-                  <td>{{item.team_name}}
-                    <img src="" alt="">
-                  </td>
-                  <td>
-                    {{item.PTS}}
-                  </td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-        </div>
-      </mat-tab>
-      <mat-tab label="Proxima Fecha">
-        <div class="container-select">
-          <div class="select-categoria">
-            <label for="categoria" style="margin-right: .8rem;">Categoria:</label>
-            <select name="categoria" id="categoria">
-              <option value="1" selected>MAXI SENIORS 40</option>
-              <option value="2" selected>SUPER MAXI 45</option>
-              <option value="3" selected>MASTER</option>
-              <option value="4" selected>LIBRE</option>
-            </select>
-          </div>
-          <div class="select-fecha">
-            <label for="fecha" style="margin-right: .8rem;">Fecha:</label>
-            <select name="fecha" id="fecha">
-              <option value="1" selected>17/05/2024</option>
-              <option value="2" selected>25/05/2024</option>
-              <option value="3" selected>30/05/2024</option>
-              <option value="4" selected>05/06/2024</option>
-            </select>
-          </div>
-        </div>
-        <table class="tabla-result">
-          <thead>
-            <tr>
-              <th>Equipo Local</th>
-              <th></th>
-              <th>Equipo Visitante</th>
-              <th>Hora</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Maxi Puente Blanco</td>
-              <td>vs.</td>
-              <td>Maxi Granuja FC</td>
-              <td>18:30</td>
-            </tr>
-            <tr>
-              <td>Maxi Los Algarrobos</td>
-              <td>vs.</td>
-              <td>Maxi Los Carniceros</td>
-              <td>18:30</td>
-            </tr>
-            <tr>
-              <td>Maxi El Tanque</td>
-              <td>vs</td>
-              <td>Maxi El Ciclon</td>
-              <td>18:30</td>
-            </tr>
-          </tbody>
-          </table>
-          
-        </mat-tab>
-      </mat-tab-group>
+
+    <div class="container-select-torneo">
+      <label for="torneo">Seleccionar Torneo:</label>
+      <select name="Torneo" id="torneo">
+        <option value="1">Torneo Apertura 2024</option>
+        <option value="2">Torneo Clausura 2024</option>
+      </select>
     </div>
+
+    <div class="tabs">
+      <button 
+        class="button-tab" 
+        [ngClass]="{'selected': selectedTab === 'Fixture'}"
+        (click)="selectTab('Fixture')">
+        Fixture
+      </button>
+      <button 
+        class="button-tab" 
+        [ngClass]="{'selected': selectedTab === 'Posiciones'}"
+        (click)="selectTab('Posiciones')">
+        Posiciones
+      </button>
+    </div>
+
+    <div class="tabla-resultados">
+      <div class="fixture-container">
+        <div *ngFor="let match of matches" class="match">
+          <div class="container-teams">
+            <div class="team">
+              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <span class="team-name">{{ match.homeTeam }}</span>
+            </div>
+            <div class="score">
+              <span>{{ match.homeScore }}</span>
+              <span>-</span>
+              <span>{{ match.awayScore }}</span>
+            </div>
+            <div class="team">
+              <span class="team-name">{{ match.awayTeam }}</span>
+              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+            </div>
+          </div>
+          <div class="match-details">
+            <span>{{ match.date }}</span>
+          </div>
+        </div>
+        <button class="complete-stats-button">Estadísticas Completas</button>
+      </div>
+    </div>
+    
   </div>
+</div>

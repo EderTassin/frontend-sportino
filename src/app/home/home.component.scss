@@ -1,9 +1,9 @@
 @import 'keen-slider/keen-slider.min.css';
 
-.img-portada {
+.portada {
     position: relative;
     width: 100%;
-    height: 500px;
+    height: 80vh;
     overflow: hidden;
     background-color: #161616;
     display: flex;
@@ -17,6 +17,7 @@
     background-size: cover;
     background-position: bottom;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    transition: background-image 1s ease-in-out;
 }
 
 .img {
@@ -91,83 +92,10 @@
     }
 }
 
-.keen-slider__slide {
-    display: flex;
-    background: #5b5b5b;
-    height: 100%;
-    width: auto;
-    justify-content: center;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-
-    img {
-        height: auto;
-        width: 70%;
-        border-radius: 10px;
-    }
-}
-
-.keen-slider {
-    border-radius: 8px;
-}
-
 .carousel {
     padding: 1rem;
     padding-bottom: 1rem;
     background: #fafafa;
-}
-
-.navigation-wrapper {
-    position: relative;
-}
-
-.dots {
-    display: flex;
-    padding: 10px 0;
-    justify-content: center;
-}
-
-.dot {
-    border: none;
-    width: 10px;
-    height: 10px;
-    background: #c5c5c5;
-    border-radius: 50%;
-    margin: 0 5px;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.dot:focus {
-    outline: none;
-}
-
-.dot.active {
-    background: #000;
-}
-
-.arrow {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    fill: #fff;
-    cursor: pointer;
-}
-
-.arrow--left {
-    left: 5px;
-}
-
-.arrow--right {
-    left: auto;
-    right: 5px;
-}
-
-.arrow--disabled {
-    fill: rgba(255, 255, 255, 0.5);
 }
 
 .title-carousel {
@@ -182,25 +110,25 @@
 }
 
 @media (max-width: 768px) {
-    .img-portada {
-        height: 560px;
+    .portada {
+        height: 100vh;
     }
 
     .img {
         width: 90%;
-        height: 94%;
+        height: 500px;
         background-size: cover;
         background-position: bottom;
+        margin-top: 1rem;
     }
 
     .card {
         flex-direction: column;
     }
 
-    .keen-slider__slide {
-        img {
-            width: 96%;
-        }
+    .portada{
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -242,3 +170,10 @@
         width: 90%;
     }
 }
+
+.btn-gradient-2 {
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(to right, darkblue, darkorchid) border-box;
+    border-radius: 50em;
+    border: 4px solid transparent;
+  }
