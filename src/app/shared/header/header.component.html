@@ -4,15 +4,33 @@
     <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#7ed957">o</span></h1>
   </div>
 
-  <button class="buttons" mat-button [matMenuTriggerFor]="menu" style="background: #161616; color: white">
-    <span class="material-symbols-outlined">
-      menu
-    </span>
-  </button>
+  <div class="buttons-header">
+    <button routerLink="/">
+      <span>Inicio</span>
+    </button>
+    <button mat-button>
+      <span>Torneos 🏆</span>
+    </button>
+    <button>
+      <span>Ubicacion</span>
+    </button>
+    <button routerLink="/login">
+      <span>Inicio</span>
+    </button>
+  </div>
 
+  <div class="menu">
+    <button class="buttons" mat-button [matMenuTriggerFor]="menu" style="background: #161616; color: white">
+      <span class="material-symbols-outlined">
+        menu
+      </span>
+    </button>
+  
     <mat-menu #menu="matMenu">
       <button mat-menu-item routerLink="/login">Login</button>
-      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">Instalar Aplicacion</button>
+      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">Instalar Aplicacionxxs</button>
     </mat-menu>
+  </div>
+  
 
 </div>

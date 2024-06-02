@@ -103,4 +103,29 @@ tbody{
     border-color: #ff7300;
   }
 
- 
+  .container-button {
+    margin-bottom: .5rem;
+    margin-top: .5rem;
+    display: flex;
+    justify-content: center;
+
+    button {
+        width: 10rem;
+        font-size: 18px;
+        color: #161616;
+        height: 1.8rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: transparent;
+        border: .5px solid #161616;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    }
+
+    button:hover {
+        width: 9.1rem;
+        height: 1.9rem;
+    }
+}
