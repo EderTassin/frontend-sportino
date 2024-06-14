@@ -1,37 +1,31 @@
+/* General Container Styles */
 .container {
   background-color: #161616;
   display: flex;
   flex-direction: column;
   align-items: center;
-  // min-height: 400px;
-  padding-bottom: 1rem;
-  padding-top: 1rem;
+  padding: 1rem 0;
 }
 
-.tabla-resultados{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Title Styles */
 .title {
   background-color: white;
   border-radius: 8px;
   width: 500px;
   display: flex;
   justify-content: center;
-  align-content: center;
   margin-bottom: 1rem;
-
-  h2 {
-    font-family: 'Ubuntu Sans';
-    font-style: italic;
-    font-weight: 600;
-    font-size: 2.5rem;
-  }
-
 }
 
+.title h2 {
+  font-family: 'Ubuntu Sans', sans-serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 2.5rem;
+  margin: .5rem;
+}
+
+/* Tab Container Styles */
 .container-tab {
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -39,55 +33,63 @@
   font-size: 16px;
   margin: 10px;
   font-weight: 500;
-
-  .container-select-torneo {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    select {
-      background: transparent;
-      border-radius: 8px;
-      border: 2px solid black;
-      height: 28px;
-      width: 50%;
-    }
-  }
-
-  .tabs {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0px;
-  }
-  
-  .button-tab {
-    background: #ddd;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    transition: background-color 0.3s, color 0.3s;
-    width: 100px;
-  }
-  
-  .button-tab.selected {
-    background-color: #7ed956;
-    color: #f9f9f9;
-    font-weight: 500;
-    font-size: 16px;
-  }
 }
 
-.fixture-container {
+.container-select-torneo {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container-select-torneo select {
+  background: transparent;
+  border-radius: 8px;
+  border: 2px solid black;
+  height: 28px;
+  width: 50%;
+}
+
+.tabs {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0px;
+}
+
+.button-tab {
+  background: #ddd;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  width: 100px;
+}
+
+.button-tab.selected {
+  background-color: #7ed956;
+  color: #f9f9f9;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+/* Table Result Styles */
+.tabla-resultados {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fixture-container,
+.posiciones-container {
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  //box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 95%;
 }
 
+/* Match Styles */
 .match {
   display: flex;
   justify-content: space-between;
@@ -101,7 +103,7 @@
   border-bottom: none;
 }
 
-.team{
+.team {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -112,7 +114,7 @@
   width: 36px;
   height: 36px;
   margin-right: 10px;
-  border-radius: 50px;
+  border-radius: 50%;
 }
 
 .team-name {
@@ -133,7 +135,7 @@
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
-  flex: 1; 
+  flex: 1;
 }
 
 .match-details {
@@ -141,12 +143,43 @@
   color: #888;
 }
 
+/* Scrollable Table Styles */
+.scrollable-table {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.scrollable-table table {
+  width: 100%;
+}
+
+.scrollable-table thead tr {
+  display: flex;
+  justify-content: space-between;
+}
+
+.scrollable-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.team-posiciones {
+  display: flex;
+  align-items: center;
+}
+
+.match-posiciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Complete Stats Button Styles */
 .complete-stats-button {
-  display: block;
   width: 90%;
   padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   background-color: #000;
   color: #fff;
   text-align: center;
@@ -161,52 +194,19 @@
   background-color: #333;
 }
 
-.posiciones-container{
-  width: 100%;
-  margin: 10px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  //box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  table{
-    width: 100%;
-    padding: 10px;
-  }
-
-  thead{
-    tr{
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  tbody{
-    tr{
-      border-bottom: 1px solid #333;
-    }
-  }
-
-  .team-posiciones{
-    display: flex;
-    align-content: center;
-    align-items: center;
-  }
-
-  .match-pocisiones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-  }
+/* Fade-in Transition */
+.tab-content {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-@media (max-width: 600px) {
-  .title {
-    width: 98%;
-  }
+.tab-content.fade-in {
+  opacity: 1;
+}
 
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .title,
   .container-tab {
     width: 98%;
   }

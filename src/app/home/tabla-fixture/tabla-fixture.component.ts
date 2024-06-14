@@ -75,14 +75,14 @@ export class TablaFixtureComponent implements OnInit {
   ];
 
   positions = [
-    { team: 'Entraste Debil FC', points: 24, logo: 'ruta/logo1.png' },
-    { team: 'La Butteler', points: 16, logo: 'ruta/logo2.png' },
-    { team: 'Deche FC', points: 16, logo: 'ruta/logo3.png' },
-    { team: 'Peppa Pig', points: 14, logo: 'ruta/logo4.png' },
+    { team: 'Entraste Debil FC', points: 24, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0HuCQdeHMWuxEXzs-BiFZKkfwfaNKqNJRUQ&s' },
+    { team: 'La Butteler', points: 16, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcBP5d4jVB3848760VJJuWiMnzPZBeygGPWQ&s' },
+    { team: 'Deche FC', points: 16, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLi-Kg3y587db1mXZSz6CwlylxS6acV_0dcw&s' },
+    { team: 'Peppa Pig', points: 14, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKJkwVhSBjhj-MfuODjrEN9Bod9vWK2RTbvg&s' },
     { team: 'La Societa FC', points: 13, logo: 'ruta/logo5.png' },
-    { team: 'C.D Independencia', points: 13, logo: 'ruta/logo6.png' },
-    { team: 'Belladona', points: 11, logo: 'ruta/logo7.png' },
-    { team: 'La Leti', points: 9, logo: 'ruta/logo8.png' },
+    { team: 'C.D Independencia', points: 13, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0HuCQdeHMWuxEXzs-BiFZKkfwfaNKqNJRUQ&s' },
+    { team: 'Belladona', points: 11, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxQfNm4Tb7SqzwB8Ie8iG0Eh-oxu0qcT3X3A&s' },
+    { team: 'La Leti', points: 9, logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwLG1I5juIJ20IINZqK-phbioJVrGMiB8S3ErWGJQCS9bP1-tJA16dVF1ql6ZWSJljWM4&usqp=CAU' },
     { team: 'La Cuadra FC', points: 7, logo: 'ruta/logo9.png' },
     { team: 'La Escabieta', points: 7, logo: 'ruta/logo10.png' }
   ];
