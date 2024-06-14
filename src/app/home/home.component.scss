@@ -9,11 +9,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: .3px solid rgba(250, 250, 250, 0.3);
 }
 
 .img {
   width: 96%;
-  height: 94%;
+  height: 80%;
   background-size: cover;
   background-position: bottom;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -47,6 +48,8 @@
   iframe {
     width: 100%;
     height: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .contacto-container {
@@ -82,15 +85,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
   background: #161616;
+  border-bottom: .3px solid rgba(250, 250, 250, 0.3);
+  border-top: .3px solid rgba(250, 250, 250, 0.3);
 }
 
 .container-title-map {
   flex: 1;
   padding: 20px;
-
+  padding-top: 25px;
   span {
     color: #7ed957;
   }
@@ -122,6 +125,10 @@ iframe {
   flex: 2;
   height: 450px;
   border: 0;
+  
+  padding: 16px;
+  border-bottom-right-radius: 30px 30px;
+  border-top-left-radius: 30px 30px;
 }
 
 .contacto-container {
@@ -200,6 +207,8 @@ iframe {
 .contacto-container-contacto {
   .contacto {
     width: 100%;
+    background: #161616;
+    border-bottom: .3px solid rgba(250, 250, 250, 0.3);
 
     h2 {
       font-family: 'Ubuntu Sans', Courier, monospace;
@@ -207,13 +216,16 @@ iframe {
       font-style: italic;
       font-size: 3rem;
       padding: 20px;
+      color: #fafafa;
+      margin-bottom: 0px;
+      padding-top: 1.5rem;
     }
 
     .contacto-info {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      margin: 2rem;
+      padding: 2rem;
     }
 
     .contacto-item {
@@ -223,7 +235,7 @@ iframe {
 
       p {
         margin: 0.5rem 0;
-        color: #161616;
+        color: #fafafa;
         font-size: 1.2em;
 
         a {
