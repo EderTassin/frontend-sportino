@@ -74,6 +74,20 @@ export class TablaFixtureComponent implements OnInit {
     }
   ];
 
+  positions = [
+    { team: 'Entraste Debil FC', points: 24, logo: 'ruta/logo1.png' },
+    { team: 'La Butteler', points: 16, logo: 'ruta/logo2.png' },
+    { team: 'Deche FC', points: 16, logo: 'ruta/logo3.png' },
+    { team: 'Peppa Pig', points: 14, logo: 'ruta/logo4.png' },
+    { team: 'La Societa FC', points: 13, logo: 'ruta/logo5.png' },
+    { team: 'C.D Independencia', points: 13, logo: 'ruta/logo6.png' },
+    { team: 'Belladona', points: 11, logo: 'ruta/logo7.png' },
+    { team: 'La Leti', points: 9, logo: 'ruta/logo8.png' },
+    { team: 'La Cuadra FC', points: 7, logo: 'ruta/logo9.png' },
+    { team: 'La Escabieta', points: 7, logo: 'ruta/logo10.png' }
+  ];
+
+
   listPosicion: any;
   listFilterPosicion:any;
   selectCategoria: string = "LIBRE";

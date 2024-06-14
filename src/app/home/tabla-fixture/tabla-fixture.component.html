@@ -1,11 +1,9 @@
 <div class="container">
-
   <div class="title">
     <h2 style="margin: .5rem;">Estadisticas</h2>
   </div>
 
   <div class="container-tab">
-
     <div class="container-select-torneo">
       <label for="torneo">Seleccionar Torneo:</label>
       <select name="Torneo" id="torneo">
@@ -15,26 +13,23 @@
     </div>
 
     <div class="tabs">
-      <button 
-        class="button-tab" 
-        [ngClass]="{'selected': selectedTab === 'Fixture'}"
-        (click)="selectTab('Fixture')">
+      <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Fixture'}" (click)="selectTab('Fixture')">
         Fixture
       </button>
-      <button 
-        class="button-tab" 
-        [ngClass]="{'selected': selectedTab === 'Posiciones'}"
+      <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Posiciones'}"
         (click)="selectTab('Posiciones')">
         Posiciones
       </button>
     </div>
 
     <div class="tabla-resultados">
-      <div class="fixture-container">
+      <!-- Fixture Section -->
+      <div *ngIf="selectedTab === 'Fixture'" class="fixture-container">
         <div *ngFor="let match of matches" class="match">
           <div class="container-teams">
             <div class="team">
-              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo"
+                (error)="defaultImage($event)">
               <span class="team-name">{{ match.homeTeam }}</span>
             </div>
             <div class="score">
@@ -44,16 +39,39 @@
             </div>
             <div class="team">
               <span class="team-name">{{ match.awayTeam }}</span>
-              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo"
+                (error)="defaultImage($event)">
             </div>
           </div>
           <div class="match-details">
             <span>{{ match.date }}</span>
           </div>
         </div>
-        <button class="complete-stats-button">Estadísticas Completas</button>
       </div>
+
+      <!-- Posiciones Section -->
+      <div *ngIf="selectedTab === 'Posiciones'" class="posiciones-container">
+        <div style="max-height: 400px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Equipo</th>
+                <th>Pts.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let position of positions" class="match-posiciones">
+                <td class="team-posiciones">
+                  <img [src]="position.logo" alt="{{ position.team }} logo" class="team-logo" (error)="defaultImage($event)">
+                  <span class="team-name">{{ position.team }}</span>
+                </td>
+                <td class="points">{{ position.points }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button class="complete-stats-button">Estadísticas Completas</button>
     </div>
-    
   </div>
 </div>

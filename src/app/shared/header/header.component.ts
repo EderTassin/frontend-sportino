@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ScrollService } from '../service/scroll.service';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,8 @@ export class HeaderComponent implements OnInit {
   installPromptEvent: any;
   showInstallButton: boolean = true;
 
-  constructor(private router: Router) { }
+  constructor(private scrollService: ScrollService,
+              private router: Router) { }
 
   ngOnInit() {
   }
@@ -33,4 +35,13 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl('/')
   }
 
+  scrollToTop() {
+    this.router.navigate(['/']).then(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+
+  navigateToLocation() {
+    this.scrollService.triggerScrollToLocation();
+  }
 }

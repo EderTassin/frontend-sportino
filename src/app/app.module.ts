@@ -19,6 +19,8 @@ import KeenSlider from 'keen-slider'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
+import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
 
 @NgModule({
   declarations: [	
@@ -28,7 +30,9 @@ import { HttpClientModule } from '@angular/common/http';
       FooterComponent,
       LoginComponent,
       TablaFixtureComponent,
-      TablaJugadoresComponent
+      TablaJugadoresComponent,
+      MatchStatisticsComponent,
+      SelectTournamentComponent
    ],
   imports: [
     BrowserModule,

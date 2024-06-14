@@ -1,21 +1,22 @@
 <div class="container-header">
 
   <div class="title-header" (click)="redirect()">
-    <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#7ed957">o</span></h1>
+    <!-- <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#7ed957">o</span></h1> -->
+     <img src="../../../assets/blanco_sin_logo.png" alt="">
   </div>
 
   <div class="buttons-header">
-    <button routerLink="/">
-      <span>Inicio</span>
+    <button routerLink="/" (click)="scrollToTop()">
+      <span>INICIO</span>
     </button>
-    <button mat-button>
-      <span>Torneos 🏆</span>
+    <button routerLink="/tournament">
+      <span>TORNEOS 🏆</span>
     </button>
-    <button>
-      <span>Ubicacion</span>
+    <button (click)="navigateToLocation()">
+      <span>UBICACIÓN</span>
     </button>
     <button routerLink="/login">
-      <span>Inicio</span>
+      <span>INICIAR SESIÓN</span>
     </button>
   </div>
 
