@@ -1,1 +1,24 @@
-<p>select-tournament works!</p>
+<div class="tournaments-container">
+    <header>
+      <h1>Explora Torneos</h1>
+      <div class="filters">
+        <label for="year">Año:</label>
+        <select id="year" [(ngModel)]="selectedYear" (change)="filterTournaments()">
+          <option [value]="null">Todos</option>
+          <option *ngFor="let year of [2024, 2025, 2026]">{{ year }}</option>
+        </select>
+        <label for="active">Mostrar solo activos:</label>
+        <input type="checkbox" id="active" [(ngModel)]="showActiveOnly" (change)="filterTournaments()">
+      </div>
+    </header>
+    <div class="tournaments-grid">
+      <div class="tournament-card" *ngFor="let tournament of filteredTournaments" (click)="selectTournament(tournament)">
+        <div class="tournament-image" [ngStyle]="{'background-image': 'url(' + tournament.image + ')'}"></div>
+        <div class="tournament-info">
+          <h2>{{ tournament.name }}</h2>
+          <p>{{ tournament.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

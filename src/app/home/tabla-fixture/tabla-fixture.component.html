@@ -1,6 +1,6 @@
 <div class="container">
   <div class="title">
-    <h2 style="margin: .5rem;">Estadisticas</h2>
+    <h2>Estadísticas</h2>
   </div>
 
   <div class="container-tab">
@@ -16,20 +16,18 @@
       <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Fixture'}" (click)="selectTab('Fixture')">
         Fixture
       </button>
-      <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Posiciones'}"
-        (click)="selectTab('Posiciones')">
+      <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Posiciones'}" (click)="selectTab('Posiciones')">
         Posiciones
       </button>
     </div>
 
     <div class="tabla-resultados">
       <!-- Fixture Section -->
-      <div *ngIf="selectedTab === 'Fixture'" class="fixture-container">
+      <div *ngIf="selectedTab === 'Fixture'" class="fixture-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Fixture'}">
         <div *ngFor="let match of matches" class="match">
           <div class="container-teams">
             <div class="team">
-              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo"
-                (error)="defaultImage($event)">
+              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
               <span class="team-name">{{ match.homeTeam }}</span>
             </div>
             <div class="score">
@@ -39,8 +37,7 @@
             </div>
             <div class="team">
               <span class="team-name">{{ match.awayTeam }}</span>
-              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo"
-                (error)="defaultImage($event)">
+              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
           <div class="match-details">
@@ -50,8 +47,8 @@
       </div>
 
       <!-- Posiciones Section -->
-      <div *ngIf="selectedTab === 'Posiciones'" class="posiciones-container">
-        <div style="max-height: 400px; overflow-y: auto;">
+      <div *ngIf="selectedTab === 'Posiciones'" class="posiciones-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Posiciones'}">
+        <div class="scrollable-table">
           <table>
             <thead>
               <tr>
