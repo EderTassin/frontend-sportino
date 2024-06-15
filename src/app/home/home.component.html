@@ -1,6 +1,8 @@
 <div class="portada">
-  <div class="img" [ngStyle]="{'background-image': 'url(' + currentImage + ')'}" loading="lazy"></div>
-  <div class="statistics">
+  <div class="img-container">
+    <div class="img" [ngStyle]="{'background-image': 'url(' + currentImage + ')'}" loading="lazy"></div>
+  </div>
+  <div class="statistics" style="display: flex; justify-content: center; align-items: center;">
     <app-tabla-fixture></app-tabla-fixture>
   </div>
 </div>
