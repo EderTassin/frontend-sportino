@@ -192,7 +192,6 @@
   background-color: #333;
 }
 
-/* Fade-in Transition */
 .tab-content {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
@@ -202,10 +201,9 @@
   opacity: 1;
 }
 
-/* Responsive Styles */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .title,
   .container-tab {
-    width: 98%;
+    width: 380px;
   }
 }

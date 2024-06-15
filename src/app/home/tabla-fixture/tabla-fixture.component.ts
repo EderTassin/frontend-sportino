@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EstadisticaPartidosService } from './service/estadistica-partidos.service';
+import { Router } from '@angular/router';
 
 interface Match {
   homeTeam: string;
@@ -10,6 +11,14 @@ interface Match {
   awayScore: number;
   date: string;
   time: string;
+}
+interface Tournament {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  year: number;
+  isActive: boolean;
 }
 @Component({
   selector: 'app-tabla-fixture',
@@ -95,7 +104,7 @@ export class TablaFixtureComponent implements OnInit {
   defaultLogo: string = 'https://static.vecteezy.com/system/resources/previews/000/356/368/non_2x/leader-of-group-vector-icon.jpg';
 
 
-  constructor(private serviceEstadistica:EstadisticaPartidosService) { }
+  constructor(private serviceEstadistica:EstadisticaPartidosService,private router: Router) { }
 
   ngOnInit() {
     this.getPosiciones();
@@ -113,5 +122,10 @@ export class TablaFixtureComponent implements OnInit {
   defaultImage(event: Event) {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = this.defaultLogo;
+  }
+
+
+  selectTournament(tournament: number): void {
+    this.router.navigate(['/match-statistics', tournament]);
   }
 }
