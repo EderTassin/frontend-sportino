@@ -1,4 +1,3 @@
-// match-statistics.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -175,7 +174,7 @@ export class MatchStatisticsComponent implements OnInit {
   }
 
   defaultImage(event: any): void {
-    event.target.src = 'default-logo.png';
+    event.target.src = 'https://img.freepik.com/vector-premium/plantilla-vector-icono-forma-escudo_917138-353.jpg';
   }
 
   openModal(match: any) {
