@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Montserrat', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: #f0f0f0;
   color: #333;
   display: flex;
@@ -60,9 +60,15 @@ header {
 }
 
 header h1 {
-  font-size: 3rem;
   color: #161616;
-  margin: 0;
+  margin: 10px;
+  font-family: 'Ubuntu Sans';
+  font-weight: 500;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  background: #fafafa;
+  padding: 10px;
+  font-size: 2rem;
 }
 
 section {
@@ -71,8 +77,10 @@ section {
 
 section h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0px;
   color: #161616;
+  padding: 10px;
+  font-family: 'Montserrat' !important;
 }
 
 ul {
