@@ -1,0 +1,337 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.match {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  flex-direction: column;
+}
+
+.match:last-child {
+  border-bottom: none;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.team-logo {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.container-teams {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.match-statistics-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 3rem;
+  color: #161616;
+  margin: 0;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #161616;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+ul li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  cursor:pointer;
+}
+
+.top-scorers__item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor:pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 600px;
+}
+
+th,
+td {
+  padding: 1rem;
+  text-align: left;
+  }
+
+th {
+  background-color: #f0f0f0;
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.top-scorers {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .top-scorers__title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .top-scorers__list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .top-scorers__item {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out;
+
+    &:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+
+  .top-scorers__player {
+    font-weight: bold;
+  }
+
+  .top-scorers__team {
+    color: #666;
+    margin-left: 5px;
+  }
+
+  .top-scorers__goals {
+    font-style: italic;
+    color: #888;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .match-statistics-container {
+    width: 100%;
+  }
+
+  section {
+    margin-bottom: 1rem;
+  }
+
+  table {
+    min-width: auto; 
+  }
+  th, td:first-child {
+    position: sticky; 
+    left: 0; 
+    background-color: #fff; 
+  }
+  .table-container {
+    max-width: 100%;
+    overflow-x: auto; 
+  }
+  table {
+    width: 100%; 
+    border-collapse: collapse;
+  }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.open {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.match-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 2rem;
+}
+
+.team-detail {
+  display: flex;
+  align-items: center;
+}
+
+.team-logo {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.team-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.team-result {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.modal-tabs {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #f0f0f0;
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.modal-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.modal-tab.active {
+  background-color: #ccc;
+  border-radius: 8px;
+}
+
+.modal-body {
+  padding: 20px 0;
+  width: 100%;
+}
+
+.modal-body h3 {
+  margin-bottom: 10px;
+}
+
+.modal-body ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.modal-body li {
+  margin-bottom: 5px;
+}
+
+.action {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.item-player{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: .5px solid #ccc;
+  font-size: 16px;
+  margin-top: 10px;
+  span{
+    font-size: 20px;
+  }
+}
+
+.action i {
+  color: #218838; /* Color del icono de gol */
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Tournament {
   id: number;
@@ -55,7 +56,7 @@ export class SelectTournamentComponent implements OnInit {
   selectedYear: number | null = null;
   showActiveOnly: boolean = true;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.filterTournaments();
@@ -69,6 +70,6 @@ export class SelectTournamentComponent implements OnInit {
   }
 
   selectTournament(tournament: Tournament): void {
-    console.log('Torneo seleccionado:', tournament);
+    this.router.navigate(['/match-statistics', tournament.id]);
   }
 }
