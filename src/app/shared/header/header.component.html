@@ -10,7 +10,7 @@
       <span>INICIO</span>
     </button>
     <button routerLink="/tournament">
-      <span>TORNEOS 🏆</span>
+      <span>TORNEOS</span>
     </button>
     <button (click)="navigateToLocation()">
       <span>UBICACIÓN</span>
@@ -28,8 +28,9 @@
     </button>
   
     <mat-menu #menu="matMenu">
-      <button mat-menu-item routerLink="/login">Login</button>
-      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">Instalar Aplicacionxxs</button>
+      <button mat-menu-item routerLink="/login">INICIAR SESIÓN</button>
+      <button mat-menu-item routerLink="/tournament">TORNEOS</button>
+      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">INSTALAr APLICACION</button>
     </mat-menu>
   </div>
   

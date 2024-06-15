@@ -1,1 +1,140 @@
-<p>match-statistics works!</p>
+<div class="match-statistics-container">
+    <header>
+      <h1>Detalles del Torneo</h1>
+    </header>
+    <section class="matches">
+      <h2>Resultados</h2>
+      <ul>
+        <li *ngFor="let match of matches; let i = index" class="match" (click)="openModal(i)">
+            <div class="container-teams">
+              <div class="team">
+                <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+                <span class="team-name">{{ match.homeTeam }}</span>
+              </div>
+              <div class="score">
+                <span>{{ match.homeScore }}</span>
+                <span>-</span>
+                <span>{{ match.awayScore }}</span>
+              </div>
+              <div class="team">
+                <span class="team-name">{{ match.awayTeam }}</span>
+                <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              </div>
+            </div>
+        </li>
+      </ul>
+    </section>
+    <section>
+        <h2 class="top-scorers__title">Goleadores</h2>
+        <div class="top-scorers">
+            <div class="top-scorers__list">
+                <div *ngFor="let scorer of topScorers" class="top-scorers__item">
+                    <div>
+                        <span class="top-scorers__player">{{ scorer.player }}</span>
+                        <span class="top-scorers__team">({{ scorer.team }})</span>:
+                    </div>
+                    <span class="top-scorers__goals">{{ scorer.goals }} goles</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="standings">
+      <h2>Posiciones</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Equipos</th>
+              <th>Pts</th>
+              <th>PJ</th>
+              <th>PG</th>
+              <th>PE</th>
+              <th>PP</th>
+              <th>GF</th>
+              <th>GC</th>
+              <th>DG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let team of standings">
+              <td>{{ team.team }}</td>
+              <td>{{ team.pts }}</td>
+              <td>{{ team.pj }}</td>
+              <td>{{ team.pg }}</td>
+              <td>{{ team.pe }}</td>
+              <td>{{ team.pp }}</td>
+              <td>{{ team.gf }}</td>
+              <td>{{ team.gc }}</td>
+              <td>{{ team.dg }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="modal" [ngClass]="{ 'open': showModal }">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <div class="match-details">
+        <div class="team-details">
+          <div class="team-detail">
+            <img [src]="selectedMatch?.homeLogo" alt="{{ selectedMatch?.homeTeam }} logo" class="team-logo">
+            <span>{{ selectedMatch?.homeTeam }}</span>
+          </div>
+          <div class="team-result">
+            <span>{{ selectedMatch?.homeScore }}</span>
+            <span>-</span>
+            <span>{{ selectedMatch?.awayScore }}</span>
+          </div>
+          <div class="team-detail">
+            <span>{{ selectedMatch?.awayTeam }}</span>
+            <img [src]="selectedMatch?.awayLogo" alt="{{ selectedMatch?.awayTeam }} logo" class="team-logo">
+          </div>
+        </div>
+        <div class="modal-tabs">
+          <div class="modal-tab" (click)="selectTab('team1')" [ngClass]="{ 'active': activeTab === 'team1' }">{{ selectedMatch?.homeTeam }}</div>
+          <div class="modal-tab" (click)="selectTab('team2')" [ngClass]="{ 'active': activeTab === 'team2' }">{{ selectedMatch?.awayTeam }}</div>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="activeTab === 'team1'">
+            <h3>{{ selectedMatch?.homeTeam }}</h3>
+            <div>
+              <div *ngFor="let player of selectedMatch?.homePlayers" class="item-player">
+                <span>{{ player.name }}</span>
+                <span *ngIf="player.goals > 0" class="action">
+                  <ng-container *ngFor="let _ of createArray(player.goals)">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                  </ng-container>
+                </span>
+                <span *ngIf="player.cards > 0" class="action" [style.color]="player.cardColor">
+                  <ng-container *ngFor="let _ of createArray(player.cards)">
+                    <span class="material-symbols-outlined">square</span>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="activeTab === 'team2'">
+            <h3>{{ selectedMatch?.awayTeam }}</h3>
+            <div>
+              <div *ngFor="let player of selectedMatch?.awayPlayers" class="item-player">
+                <span>{{ player.name }}</span>
+                <span *ngIf="player.goals > 0" class="action">
+                  <ng-container *ngFor="let _ of createArray(player.goals)">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                  </ng-container>
+                </span>
+                <span *ngIf="player.cards > 0" class="action" [style.color]="player.cardColor">
+                  <ng-container *ngFor="let _ of createArray(player.cards)">
+                    <span class="material-symbols-outlined">square</span>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
