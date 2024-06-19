@@ -91,7 +91,8 @@ export class MatchStatisticsComponent implements OnInit {
       awayLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxQfNm4Tb7SqzwB8Ie8iG0Eh-oxu0qcT3X3A&s',
       awayScore: 6,
       date: '27/05/2024',
-      time: '21:00 hs'
+      time: '21:00 hs',
+      
     },
     {
       homeTeam: 'Sporting Branca',

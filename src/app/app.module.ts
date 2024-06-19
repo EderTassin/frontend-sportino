@@ -17,10 +17,13 @@ import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.
 
 import KeenSlider from 'keen-slider'
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
 import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
+import { CreateTournamentsComponent } from './admin/create-tournaments/create-tournaments.component';
+import { CreateTeamComponent } from './admin/create-team/create-team.component';
+import { LoadDataMatchComponent } from './admin/load-data-match/load-data-match.component';
 
 @NgModule({
   declarations: [	
@@ -32,7 +35,10 @@ import { SelectTournamentComponent } from './select-tournament/select-tournament
       TablaFixtureComponent,
       TablaJugadoresComponent,
       MatchStatisticsComponent,
-      SelectTournamentComponent
+      SelectTournamentComponent,
+      CreateTournamentsComponent,
+      CreateTeamComponent,
+      LoadDataMatchComponent
    ],
   imports: [
     BrowserModule,
@@ -46,7 +52,8 @@ import { SelectTournamentComponent } from './select-tournament/select-tournament
     MatTabsModule,
     CommonModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
