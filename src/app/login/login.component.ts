@@ -34,9 +34,7 @@ export class LoginComponent {
         alert('Login failed');
       }
     }else{
-      console.log('FORM INCORRECTO');
-      
+      console.log('CREDENCIALES INCORRECTAS');
     }
-
   }
 }

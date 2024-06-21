@@ -9,7 +9,8 @@ const routes: Routes = [
   {path:'',component: HomeComponent},
   {path:'login',component: LoginComponent},
   {path:'tournament', component: SelectTournamentComponent},
-  {path:'match-statistics/:id', component: MatchStatisticsComponent }
+  {path:'match-statistics/:id', component: MatchStatisticsComponent },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) }
 ];
 
 @NgModule({

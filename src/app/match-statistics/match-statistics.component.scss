@@ -1,3 +1,6 @@
+$color-orange: #ff7300;
+$color-green:  #7ed957;
+
 body {
   margin: 0;
   font-family: 'Montserrat', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -69,6 +72,13 @@ header h1 {
   background: #fafafa;
   padding: 10px;
   font-size: 2rem;
+}
+
+header h3{
+  font-size: 2rem;
+  font-weight: 500;
+  color: #161616;
+  margin-top: 1em;
 }
 
 section {

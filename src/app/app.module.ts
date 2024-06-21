@@ -15,15 +15,13 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatMenuModule} from '@angular/material/menu'
 import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.component';
 
-import KeenSlider from 'keen-slider'
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
 import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
-import { CreateTournamentsComponent } from './admin/create-tournaments/create-tournaments.component';
-import { CreateTeamComponent } from './admin/create-team/create-team.component';
-import { LoadDataMatchComponent } from './admin/load-data-match/load-data-match.component';
+import { AuthGuard } from './_services/auth-guard.service';
+import { AuthService } from './_services/auth.service';
 
 @NgModule({
   declarations: [	
@@ -35,10 +33,7 @@ import { LoadDataMatchComponent } from './admin/load-data-match/load-data-match.
       TablaFixtureComponent,
       TablaJugadoresComponent,
       MatchStatisticsComponent,
-      SelectTournamentComponent,
-      CreateTournamentsComponent,
-      CreateTeamComponent,
-      LoadDataMatchComponent
+      SelectTournamentComponent
    ],
   imports: [
     BrowserModule,
@@ -55,7 +50,7 @@ import { LoadDataMatchComponent } from './admin/load-data-match/load-data-match.
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

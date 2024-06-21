@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { Subscription } from 'rxjs';
 import { ScrollService } from '../shared/service/scroll.service';
 
