@@ -11,8 +11,8 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TablaFixtureComponent } from './home/tabla-fixture/tabla-fixture.component';
 
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatMenuModule} from '@angular/material/menu'
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu'
 import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.component';
 
 import { CommonModule } from '@angular/common';
@@ -20,21 +20,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
 import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
-import { AuthGuard } from './_services/auth-guard.service';
 import { AuthService } from './_services/auth.service';
+import { RegisterComponent } from './login/register/register.component';
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
-      HomeComponent,
-      HeaderComponent,
-      FooterComponent,
-      LoginComponent,
-      TablaFixtureComponent,
-      TablaJugadoresComponent,
-      MatchStatisticsComponent,
-      SelectTournamentComponent
-   ],
+    HomeComponent,
+    HeaderComponent,
+    FooterComponent,
+    LoginComponent,
+    TablaFixtureComponent,
+    TablaJugadoresComponent,
+    MatchStatisticsComponent,
+    SelectTournamentComponent,
+    RegisterComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
