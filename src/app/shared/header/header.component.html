@@ -1,11 +1,10 @@
 <div class="container-header">
 
   <div class="title-header" (click)="redirect()">
-    <!-- <h1>Sp<span style="color:#7ed957">o</span>rtin<span style="color:#7ed957">o</span></h1> -->
      <img src="../../../assets/blanco_sin_logo.png" alt="">
   </div>
 
-  <div class="buttons-header">
+  <div class="buttons-header" *ngIf="isLoggin">
     <button routerLink="/" (click)="scrollToTop()">
       <span>INICIO</span>
     </button>
@@ -20,6 +19,12 @@
     </button>
   </div>
 
+  <div class="buttons-header" *ngIf="!isLoggin">
+    <button (click)="logout()">
+      <span>CERRAR SESIÓN</span>
+    </button>
+  </div>
+
   <div class="menu">
     <button class="buttons" mat-button [matMenuTriggerFor]="menu" style="background: #161616; color: white">
       <span class="material-symbols-outlined">
@@ -28,9 +33,10 @@
     </button>
   
     <mat-menu #menu="matMenu">
-      <button mat-menu-item routerLink="/login">INICIAR SESIÓN</button>
-      <button mat-menu-item routerLink="/tournament">TORNEOS</button>
-      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">INSTALAr APLICACION</button>
+      <button mat-menu-item routerLink="/login" *ngIf="isLoggin">INICIAR SESIÓN</button>
+      <button mat-menu-item (click)="logout()" *ngIf="!isLoggin">CERRAR SESIÓN</button>
+      <button mat-menu-item routerLink="/tournament" *ngIf="isLoggin">TORNEOS</button>
+      <button mat-menu-item *ngIf="showInstallButton" (click)="installPWA()">INSTALAR APLICACION</button>
     </mat-menu>
   </div>
   

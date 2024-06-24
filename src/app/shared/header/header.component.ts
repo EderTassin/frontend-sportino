@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ScrollService } from '../service/scroll.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,16 @@ export class HeaderComponent implements OnInit {
 
   installPromptEvent: any;
   showInstallButton: boolean = true;
+  isLoggin: boolean = false
 
   constructor(private scrollService: ScrollService,
-              private router: Router) { }
+              private router: Router,
+              private authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.authStatus.subscribe((isAuthenticated: any) => {
+      this.isLoggin = !isAuthenticated;
+    });
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
@@ -43,5 +49,9 @@ export class HeaderComponent implements OnInit {
 
   navigateToLocation() {
     this.scrollService.triggerScrollToLocation();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

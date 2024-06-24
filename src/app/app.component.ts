@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
+import { AuthService } from './_services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'sportino-app';
+  authService: any = inject(AuthService)
+
+  @HostListener('window:mousemove')
+  @HostListener('window:keydown')
+  @HostListener('window:click')
+  @HostListener('window:scroll')
+  handleUserActivity() {
+    this.authService.userInteracted();
+  }
+
 }
