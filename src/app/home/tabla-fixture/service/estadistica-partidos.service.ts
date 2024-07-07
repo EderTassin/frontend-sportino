@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, firstValueFrom } from 'rxjs';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EstadisticaPartidosService {
-
-  url: string = "/api/";
+  private url = environment.apiEndpoint;
 
   constructor(private http: HttpClient) { }
 
@@ -16,8 +16,8 @@ export class EstadisticaPartidosService {
     throw error;
   }
 
-  async getPosiciones(category: string) {
-    const url = `${this.url}calendars/board/?tournament=39&category=${category}`;
+  async getPosiciones(tournament: number, category?: string) {
+    const url = `${this.url}calendars/board/?tournament=${tournament}&category=${category}`;
     const headers = {
       headers: {
         'Content-Type': 'application/json'
@@ -32,4 +32,35 @@ export class EstadisticaPartidosService {
     return res;
   }
 
+  async getTournament() {
+    const url = `${this.url}calendars/tournament/`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
+  async getCalendarsWidgets(id: number) {
+    const url = `${this.url}calendars/widgets/?tournament=${id}`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
 }

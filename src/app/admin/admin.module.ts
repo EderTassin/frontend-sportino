@@ -10,7 +10,7 @@ import { AuthGuard } from '../_services/auth-guard.service';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
-  { path: 'create-tournaments', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
+  { path: 'tournaments', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
   { path: 'create-team', component: CreateTeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] }
 ];
@@ -20,7 +20,8 @@ const routes: Routes = [
     CreateTournamentsComponent,
     CreateTeamComponent,
     LoadDataMatchComponent,
-    HomeAdminComponent],
+    HomeAdminComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)],

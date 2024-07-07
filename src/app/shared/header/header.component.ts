@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ScrollService } from '../service/scroll.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { environment } from 'src/environment/environment';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,7 @@ export class HeaderComponent implements OnInit {
   installPromptEvent: any;
   showInstallButton: boolean = true;
   isLoggin: boolean = false
+  private apiUrl = environment.apiEndpoint;
 
   constructor(private scrollService: ScrollService,
               private router: Router,

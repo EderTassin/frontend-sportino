@@ -6,15 +6,19 @@
   <div class="container-tab">
     <div class="container-select-torneo">
       <label for="torneo">Seleccionar Torneo:</label>
-      <select name="Torneo" id="torneo">
-        <option value="1">Torneo Apertura 2024</option>
-        <option value="2">Torneo Clausura 2024</option>
+      <select name="Torneo" id="torneo" [(ngModel)]="selectedTournament" (change)="searchTournament()">
+        <ng-container *ngFor="let item of listTournament">
+            <option [value]="item.id">{{item.name}}</option>
+        </ng-container>
       </select>
     </div>
 
     <div class="tabs">
       <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Fixture'}" (click)="selectTab('Fixture')">
         Fixture
+      </button>
+      <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Goleadores'}" (click)="selectTab('Goleadores')">
+        Goleadores
       </button>
       <button class="button-tab" [ngClass]="{'selected': selectedTab === 'Posiciones'}" (click)="selectTab('Posiciones')">
         Posiciones
@@ -24,24 +28,25 @@
     <div class="tabla-resultados">
       <!-- Fixture Section -->
       <div *ngIf="selectedTab === 'Fixture'" class="fixture-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Fixture'}">
-        <div *ngFor="let match of matches" class="match">
+        <div *ngFor="let match of listFixture" class="match">
           <div class="container-teams">
             <div class="team">
-              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
-              <span class="team-name">{{ match.homeTeam }}</span>
+              <img [src]="match.team_1_logo" alt="{{ match.team_1 }} logo" class="team-logo" (error)="defaultImage($event)">
+              <span class="team-name">{{ match.team_1 }}</span>
             </div>
-            <div class="score">
-              <span>{{ match.homeScore }}</span>
-              <span>-</span>
-              <span>{{ match.awayScore }}</span>
-            </div>
+              <div class="score">
+                <span>{{ match.result ? match.result.goals_team_1 : '-' }}</span>
+                <span>-</span>
+                <span>{{ match.result ? match.result.goals_team_2 : '-' }}</span>
+              </div>
             <div class="team">
-              <span class="team-name">{{ match.awayTeam }}</span>
-              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <span class="team-name">{{ match.team_2 }}</span>
+              <img [src]="match.team_2_logo" alt="{{ match.team_2 }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
           <div class="match-details">
             <span>{{ match.date }}</span>
+            <span>&nbsp;Cancha: {{match.field}}</span>
           </div>
         </div>
       </div>
@@ -57,12 +62,34 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let position of positions" class="match-posiciones">
+              <tr *ngFor="let position of listPosicion.positions" class="match-posiciones">
                 <td class="team-posiciones">
                   <img [src]="position.logo" alt="{{ position.team }} logo" class="team-logo" (error)="defaultImage($event)">
                   <span class="team-name">{{ position.team }}</span>
                 </td>
                 <td class="points">{{ position.points }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Goals Section -->
+      <div *ngIf="selectedTab === 'Goleadores'" class="posiciones-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Goleadores'}">
+        <div class="scrollable-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Jugador</th>
+                <th>Goles</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let position of listGoleadores" class="match-posiciones">
+                <td class="team-posiciones">
+                  <span class="team-name">{{ position.player_full_name }}</span>
+                </td>
+                <td class="points">{{ position.goals }}</td>
               </tr>
             </tbody>
           </table>
