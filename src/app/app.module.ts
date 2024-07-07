@@ -17,11 +17,14 @@ import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
 import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
 import { AuthService } from './_services/auth.service';
 import { RegisterComponent } from './login/register/register.component';
+import { LoadingInterceptor } from './shared/loader/loading.interceptor';
+import { LoadingComponent } from './shared/loader/loading.component';
+import { LoadingService } from './shared/loader/loading.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,8 @@ import { RegisterComponent } from './login/register/register.component';
     TablaJugadoresComponent,
     MatchStatisticsComponent,
     SelectTournamentComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,10 @@ import { RegisterComponent } from './login/register/register.component';
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [AuthService],
+  providers: [AuthService,
+    LoadingService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,7 +11,7 @@ export class HomeAdminComponent {
   constructor(private router: Router) { }
 
   navigateTo(section: string): void {
-    this.router.navigate([`/${section}`]);
+    this.router.navigate([`admin/${section}`]);
   }
   
 }
