@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
 
 interface Tournament {
   id: number;
   name: string;
-  description: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
   image: string;
-  year: number;
-  isActive: boolean;
+  category: number[];
 }
 
 @Component({
@@ -15,57 +17,49 @@ interface Tournament {
   templateUrl: './select-tournament.component.html',
   styleUrls: ['./select-tournament.component.scss']
 })
-
 export class SelectTournamentComponent implements OnInit {
-  tournaments: Tournament[] = [
-    {
-      id: 1,
-      name: 'Torneo Apertura 2024',
-      description: 'El torneo de apertura de la temporada 2024, con equipos de todo el país compitiendo por el título.',
-      image: 'https://library.sportingnews.com/styles/twitter_card_120x120/s3/2022-11/Liga%20Profesional%20Argentina%20AFA%20LPF.jpg?itok=co02_pTs',
-      year: 2024,
-      isActive: true
-    },
-    {
-      id: 2,
-      name: 'Copa Invierno 2024',
-      description: 'Un torneo especial de invierno, con partidos emocionantes y equipos compitiendo en condiciones desafiantes.',
-      image: 'https://pbs.twimg.com/media/GMWWjH9W0AA6W3l.jpg',
-      year: 2024,
-      isActive: false
-    },
-    {
-      id: 3,
-      name: 'Torneo Clausura 2024',
-      description: 'El torneo de clausura de la temporada 2024, donde los equipos buscan terminar la temporada en la cima.',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScY6eg1qQwdvOjOrBra2z4q1LwDQowcVNqZw&s',
-      year: 2024,
-      isActive: true
-    },
-    {
-      id: 4,
-      name: 'Copa Verano 2025',
-      description: 'La copa de verano para la próxima temporada, con partidos amistosos y competiciones de pretemporada.',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPz4DyUrZ979I8ZyZOUCXPZB-NTcDhrG7vfQ&s',
-      year: 2025,
-      isActive: true
-    }
-  ];
-
+  
   filteredTournaments: Tournament[] = [];
+  tournaments: Tournament[] = [];
+  years: number[] = [];
   selectedYear: number | null = null;
+  selectedDateFrom: string | null = null;
   showActiveOnly: boolean = true;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private estadisticaPartidosService: EstadisticaPartidosService) { }
 
-  ngOnInit(): void {
-    this.filterTournaments();
+  async ngOnInit() {
+    await this.getTournaments();
   }
 
-  filterTournaments(): void {
-    this.filteredTournaments = this.tournaments.filter(tournament => {
-      return (!this.selectedYear || tournament.year === this.selectedYear) &&
-             (!this.showActiveOnly || tournament.isActive);
+  async getTournaments(): Promise<void> {
+    this.tournaments = await this.estadisticaPartidosService.getTournament();
+    this.filterTournaments();
+    this.populateYears();
+  }
+
+  populateYears(): void {
+    const yearsSet = new Set<number>();
+    this.tournaments.forEach(tournament => {
+      const year = new Date(tournament.date_from).getFullYear();
+      yearsSet.add(year);
+    });
+    this.years = Array.from(yearsSet).sort((a, b) => a - b);
+  }
+
+  filterTournaments() {
+    const selectedYear = this.selectedYear !== null ? Number(this.selectedYear) : null;
+  
+    console.log(selectedYear);
+
+    if (selectedYear) {
+      this.filteredTournaments = this.tournaments;
+      return;
+    }
+
+    this.filteredTournaments = this.tournaments.filter((tournament) => {
+      const date = new Date(tournament.date_from);
+      return date.getFullYear() === selectedYear;
     });
   }
 

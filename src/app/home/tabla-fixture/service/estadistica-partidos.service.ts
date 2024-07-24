@@ -3,6 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
+interface Tournament {
+  id: number;
+  name: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
+  image: string;
+  category: number[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +42,7 @@ export class EstadisticaPartidosService {
     return res;
   }
 
-  async getTournament() {
+  async getTournament(): Promise<Tournament[]> {
     const url = `${this.url}calendars/tournament/`;
     const headers = {
       headers: {
