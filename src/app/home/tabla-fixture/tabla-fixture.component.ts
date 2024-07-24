@@ -22,10 +22,11 @@ interface Match {
 interface Tournament {
   id: number;
   name: string;
-  description: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
   image: string;
-  year: number;
-  isActive: boolean;
+  category: number[];
 }
 @Component({
   selector: 'app-tabla-fixture',

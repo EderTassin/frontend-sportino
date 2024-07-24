@@ -1,9 +1,9 @@
 {
-    "/api": {
-      "target": "https://x9pjmh7w-8050.brs.devtunnels.ms",
-      "secure": false,
-      "changeOrigin": true,
-      "logLevel": "debug"
-    }
+  "/api": {
+    "target": "http://172.233.27.125:8050",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
+}
   
