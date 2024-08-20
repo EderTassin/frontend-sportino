@@ -58,8 +58,33 @@ export class EstadisticaPartidosService {
     return res;
   }
 
-  async getCalendarsWidgets(id: number) {
-    const url = `${this.url}calendars/widgets/?tournament=${id}`;
+  async getCalendarsWidgets(id?: number, date?: Date) {
+
+    let url = `${this.url}calendars/widgets`;
+
+    if (id) {
+      url+=`/?tournament=${id}`
+    }
+    if (date) {
+      url+=`&?date=${id}`  
+    }
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
+  async getDatesTournaments() {
+    const url = `${this.url}calendars/dates/`;
     const headers = {
       headers: {
         'Content-Type': 'application/json'

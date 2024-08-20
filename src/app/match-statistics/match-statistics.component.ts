@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
 
 interface Match {
   homeTeam: string;
@@ -35,7 +36,8 @@ interface Standings {
   templateUrl: './match-statistics.component.html',
   styleUrls: ['./match-statistics.component.scss']
 })
-export class MatchStatisticsComponent implements OnInit {
+
+export class MatchStatisticsComponent {
   tournamentId: string | null = "";
   filterDate: string = '';
   filterCategory: string = '';
@@ -82,62 +84,6 @@ export class MatchStatisticsComponent implements OnInit {
     }
   ];
 
-  matches: Match[] = [
-    {
-      homeTeam: 'Los Charrúas',
-      homeLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKJkwVhSBjhj-MfuODjrEN9Bod9vWK2RTbvg&s',
-      homeScore: 7,
-      awayTeam: 'Celeste Mecánica',
-      awayLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxQfNm4Tb7SqzwB8Ie8iG0Eh-oxu0qcT3X3A&s',
-      awayScore: 6,
-      date: '27/05/2024',
-      time: '21:00 hs',
-      
-    },
-    {
-      homeTeam: 'Sporting Branca',
-      homeLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmfnzC8tfV0yvoA15Hude551Wo156IAeOiDQ&s',
-      homeScore: 5,
-      awayTeam: 'Chosma FC',
-      awayLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8YuWb7QRJ4lsl9cthPr6CYcNxcuixMbhig&s',
-      awayScore: 4,
-      date: '27/05/2024',
-      time: '21:00 hs'
-    },
-    {
-      homeTeam: 'Los Wichis',
-      homeLogo: 'path/to/logo5.png',
-      homeScore: 3,
-      awayTeam: 'Fanta fc',
-      awayLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPiQGfbMkPvQbq7aaVaUNn_-tPfyRXtcBSuA&s',
-      awayScore: 5,
-      date: '27/05/2024',
-      time: '22:00 hs'
-    },
-    {
-      homeTeam: 'La Docta FC',
-      homeLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0HuCQdeHMWuxEXzs-BiFZKkfwfaNKqNJRUQ&s',
-      homeScore: 13,
-      awayTeam: 'Titanes FC',
-      awayLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcBP5d4jVB3848760VJJuWiMnzPZBeygGPWQ&s',
-      awayScore: 1,
-      date: '27/05/2024',
-      time: '21:00 hs'
-    },
-    {
-      homeTeam: 'Celta de Vino',
-      homeLogo: 'path/to/logo9.png',
-      homeScore: 2,
-      awayTeam: 'Los Barats',
-      awayLogo: 'path/to/logo10.png',
-      awayScore: 4,
-      date: '27/05/2024',
-      time: '21:00 hs'
-    }
-  ];
-
-  filteredMatches: Match[] = [];
-
   topScorers: TopScorer[] = [
     { player: 'Lionel Messi', team: 'FC Barcelona', goals: 25 },
     { player: 'Cristiano Ronaldo', team: 'Juventus', goals: 23 },
@@ -159,19 +105,37 @@ export class MatchStatisticsComponent implements OnInit {
     { team: 'Granada CF', pts: 40, pj: 34, pg: 12, pe: 4, pp: 18, gf: 35, gc: 50, dg: -15 }
   ];
 
-  constructor(private route: ActivatedRoute) { }
+  fixture: any;
+  fixtureFilter: any;
+  datesSelects: any;
+  goleadores: any;
+  selectedDate: any;
+  listPosicion: any;
+
+  constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) { }
 
   ngOnInit(): void {
     this.tournamentId = this.route.snapshot.paramMap.get('id');
-    this.filterMatches();
+    this.loadDataForm();
   }
+  
+  filterMatchesByDate() {
+    this.fixtureFilter = this.fixture.filter( (item:any) => item.date === this.selectedDate);
+  }
+  
+  async loadDataForm(){
+    const dates = await this.estadisticaPartidosService.getDatesTournaments();
+    this.datesSelects = dates.filter((item:any) => item.tournament.includes(Number(this.tournamentId)))
+    this.selectedDate = this.datesSelects[0].date;
 
-  filterMatches(): void {
-    this.filteredMatches = this.matches.filter(match => {
-      const dateMatch = this.filterDate ? match.date === this.filterDate : true;
-      //const categoryMatch = this.filterCategory ? match.category === this.filterCategory : true;
-      //return dateMatch && categoryMatch;
-    });
+    const allData = await this.estadisticaPartidosService.getCalendarsWidgets(Number(this.tournamentId));
+    this.fixture = allData.fixture;
+    this.goleadores = allData.goleadores;
+
+    this.listPosicion = await this.estadisticaPartidosService.getPosiciones(Number(this.tournamentId));
+    console.log(this.listPosicion);
+    
+    this.filterMatchesByDate();
   }
 
   defaultImage(event: any): void {
@@ -180,8 +144,6 @@ export class MatchStatisticsComponent implements OnInit {
 
   openModal(match: any) {
     this.selectedMatch = this.matchesDetail[0];
-    console.log(this.matchesDetail[0]);
-    
     this.showModal = true;
   }
 
