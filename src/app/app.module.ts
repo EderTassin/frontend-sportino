@@ -25,6 +25,9 @@ import { RegisterComponent } from './login/register/register.component';
 import { LoadingInterceptor } from './shared/loader/loading.interceptor';
 import { LoadingComponent } from './shared/loader/loading.component';
 import { LoadingService } from './shared/loader/loading.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,9 @@ import { LoadingService } from './shared/loader/loading.service';
     BrowserAnimationsModule,
     MatMenuModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
     CommonModule,
     FormsModule,
     HttpClientModule,

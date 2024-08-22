@@ -34,7 +34,6 @@ export class SelectTournamentComponent implements OnInit {
 
   async getTournaments(): Promise<void> {
     this.tournaments = await this.estadisticaPartidosService.getTournament();
-    this.filterTournaments();
     this.populateYears();
   }
 
@@ -45,22 +44,20 @@ export class SelectTournamentComponent implements OnInit {
       yearsSet.add(year);
     });
     this.years = Array.from(yearsSet).sort((a, b) => a - b);
+    this.filterTournaments();
   }
 
   filterTournaments() {
     const selectedYear = this.selectedYear !== null ? Number(this.selectedYear) : null;
-  
-    console.log(selectedYear);
-
+    this.filteredTournaments = [];
     if (selectedYear) {
+      this.filteredTournaments = this.tournaments.filter((tournament) =>  
+        new Date(tournament.date_from).getFullYear() === selectedYear ||
+        new Date(tournament.date_to).getFullYear() === selectedYear 
+    );
+    }else{
       this.filteredTournaments = this.tournaments;
-      return;
     }
-
-    this.filteredTournaments = this.tournaments.filter((tournament) => {
-      const date = new Date(tournament.date_from);
-      return date.getFullYear() === selectedYear;
-    });
   }
 
   selectTournament(tournament: Tournament): void {
