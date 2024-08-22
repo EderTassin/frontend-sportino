@@ -27,7 +27,7 @@ export class EstadisticaPartidosService {
   }
 
   async getPosiciones(tournament: number, category?: string) {
-    const url = `${this.url}calendars/board/?tournament=${tournament}&category=${category}`;
+    const url = `${this.url}calendars/board/?tournament=${tournament}`;
     const headers = {
       headers: {
         'Content-Type': 'application/json'

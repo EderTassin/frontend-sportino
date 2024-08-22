@@ -22,7 +22,7 @@
           <div class="container-teams">
             <div class="team">
               <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
-              <span class="team-name">{{ match.team_1 }}</span>
+              <span class="team-name">{{ match.team_1.name }}</span>
             </div>
             <div class="score">
               <div *ngIf="match.result">
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="team">
-              <span class="team-name">{{ match.team_2 }}</span>
+              <span class="team-name">{{ match.team_2.name }}</span>
               <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
@@ -81,7 +81,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let team of listPosicion.positions">
+          <tr *ngFor="let team of listPosicion?.positions">
             <td><b>{{ team.team }}</b></td>
             <td>{{ team.points }}</td>
             <td>{{ team.games.total }}</td>
