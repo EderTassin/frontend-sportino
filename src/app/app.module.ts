@@ -28,6 +28,7 @@ import { LoadingService } from './shared/loader/loading.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { CamelcasePipe } from './_services/pipe/camelcase.pipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { MatOptionModule } from '@angular/material/core';
     MatchStatisticsComponent,
     SelectTournamentComponent,
     RegisterComponent,
-    LoadingComponent
+    LoadingComponent,
+    CamelcasePipe
   ],
   imports: [
     BrowserModule,

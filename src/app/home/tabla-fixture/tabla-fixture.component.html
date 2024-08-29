@@ -32,7 +32,7 @@
           <div class="container-teams">
             <div class="team">
               <img [src]="match.team_1_logo" alt="{{ match.team_1 }} logo" class="team-logo" (error)="defaultImage($event)">
-              <span class="team-name">{{ match.team_1 }}</span>
+              <span class="team-name">{{ match.team_1.name }}</span>
             </div>
               <div class="score">
                 <span>{{ match.result ? match.result.goals_team_1 : '-' }}</span>
@@ -40,7 +40,7 @@
                 <span>{{ match.result ? match.result.goals_team_2 : '-' }}</span>
               </div>
             <div class="team">
-              <span class="team-name">{{ match.team_2 }}</span>
+              <span class="team-name">{{ match.team_2.name }}</span>
               <img [src]="match.team_2_logo" alt="{{ match.team_2 }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>

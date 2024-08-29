@@ -6,6 +6,8 @@ import { LoadDataMatchComponent } from './load-data-match/load-data-match.compon
 import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../_services/auth-guard.service';
+import { FormsModule } from '@angular/forms';
+import { FilterPipe } from '../_services/pipe/filter.pipe';
 
 
 const routes: Routes = [
@@ -20,10 +22,12 @@ const routes: Routes = [
     CreateTournamentsComponent,
     CreateTeamComponent,
     LoadDataMatchComponent,
-    HomeAdminComponent
+    HomeAdminComponent,
+    FilterPipe
   ],
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule.forChild(routes)],
   exports: [RouterModule]
 })

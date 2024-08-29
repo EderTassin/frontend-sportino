@@ -22,7 +22,7 @@
           <div class="container-teams">
             <div class="team">
               <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
-              <span class="team-name">{{ match.team_1.name }}</span>
+              <span class="team-name">{{ match.team_1?.name }}</span>
             </div>
             <div class="score">
               <div *ngIf="match.result">
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="team">
-              <span class="team-name">{{ match.team_2.name }}</span>
+              <span class="team-name">{{ match.team_2?.name }}</span>
               <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
@@ -104,35 +104,35 @@
     <div class="match-details">
       <div class="team-details">
         <div class="team-detail">
-          <img [src]="selectedMatch?.homeLogo" alt="{{ selectedMatch?.homeTeam }} logo" class="team-logo">
-          <span>{{ selectedMatch?.homeTeam }}</span>
+          <img [src]="selectedMatch?.homeLogo" alt="{{ selectedMatch?.team_1.name }} logo" class="team-logo" (error)="defaultImage($event)">
+          <span>{{ selectedMatch?.team_1.name }}</span>
         </div>
         <div class="team-result">
-          <span>{{ selectedMatch?.homeScore }}</span>
+          <span>{{ selectedMatch?.result.goals_team_1 }}</span>
           <span>-</span>
-          <span>{{ selectedMatch?.awayScore }}</span>
+          <span>{{ selectedMatch?.result.goals_team_2 }}</span>
         </div>
         <div class="team-detail">
-          <span>{{ selectedMatch?.awayTeam }}</span>
-          <img [src]="selectedMatch?.awayLogo" alt="{{ selectedMatch?.awayTeam }} logo" class="team-logo">
+          <span>{{ selectedMatch?.team_2.name }}</span>
+          <img [src]="selectedMatch?.awayLogo" alt="{{ selectedMatch?.team_2.name }} logo" class="team-logo" (error)="defaultImage($event)">
         </div>
       </div>
       <div class="modal-tabs">
         <div class="modal-tab" (click)="selectTab('team1')" [ngClass]="{ 'active': activeTab === 'team1' }">
-          {{ selectedMatch?.homeTeam }}
+          {{ selectedMatch?.team_1.name }}
         </div>
         <div class="modal-tab" (click)="selectTab('team2')" [ngClass]="{ 'active': activeTab === 'team2' }">
-          {{ selectedMatch?.awayTeam }}
+          {{ selectedMatch?.team_2.name}}
         </div>
       </div>
       <div class="modal-body">
         <div *ngIf="activeTab === 'team1'">
-          <h3>{{ selectedMatch?.homeTeam }}</h3>
+          <h3>{{ selectedMatch?.team_1.name  }}</h3>
           <div>
-            <div *ngFor="let player of selectedMatch?.homePlayers" class="item-player">
-              <span>{{ player.name }}</span>
-              <div *ngIf="player.goals > 0" class="action">
-                <span *ngFor="let _ of createArray(player.goals)" class="material-symbols-outlined">
+            <div *ngFor="let player of selectedMatch?.team_1.players" class="item-player">
+              <span>{{ player.full_name | camelcase}}</span>
+              <div *ngIf="player.goals" class="action">
+                <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">
                   sports_soccer
                 </span>
               </div>
@@ -145,12 +145,12 @@
           </div>
         </div>
         <div *ngIf="activeTab === 'team2'">
-          <h3>{{ selectedMatch?.awayTeam }}</h3>
+          <h3>{{ selectedMatch?.team_2.name  }}</h3>
           <div>
-            <div *ngFor="let player of selectedMatch?.awayPlayers" class="item-player">
-              <span>{{ player.name }}</span>
-              <div *ngIf="player.goals > 0" class="action">
-                <span *ngFor="let _ of createArray(player.goals)" class="material-symbols-outlined">
+            <div *ngFor="let player of selectedMatch?.team_2.players" class="item-player">
+              <span>{{ player.full_name | camelcase}}</span>
+              <div *ngIf="player.goals" class="action">
+                <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">
                   sports_soccer
                 </span>
               </div>

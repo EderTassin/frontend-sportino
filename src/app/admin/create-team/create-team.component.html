@@ -1,1 +1,49 @@
-<p>create-team works!</p>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Panel de Administración de Equipos de Fútbol</h1>
+    <div class="flex justify-between mb-4">
+      <input [(ngModel)]="filter" placeholder="Filtrar por nombre del equipo" class="max-w-sm"/>
+      <button (click)="handleEdit(null)">
+        <span>Agregar Equipo</span>
+      </button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="md:col-span-2">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Liga</th>
+              <th>Entrenador</th>
+              <th>Activo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (team of filteredTeams(); track team.id) {
+              <tr>
+                <td>{{ team.name }}</td>
+                <td>{{ getLeagueLabel(team.league) }}</td>
+                <td>{{ team.manager }}</td>
+                <td>{{ team.isActive ? 'Sí' : 'No' }}</td>
+                <td>
+                  <button (click)="handleViewDetails(team)">Ver</button>
+                  <button (click)="handleEdit(team)">Editar</button>
+                  <button (click)="handleDelete(team.id)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <!-- <div *ngIf="detailTeam()">
+        <div>
+          <h2>{{ detailTeam().name }}</h2>
+          <img [src]="detailTeam().teamPhoto || '/placeholder.svg'" alt="Team photo" />
+          <img [src]="detailTeam().logo" alt="Team logo" />
+          <p><strong>Liga:</strong> {{ getLeagueLabel(detailTeam().league) }}</p>
+          <!-- More details... -->
+        </div>
+      </div> -->
+    </div>
+  </div>
+  

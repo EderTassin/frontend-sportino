@@ -98,4 +98,20 @@ export class EstadisticaPartidosService {
     );
     return res;
   }
+
+  async getMatchDetail(idMatch: number) {
+    const url = `${this.url}calendars/full-game/${idMatch}/`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
 }

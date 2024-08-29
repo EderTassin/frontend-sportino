@@ -11,12 +11,18 @@ interface Match {
   id: number;
   date: string;
   hour: string;
-  team_1: string;
+  team_1: Team;
   team_1_logo: string;
-  team_2: string;
+  team_2: Team;
   team_2_logo: string;
   field: number;
   result: Result;
+}
+
+interface Team{
+  name: string;
+  id: number;
+  category: string;
 }
 
 interface Tournament {
