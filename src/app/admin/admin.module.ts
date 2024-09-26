@@ -6,14 +6,16 @@ import { LoadDataMatchComponent } from './load-data-match/load-data-match.compon
 import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../_services/auth-guard.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../_services/pipe/filter.pipe';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../_services/auth.interceptor';
 
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
   { path: 'tournaments', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
-  { path: 'create-team', component: CreateTeamComponent, canActivate: [AuthGuard] },
+  { path: 'equipos', component: CreateTeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] }
 ];
 
@@ -25,9 +27,13 @@ const routes: Routes = [
     HomeAdminComponent,
     FilterPipe
   ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes)],
   exports: [RouterModule]
 })

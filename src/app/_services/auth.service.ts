@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(localStorage.getItem('isAuthenticated') === 'true');
   private timeoutHandle: any;
-  private readonly TIMEOUT_DURATION = 5 * 60 * 1000;
+  private readonly TIMEOUT_DURATION = 50 * 60 * 1000;
 
   authStatus = this.isAuthenticated.asObservable();
 
@@ -35,8 +35,9 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  checkAuth(): boolean {
-    return this.isAuthenticated.value;
+  checkAuth(): Observable<boolean> {
+    const isAuthenticated = this.isAuthenticated.value;
+    return of(isAuthenticated);
   }
 
   private resetTimeout() {
