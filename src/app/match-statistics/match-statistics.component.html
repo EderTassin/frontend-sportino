@@ -52,10 +52,10 @@
     <h2 class="top-scorers__title">Goleadores</h2>
     <div class="top-scorers">
       <div class="top-scorers__list">
-        <div *ngFor="let scorer of goleadores" class="top-scorers__item">
+        <div *ngFor="let scorer of goleadores; let i = index" class="top-scorers__item">
           <div *ngIf="scorer.player_full_name">
-            <span class="top-scorers__player">{{ scorer.player_full_name }}</span>:
-            <!-- <span class="top-scorers__team">({{ scorer.team }})</span>: -->
+            
+            <span class="top-scorers__player">{{ i + 1 }}. {{ scorer.player_full_name }}</span>
           </div>
           <span *ngIf="scorer.player_full_name" class="top-scorers__goals">{{ scorer.goals }} goles</span>
         </div>

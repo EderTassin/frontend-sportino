@@ -41,10 +41,9 @@ export class MatchStatisticsComponent {
 
     const allData = await this.estadisticaPartidosService.getCalendarsWidgets(Number(this.tournamentId));
     this.fixture = allData.fixture;
-    this.goleadores = allData.goleadores;
+    this.goleadores = allData.goleadores.slice(0,16);
 
     this.listPosicion = await this.estadisticaPartidosService.getPosiciones(Number(this.tournamentId));
-    console.log(this.listPosicion);
     
     this.filterMatchesByDate();
   }

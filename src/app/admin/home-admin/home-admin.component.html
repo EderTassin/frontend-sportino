@@ -1,99 +1,137 @@
 <div class="home-admin">
-  <section class="section">
-      <div class="card">
-          <img src="https://library.sportingnews.com/styles/twitter_card_120x120/s3/2022-11/Liga%20Profesional%20Argentina%20AFA%20LPF.jpg?itok=co02_pTs"
-              alt="Torneo Apertura 2024">
-          <div class="card-content">
-              <h2>Torneos</h2>
-              <p>Gestiona todos los torneos</p>
-              <button class="btn" (click)="navigateTo('tournaments')">Detalle Torneo</button>
-          </div>
-      </div>
+    <section class="section">
+        <div class="card">
+            <div class="title">
+                <h2>Total de Torneos</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#666666">
+                    <path
+                        d="m414-168 12-56q3-13 12.5-21.5T462-256l124-10q13-2 24 5t16 19l16 38q39-23 70-55.5t52-72.5l-12-6q-11-8-16-19.5t-2-24.5l28-122q3-12 12.5-20t21.5-10q-5-25-12.5-48.5T764-628q-9 5-19.5 4.5T726-630l-106-64q-11-7-16-19t-2-25l8-34q-31-14-63.5-21t-66.5-7q-14 0-29 1.5t-29 4.5l30 68q5 12 2.5 25T442-680l-94 82q-10 9-23.5 10t-24.5-6l-92-56q-23 38-35.5 81.5T160-480q0 16 4 52l88-8q14-2 25.5 4.5T294-412l48 114q5 12 2.5 25T332-252l-38 32q27 20 57.5 33t62.5 19Zm72-172q-13 2-24-5t-16-19l-54-124q-5-12-1.5-25t13.5-21l102-86q9-9 22-10t24 6l112 66q11 7 17 19t3 25l-32 130q-3 13-12 21.5T618-352l-132 12Zm-6 260q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
+                </svg>
+            </div>
+            <div class="content">
+                <p>10</p>
+                <span>+2 en el ultimo año</span>
+            </div>
+        </div>
 
-      <div class="card">
-          <img src="https://library.sportingnews.com/styles/twitter_card_120x120/s3/2022-11/Liga%20Profesional%20Argentina%20AFA%20LPF.jpg?itok=co02_pTs"
-              alt="Torneo Apertura 2024">
-          <div class="card-content">
-              <h2>Partidos</h2>
-              <p>Gestiona los partidos del torneo</p>
-              <button class="btn" (click)="navigateTo('matches')">Detalle Partido</button>
-          </div>
-      </div>
+        <div class="card">
+            <div class="title">
+                <h2>Equipos activos</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#666666">
+                    <path
+                        d="m414-168 12-56q3-13 12.5-21.5T462-256l124-10q13-2 24 5t16 19l16 38q39-23 70-55.5t52-72.5l-12-6q-11-8-16-19.5t-2-24.5l28-122q3-12 12.5-20t21.5-10q-5-25-12.5-48.5T764-628q-9 5-19.5 4.5T726-630l-106-64q-11-7-16-19t-2-25l8-34q-31-14-63.5-21t-66.5-7q-14 0-29 1.5t-29 4.5l30 68q5 12 2.5 25T442-680l-94 82q-10 9-23.5 10t-24.5-6l-92-56q-23 38-35.5 81.5T160-480q0 16 4 52l88-8q14-2 25.5 4.5T294-412l48 114q5 12 2.5 25T332-252l-38 32q27 20 57.5 33t62.5 19Zm72-172q-13 2-24-5t-16-19l-54-124q-5-12-1.5-25t13.5-21l102-86q9-9 22-10t24 6l112 66q11 7 17 19t3 25l-32 130q-3 13-12 21.5T618-352l-132 12Zm-6 260q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
+                </svg>
+            </div>
+            <div class="content">
+                <p>10</p>
+                <span>+10 en el ultimo año</span>
+            </div>
+        </div>
 
-      <div class="card">
-          <img src="https://library.sportingnews.com/styles/twitter_card_120x120/s3/2022-11/Liga%20Profesional%20Argentina%20AFA%20LPF.jpg?itok=co02_pTs"
-              alt="Torneo Apertura 2024">
-          <div class="card-content">
-              <h2>Categorías</h2>
-              <p>Gestiona las categorías del torneo</p>
-              <button class="btn" (click)="navigateTo('categories')">Detalle Categoría</button>
-          </div>
-      </div>
+        <div class="card">
+            <div class="title">
+                <h2>Proxima Fecha</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#666666">
+                    <path
+                        d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z" />
+                </svg>
+            </div>
+            <div class="content">
+                <p>10/10/2024</p>
+                <span>12 partidos programados</span>
+            </div>
+        </div>
+    </section>
 
-      <div class="card">
-          <img src="https://library.sportingnews.com/styles/twitter_card_120x120/s3/2022-11/Liga%20Profesional%20Argentina%20AFA%20LPF.jpg?itok=co02_pTs"
-              alt="Torneo Apertura 2024">
-          <div class="card-content">
-              <h2>Fechas</h2>
-              <p>Ver y gestionar las fechas del torneo</p>
-              <button class="btn" (click)="navigateTo('dates')">Detalle Fechas</button>
-          </div>
-      </div>
-  </section>
+    <section class="admin-menu">
+        <div class="title-section">
+            <h2>Accesos directos</h2>
+        </div>
+        <section class="menu-section">
+            <div class="card-menu" style="background-color: #3b3b3b; color: #fafafa;">
+                <h2><span class="material-symbols-outlined">add</span>Crear Torneos</h2>
+            </div>
+            <div class="card-menu">
+                <h2>Ver todos los torneos <span class="material-symbols-outlined">sports_soccer</span></h2>
+            </div>
+            <div class="card-menu">
+                <h2>Gestión Participantes <span class="material-symbols-outlined">groups</span></h2>
+            </div>
+            <div class="card-menu">
+                <h2>Gestión Fechas <span class="material-symbols-outlined">calendar_month</span></h2>
+            </div>
+            <div class="card-menu" (click)="navigateTo('equipos')">
+                <h2>Gestión Equipos <span class="material-symbols-outlined">groups</span></h2>
+            </div>
+            <div class="card-menu">
+                <h2>Revisar Sanciones <span class="material-symbols-outlined">warning</span></h2>
+            </div>
+        </section>
 
-  <section class="admin-menu">
-      <header class="header">
-          <h1>Administrador</h1>
-      </header>
-      <section class="menu-section">
-          <div class="card">
-              <h2>Gestión de Torneos</h2>
-              <ul>
-                  <li><a href="#">Zonas</a></li>
-                  <li><a href="#">Calendario</a></li>
-                  <li><a href="#">Act./Fechas</a></li>
-                  <li><a href="#">Categorías</a></li>
-                  <li><a href="#">Fechas</a></li>
-              </ul>
-          </div>
-          <div class="card">
-              <h2>Gestión de Participantes</h2>
-              <ul>
-                  <li><a href="#">Árbitros</a></li>
-                  <li><a (click)="navigateTo('delegates')">Delegados</a></li>
-                  <li><a (click)="navigateTo('equipos')">Equipos</a></li>
-                  <li><a href="#">Jugadores</a></li>
-                  <li><a href="#">Sanciones</a></li>
-              </ul>
-          </div>
-          <div class="card">
-              <h2>Administración</h2>
-              <ul>
-                  <li><a href="#">Veedores</a></li>
-                  <li><a href="#">Parámetros</a></li>
-                  <li><a href="#">Backup</a></li>
-                  <li><a href="#">Claves Delegados</a></li>
-                  <li><a href="#">Quita Puntos</a></li>
-              </ul>
-          </div>
-          <div class="card">
-              <h2>Galería</h2>
-              <ul>
-                  <li><a href="#">Sube Fotos Campeones</a></li>
-                  <li><a href="#">Administración de Galerías</a></li>
-                  <li><a href="#">Sube Fotos</a></li>
-                  <li><a href="#">Imagen de Portada</a></li>
-              </ul>
-          </div>
-          <div class="card">
-              <h2>Informes</h2>
-              <ul>
-                  <li><a href="#">Listado de Partidos</a></li>
-                  <li><a href="#">Listado de Equipos</a></li>
-                  <li><a href="#">Imprime todas las planillas</a></li>
-                  <li><a href="#">Busca Jugadores</a></li>
-              </ul>
-          </div>
-      </section>
-  </section>
+        <div class="title-section" style="margin-top: 40px; margin-bottom: 0px;">
+            <h2 style="margin: 0px;">Panel de administración</h2>
+        </div>
+
+        <div class="admin-panel">
+            <button (click)="toggleAdminPanel()" class="toggle-button">
+                <span class="material-symbols-outlined">
+                    {{ isAdminPanelVisible ? 'keyboard_arrow_up': 'keyboard_arrow_down' }}
+                </span>
+            </button>
+        </div>
+
+        <section class="menu-section" id="menu-section" [ngClass]="{'hidden': !isAdminPanelVisible}">
+            <div class="card">
+                <h2>Gestión de Torneos</h2>
+                <ul>
+                    <li><a href="#">Zonas</a></li>
+                    <li><a href="#">Calendario</a></li>
+                    <li><a href="#">Act./Fechas</a></li>
+                    <li><a href="#">Categorías</a></li>
+                    <li><a href="#">Fechas</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Gestión de Participantes</h2>
+                <ul>
+                    <li><a href="#">Árbitros</a></li>
+                    <li><a (click)="navigateTo('delegates')">Delegados</a></li>
+                    <li><a (click)="navigateTo('equipos')">Equipos</a></li>
+                    <li><a href="#">Jugadores</a></li>
+                    <li><a href="#">Sanciones</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Administración</h2>
+                <ul>
+                    <li><a href="#">Veedores</a></li>
+                    <li><a href="#">Parámetros</a></li>
+                    <li><a href="#">Backup</a></li>
+                    <li><a href="#">Claves Delegados</a></li>
+                    <li><a href="#">Quita Puntos</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Galería</h2>
+                <ul>
+                    <li><a href="#">Sube Fotos Campeones</a></li>
+                    <li><a href="#">Administración de Galerías</a></li>
+                    <li><a href="#">Sube Fotos</a></li>
+                    <li><a href="#">Imagen de Portada</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Informes</h2>
+                <ul>
+                    <li><a href="#">Listado de Partidos</a></li>
+                    <li><a href="#">Listado de Equipos</a></li>
+                    <li><a href="#">Imprime todas las planillas</a></li>
+                    <li><a href="#">Busca Jugadores</a></li>
+                </ul>
+            </div>
+        </section>
+    </section>
 </div>
