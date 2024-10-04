@@ -10,13 +10,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../_services/pipe/filter.pipe';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../_services/auth.interceptor';
+import { DelegadosComponent } from './delegados/delegados.component';
 
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
   { path: 'tournaments', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
   { path: 'equipos', component: CreateTeamComponent, canActivate: [AuthGuard] },
-  { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] }
+  { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] },
+  { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -25,7 +27,8 @@ const routes: Routes = [
     CreateTeamComponent,
     LoadDataMatchComponent,
     HomeAdminComponent,
-    FilterPipe
+    FilterPipe,
+    DelegadosComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

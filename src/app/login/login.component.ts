@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -10,30 +11,38 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent {
 
-  email: string ="";
+  email: string = "";
   password: string = "";
   loginForm: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router,private formBuilder: FormBuilder) {   this.loginForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8), this.validatePassword]]
-  });
-}
+  constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder) {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8), this.validatePassword]]
+    });
+  }
 
-  validatePassword(control:any) {
+  validatePassword(control: any) {
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     return strongPasswordRegex.test(control.value) ? null : { invalidPassword: true };
   }
 
-  async login(){
+  async login() {
     if (this.loginForm) {
       const auth = await this.authService.login(this.email, this.password)
+
+      const decodedToken = this.authService.decodeToken();
+
       if (auth) {
-        this.router.navigate(['/admin']);
+        if(this.authService.isAdmin()){
+          this.router.navigate(['/admin']);
+        }else{
+          this.router.navigate(['/user/manager/'+decodedToken.id]);
+        }
       } else {
         alert('Login failed');
       }
-    }else{
+    } else {
       console.log('CREDENCIALES INCORRECTAS');
     }
   }

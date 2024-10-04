@@ -35,6 +35,8 @@
       </div>
       <hr>
       <button mat-menu-item> <h3>Configuracion</h3></button>
+      <button mat-menu-item routerLink="/admin">Dashboard</button>
+      <button mat-menu-item routerLink="/">Inicio</button>
       <button mat-menu-item (click)="logout()" *ngIf="!isLoggin">
         <h3>Cerrar Sesión</h3>
       </button>

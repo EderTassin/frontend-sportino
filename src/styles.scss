@@ -23,3 +23,12 @@ button{
     border: 0px;
     cursor: pointer;
 }
+
+.back-button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: $color-orange;
+    margin-top: 20px;
+    margin-left: 20px;
+}

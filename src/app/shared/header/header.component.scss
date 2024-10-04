@@ -17,8 +17,10 @@ body {
 
 .title-header {
   color: white;
-  padding: 12px;
-  background-color: transparent;
+    position: relative;
+    height: 20px;
+    top: -38px;
+    background-color: transparent;
 
   h1,
   span {

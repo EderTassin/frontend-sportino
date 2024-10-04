@@ -7,10 +7,24 @@ export const AuthGuard: CanActivateFn = () => {
   const routerService = inject(Router);
   const authService =  inject(AuthService)
 
-  if (authService.checkAuth()) {
+  if (authService.checkAuth() && authService.isAdmin()) {
     return true;
   }
   
   routerService.navigate(['/']);
+  authService.logout();
   return false;
 };
+
+export const UserGuard: CanActivateFn = () => {
+  const routerService = inject(Router);
+  const authService =  inject(AuthService)
+
+  if (authService.checkAuth() && authService.isManager()) {
+    return true;
+  }
+
+  routerService.navigate(['/']);
+  authService.logout();
+  return false;
+}

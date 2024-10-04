@@ -31,4 +31,11 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}teams`);
   }
 
+  async getDelegados() {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}players/managers/`));
+  }
+
+  deleteDelegado(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}players/managers/${id}/`);
+  }
 }

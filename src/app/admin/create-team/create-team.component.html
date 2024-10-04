@@ -1,3 +1,9 @@
+<div class="goBack">
+    <button class="btn btn-secondary" routerLink="/admin">
+        <span class="material-icons">arrow_back</span>Volver
+    </button>
+</div>
+
 <div class="container">
     <h1 class="title">Panel de Administración de Equipos de Fútbol</h1>
     <div class="toolbar">
@@ -54,7 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let team of sortedTeams">
+            <tr *ngFor="let team of filteredTeams">
                 <td>{{ team.name }}</td>
                 <td>{{ findCategoryName(team.category) }}</td>
                 <td>{{ team.responsible }}</td>
@@ -119,7 +125,7 @@
             </div>
             <div>
                 <label for="image">Logo del Equipo</label>
-                <input id="image" type="file" (change)="onFileChange($event)" />
+                <input id="image" type="file" (change)="onFileChange($event)" placeholder="Logo del Equipo"/>
             </div>
             <div class="checkbox-container">
                 <label for="isActive">Activo</label>

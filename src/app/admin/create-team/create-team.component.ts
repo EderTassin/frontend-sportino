@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
 import { AdminService } from '../service/admin.service';
+import { Router } from '@angular/router';
 
 interface FootballTeam {
   id: number;
@@ -42,7 +43,8 @@ export class CreateTeamComponent implements OnInit {
 
   constructor(private fb: FormBuilder, 
       private serviceEstadistica: EstadisticaPartidosService,
-      private adminService: AdminService) {
+      private adminService: AdminService,
+      private router: Router) {
     this.teamForm = this.fb.group({
       id: [null],
       name: ['', Validators.required],
@@ -65,10 +67,9 @@ export class CreateTeamComponent implements OnInit {
 
   async getTeams() {
     const result = await this.serviceEstadistica.getAllTeams();
-    this.teams = result;
-    this.sortedTeams = [...this.teams];
-    this.applySort();
-    this.applyFilter(); 
+    this.teams = result as FootballTeam[];
+    this.filteredTeams = result as FootballTeam[];
+    this.filteredTeams.sort((a: any, b: any) => b.id - a.id);
   }
 
   sort(column: keyof FootballTeam): void {
@@ -82,7 +83,7 @@ export class CreateTeamComponent implements OnInit {
   }
 
   applySort(): void {
-    this.sortedTeams.sort((a, b) => {
+    this.filteredTeams.sort((a, b) => {
       let compareA = a[this.sortColumn] ?? '';
       let compareB = b[this.sortColumn] ?? '';
 
@@ -106,7 +107,7 @@ export class CreateTeamComponent implements OnInit {
 
   applyFilter(): void {
     const filterValue = this.filter.toLowerCase();
-    this.filteredTeams = this.sortedTeams.filter(team =>
+    this.filteredTeams = this.teams.filter(team =>
       team.name?.toLowerCase().includes(filterValue)
     );
   }
@@ -251,5 +252,9 @@ export class CreateTeamComponent implements OnInit {
   findCategoryName(id: number): string {
     const category = this.leagues.find(league => league.id === id);
     return category ? category.name : '';
+  }
+
+  goBack() {
+    this.router.navigate(['/admin/']);
   }
 }

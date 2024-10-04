@@ -1,3 +1,4 @@
+
 .home-admin {
     display: flex;
     flex-direction: column;
@@ -33,13 +34,10 @@
             width: 250px;
             text-align: center;
 
-            h2 {
-                padding: 0px;
-            }
-
             .title {
                 display: flex;
                 justify-content: space-between;
+                max-width: 250px;
             }
 
             .content {
