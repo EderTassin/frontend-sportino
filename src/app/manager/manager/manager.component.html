@@ -1,1 +1,94 @@
-<p>manager works!</p>
+<div class="manager-container">
+  <h1>Team Manager</h1>
+
+  <div class="team-info">
+    <h2>Team Information</h2>
+    <form (ngSubmit)="saveTeamData()">
+      <div class="form-group">
+        <label for="teamName">Team Name:</label>
+        <input type="text" id="teamName" [(ngModel)]="team.name" name="teamName" required>
+      </div>
+      <div class="form-group">
+        <label for="teamLogo">Team Logo URL:</label>
+        <input type="text" id="teamLogo" [(ngModel)]="team.logoUrl" name="teamLogo">
+      </div>
+      <div class="form-group">
+        <label for="teamDescription">Team Description:</label>
+        <textarea id="teamDescription" [(ngModel)]="team.description" name="teamDescription" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Team Info</button>
+    </form>
+  </div>
+
+  <div class="players-section">
+    <h2>Players</h2>
+    <table class="players-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players">
+          <td>{{player.name}}</td>
+          <td>{{player.position}}</td>
+          <td>{{player.number}}</td>
+          <td>
+            <button (click)="editPlayer(player)" class="btn btn-secondary">Edit</button>
+            <button (click)="deletePlayer(player.id)" class="btn btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Add New Player</h3>
+    <form (ngSubmit)="addPlayer()">
+      <div class="form-group">
+        <label for="playerName">Name:</label>
+        <input type="text" id="playerName" [(ngModel)]="newPlayer.name" name="playerName" required>
+      </div>
+      <div class="form-group">
+        <label for="playerPosition">Position:</label>
+        <select id="playerPosition" [(ngModel)]="newPlayer.position" name="playerPosition" required>
+          <option value="Goalkeeper">Goalkeeper</option>
+          <option value="Defender">Defender</option>
+          <option value="Midfielder">Midfielder</option>
+          <option value="Forward">Forward</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="playerNumber">Number:</label>
+        <input type="number" id="playerNumber" [(ngModel)]="newPlayer.number" name="playerNumber" required>
+      </div>
+      <button type="submit" class="btn btn-success">Add Player</button>
+    </form>
+  </div>
+
+  <div *ngIf="editingPlayer" class="edit-player-modal">
+    <h3>Edit Player</h3>
+    <form (ngSubmit)="updatePlayer()">
+      <div class="form-group">
+        <label for="editPlayerName">Name:</label>
+        <input type="text" id="editPlayerName" [(ngModel)]="editingPlayer.name" name="editPlayerName" required>
+      </div>
+      <div class="form-group">
+        <label for="editPlayerPosition">Position:</label>
+        <select id="editPlayerPosition" [(ngModel)]="editingPlayer.position" name="editPlayerPosition" required>
+          <option value="Goalkeeper">Goalkeeper</option>
+          <option value="Defender">Defender</option>
+          <option value="Midfielder">Midfielder</option>
+          <option value="Forward">Forward</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editPlayerNumber">Number:</label>
+        <input type="number" id="editPlayerNumber" [(ngModel)]="editingPlayer.number" name="editPlayerNumber" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Update Player</button>
+      <button type="button" (click)="editingPlayer = null" class="btn btn-secondary">Cancel</button>
+    </form>
+  </div>
+</div>

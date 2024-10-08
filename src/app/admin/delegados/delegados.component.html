@@ -47,12 +47,18 @@
     </div>
 </div>
 
-<div class="modal" #modalDelete>
-    <div class="modal-content">
-        <h2>Esta seguro que desea eliminar este delegado?</h2>
-        <div class="modal-actions">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-            <button class="btn btn-primary" (click)="onConfirm()">Confirmar</button>
-        </div>
+<div *ngIf="showModal" class="modal-overlay">
+    <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar eliminación</h2>
+                <button type="button" class="close" (click)="closeModal()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que deseas eliminar al delegado {{ delegadoDelete?.full_name }}?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="onConfirm()">Eliminar</button>
+            </div>
     </div>
 </div>

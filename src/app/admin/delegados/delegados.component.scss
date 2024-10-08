@@ -283,24 +283,42 @@ input:checked + .slider:before {
   }
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+.modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+}
+.modal-body{
+  padding: 1rem;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+.modal-title{
+  margin-bottom: 0 !important;
+  line-height: 1.5;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
+.modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.close{
+  background-color: transparent !important;
+  border: none !important;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span{
+    font-size: 20px;
+    color: #000;
+  }
 }
+

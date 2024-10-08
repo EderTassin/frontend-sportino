@@ -16,6 +16,7 @@ export class DelegadosComponent {
   originalDelegados: any[] = [];
   delegadoDelete: any;
   filter: string = '';
+  showModal: boolean = false;
 
   constructor(private adminService: AdminService, private router: Router) { }
 
@@ -46,11 +47,11 @@ export class DelegadosComponent {
   }
 
   openModal() {
-    this.modalDelete.nativeElement.classList.add('show');
+    this.showModal = true;
   }
 
   closeModal() {
-    this.modalDelete.nativeElement.classList.remove('block');
+    this.showModal = false;
   }
 
   goBack() {

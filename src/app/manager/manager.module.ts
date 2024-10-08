@@ -8,7 +8,8 @@ import { UserGuard } from '../_services/auth-guard.service';
 import { ManagerComponent } from './manager/manager.component';
 
 const routes: Routes = [
-    { path: '', component: ManagerComponent, canActivate: [UserGuard] },
+    //{ path: '', component: ManagerComponent, canActivate: [UserGuard] },
+    { path: '', component: ManagerComponent},
   ];
   
   @NgModule({
