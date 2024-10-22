@@ -1,0 +1,64 @@
+<div class="goBack">
+    <button (click)="goBack()" class="btn btn-secondary">
+        <span class="material-icons">arrow_back</span>Volver
+    </button>
+</div>
+
+<div class="container">
+    <h1 class="title">Delegados</h1>
+    <div class="delegados-table">
+        <div class="toolbar">
+            <input type="text" placeholder="Filtrar por nombre del delegado" [(ngModel)]="filter" class="input"
+                (ngModelChange)="applyFilter()" />
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Correo</th> 
+                        <th>Equipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let delegado of delegados">
+                        <td data-label="Nombre">{{ delegado.full_name }}</td>
+                        <td data-label="Documento">{{ delegado.id_card }}</td>
+                        <td data-label="Correo">{{ delegado.email }}</td>
+                        <td data-label="Equipo">{{ delegado.team }}</td>
+                        <td data-label="Acciones" class="actions">
+                            <button class="btn btn-icon btn-edit" (click)="handleEdit(delegado)" title="Editar">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn btn-icon btn-delete" (click)="handleDelete(delegado)" title="Eliminar">
+                                <span class="material-icons">delete</span>
+                            </button>
+                            <label class="switch" title="Activar/Desactivar">
+                                <input type="checkbox" [checked]="delegado.active" (change)="handleActive(delegado)">
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showModal" class="modal-overlay">
+    <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar eliminación</h2>
+                <button type="button" class="close" (click)="closeModal()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que deseas eliminar al delegado {{ delegadoDelete?.full_name }}?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="onConfirm()">Eliminar</button>
+            </div>
+    </div>
+</div>

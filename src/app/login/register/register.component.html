@@ -1,10 +1,13 @@
+<button (click)="goBack()" class="btn-primary back-button">
+    <span class="material-icons">arrow_back</span>Volver</button>
+
 <div class="register-container">
     <div class="register-card">
         <h2>Registrar Delegado</h2>
         <form [formGroup]="registerForm">
             <div class="input-group">
-                <label for="delegateName">Nombre del Delegado</label>
-                <input type="text" id="delegateName" formControlName="delegateName" placeholder="Nombre del Delegado"
+                <label for="full_name">Nombre del Delegado</label>
+                <input type="text" id="full_name" formControlName="full_name" placeholder="Nombre del Delegado"
                     required />
             </div>
             <div class="input-group">
@@ -13,19 +16,22 @@
                     placeholder="Número de Documento" required />
             </div>
             <div class="input-group">
-                <label for="securityKey">Clave de seguridad (10 caract. max.)</label>
-                <input type="password" id="securityKey" formControlName="securityKey" placeholder="Clave de seguridad"
-                    maxlength="10" required />
-            </div>
-            <div class="input-group">
                 <label for="email">Correo electrónico</label>
                 <input type="email" id="email" formControlName="email" placeholder="Correo electrónico" required />
             </div>
             <div class="input-group">
-                <label for="category">Categoría</label>
-                <select id="category" formControlName="category">
-                    <option value="Super Master Primera Junta">Super Master Primera Junta</option>
-                    <option value="Maxi Los Algarrobos">Maxi Los Algarrobos</option>
+                <label for="password">Clave de seguridad (15 caract. max.)</label>
+                <div class="password-input-container">
+                    <input [type]="passwordVisible ? 'text' : 'password'" id="password" formControlName="password" placeholder="Clave de seguridad" maxlength="15" required />
+                    <span class="material-icons visibility-icon" (click)="togglePasswordVisibility()">
+                        {{ passwordVisible ? 'visibility' : 'visibility_off' }}
+                    </span>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="team">Equipo</label>
+                <select id="team" formControlName="team">
+                    <option *ngFor="let team of teamsFree" [value]="team.id">{{team.name}}</option>
                 </select>
             </div>
             <div class="actions">
@@ -33,4 +39,4 @@
             </div>
         </form>
     </div>
-</div>s
+</div>

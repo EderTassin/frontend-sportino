@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 40%;
+  width: 100%;
 }
 
 .team-logo {
@@ -133,6 +133,7 @@
   font-size: 16px;
   font-weight: bold;
   flex: 1;
+  margin: 0 8px;
 }
 
 .match-details {

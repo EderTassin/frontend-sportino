@@ -12,7 +12,8 @@ const routes: Routes = [
   {path:'register', component: RegisterComponent },
   {path:'tournament', component: SelectTournamentComponent},
   {path:'match-statistics/:id', component: MatchStatisticsComponent },
-  {path:'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) }
+  {path:'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  {path:'manager', loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule) }
 ];
 
 @NgModule({

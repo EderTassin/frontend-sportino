@@ -28,6 +28,9 @@ import { LoadingService } from './shared/loader/loading.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { CamelcasePipe } from './_services/pipe/camelcase.pipe';
+import { JwtModule } from '@auth0/angular-jwt';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import { MatOptionModule } from '@angular/material/core';
     MatchStatisticsComponent,
     SelectTournamentComponent,
     RegisterComponent,
-    LoadingComponent
+    LoadingComponent,
+    CamelcasePipe
   ],
   imports: [
     BrowserModule,
@@ -54,12 +58,20 @@ import { MatOptionModule } from '@angular/material/core';
     MatMenuModule,
     MatTabsModule,
     MatFormFieldModule,
+    MatFormFieldModule,
     MatSelectModule,
-    MatOptionModule,
     CommonModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('token');
+        }
+      }
+    }),
+    ToastrModule.forRoot()
   ],
   providers: [AuthService,
     LoadingService,
