@@ -25,7 +25,7 @@ export class AuthService {
   async login(email: string, pass: string): Promise<boolean> {
 
     const body = {
-      username: email,
+      email: email,
       password: pass
     }
 
@@ -86,6 +86,10 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
+
+    console.log(decodedToken);
+    console.log(decodedToken.manager);
+
     return decodedToken.manager;
   }
 

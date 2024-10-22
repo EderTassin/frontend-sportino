@@ -34,10 +34,10 @@ export class LoginComponent {
       const decodedToken = this.authService.decodeToken();
 
       if (auth) {
-        if(this.authService.isAdmin()){
+        if(decodedToken.admin){
           this.router.navigate(['/admin']);
         }else{
-          this.router.navigate(['/user/manager/'+decodedToken.id]);
+          this.router.navigate(['/user/manager/'+decodedToken.user_id]);
         }
       } else {
         alert('Login failed');

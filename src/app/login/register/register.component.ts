@@ -44,15 +44,14 @@ export class RegisterComponent {
 
     async register() {
 
-
         if (this.registerForm.valid) {
 
             const data = {
-                full_name: this.registerForm.value.full_name,
                 id_card: this.registerForm.value.documentNumber,
+                username: this.registerForm.value.full_name,
                 password: this.registerForm.value.password,
                 email: this.registerForm.value.email,
-                team: this.registerForm.value.team
+                team: Number(this.registerForm.value.team),
             }
 
             await this.loginService.register(data).then(() => {

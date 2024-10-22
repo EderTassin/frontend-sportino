@@ -64,7 +64,12 @@ export class DelegadosComponent {
   }
 
   handleActive(delegado: any) {
-    console.log(delegado);
+
+    this.adminService.updateDelegado(delegado.id, { active: !delegado.active }).subscribe((res) => {
+      console.log(res);
+      delegado.active = !delegado.active;
+    });
+
   }
 
   onConfirm() {

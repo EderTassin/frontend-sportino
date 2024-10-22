@@ -1,94 +1,56 @@
-<div class="manager-container">
-  <h1>Team Manager</h1>
-
-  <div class="team-info">
-    <h2>Team Information</h2>
-    <form (ngSubmit)="saveTeamData()">
-      <div class="form-group">
-        <label for="teamName">Team Name:</label>
-        <input type="text" id="teamName" [(ngModel)]="team.name" name="teamName" required>
-      </div>
-      <div class="form-group">
-        <label for="teamLogo">Team Logo URL:</label>
-        <input type="text" id="teamLogo" [(ngModel)]="team.logoUrl" name="teamLogo">
-      </div>
-      <div class="form-group">
-        <label for="teamDescription">Team Description:</label>
-        <textarea id="teamDescription" [(ngModel)]="team.description" name="teamDescription" rows="3"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Save Team Info</button>
-    </form>
+<div class="container mx-auto mt-10">
+  <div class="container-header">
+    <h1>Gestión de Jugadores</h1>
+    <div class="logo flex items-center gap-4">
+      <img src="../../../assets/boca.png" alt="Logo" class="rounded-full w-32 border-2 border-gray-300">
+      <h1 class="text-2xl font-bold">Boca Juniors</h1>
+    </div>
   </div>
 
-  <div class="players-section">
-    <h2>Players</h2>
-    <table class="players-table">
-      <thead>
+  <div class="flex justify-end items-center">
+    <button class="relative inline-flex items-center bg-white justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+      <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+      Agregar Jugador
+      </span>
+      </button>
+  </div>
+
+  <div class="container-table relative overflow-x-auto shadow-md sm:rounded-lg h-full">
+    <table class="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-white">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th>Name</th>
-          <th>Position</th>
-          <th>Number</th>
-          <th>Actions</th>
+          <th></th>
+          <th scope="col" class="px-6 py-3">Nombre</th>
+          <th scope="col" class="px-6 py-3">Email</th>
+          <th scope="col" class="px-6 py-3">DNI</th>
+          <th scope="col" class="px-6 py-3">Estado</th>
+          <th scope="col" class="px-2 py-3"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let player of players">
-          <td>{{player.name}}</td>
-          <td>{{player.position}}</td>
-          <td>{{player.number}}</td>
-          <td>
-            <button (click)="editPlayer(player)" class="btn btn-secondary">Edit</button>
-            <button (click)="deletePlayer(player.id)" class="btn btn-danger">Delete</button>
+          <td> <img [src]="player.photo" alt="Player Photo" class="w-10 h-10 rounded-full"></td>
+          <td class="px-6 py-4">{{player.name}}</td>
+          <td class="px-6 py-4">{{player.email}}</td>
+          <td class="px-6 py-4">{{player.dni}}</td>
+          <td class="px-6 py-4">
+            <span class="bg-green-500 text-white px-2 py-1 rounded-md" *ngIf="player.active">Activo</span>
+            <span class="bg-red-500 text-white px-2 py-1 rounded-md" *ngIf="!player.active">Inactivo</span>
+          </td>
+          <td class="px-2 py-4">
+            <button class="buttons" mat-button [matMenuTriggerFor]="menu">
+              <span class="material-symbols-outlined text-gray-500 font-bold text-xl">
+                more_vert
+              </span>
+            </button>
+          
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>Editar</button>
+              <button mat-menu-item>Eliminar</button>
+            </mat-menu>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <h3>Add New Player</h3>
-    <form (ngSubmit)="addPlayer()">
-      <div class="form-group">
-        <label for="playerName">Name:</label>
-        <input type="text" id="playerName" [(ngModel)]="newPlayer.name" name="playerName" required>
-      </div>
-      <div class="form-group">
-        <label for="playerPosition">Position:</label>
-        <select id="playerPosition" [(ngModel)]="newPlayer.position" name="playerPosition" required>
-          <option value="Goalkeeper">Goalkeeper</option>
-          <option value="Defender">Defender</option>
-          <option value="Midfielder">Midfielder</option>
-          <option value="Forward">Forward</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="playerNumber">Number:</label>
-        <input type="number" id="playerNumber" [(ngModel)]="newPlayer.number" name="playerNumber" required>
-      </div>
-      <button type="submit" class="btn btn-success">Add Player</button>
-    </form>
-  </div>
-
-  <div *ngIf="editingPlayer" class="edit-player-modal">
-    <h3>Edit Player</h3>
-    <form (ngSubmit)="updatePlayer()">
-      <div class="form-group">
-        <label for="editPlayerName">Name:</label>
-        <input type="text" id="editPlayerName" [(ngModel)]="editingPlayer.name" name="editPlayerName" required>
-      </div>
-      <div class="form-group">
-        <label for="editPlayerPosition">Position:</label>
-        <select id="editPlayerPosition" [(ngModel)]="editingPlayer.position" name="editPlayerPosition" required>
-          <option value="Goalkeeper">Goalkeeper</option>
-          <option value="Defender">Defender</option>
-          <option value="Midfielder">Midfielder</option>
-          <option value="Forward">Forward</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="editPlayerNumber">Number:</label>
-        <input type="number" id="editPlayerNumber" [(ngModel)]="editingPlayer.number" name="editPlayerNumber" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Update Player</button>
-      <button type="button" (click)="editingPlayer = null" class="btn btn-secondary">Cancel</button>
-    </form>
   </div>
 </div>

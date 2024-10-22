@@ -1,98 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { ManagerService } from '../manager.service';
 
+
+export interface Player {
+  id: number;
+  name: string;
+  email: string;
+  birthDate: Date;
+  dni: string;
+  photo: string;
+  goals: number;
+  assists: number;
+  penalties: number;
+  active: boolean;
+}
+
 @Component({
   selector: 'app-manager',
   templateUrl: './manager.component.html',
   styleUrls: ['./manager.component.scss']
 })
 export class ManagerComponent implements OnInit {
-  team: any = {};
-  players: any[] = [];
-  newPlayer: any = {};
-  editingPlayer: any = null;
 
+  players: Player[] = [];
+  
+  
   constructor(private managerService: ManagerService) { }
 
-  ngOnInit(): void {
-    this.loadTeamData();
-    this.loadPlayers();
-  }
+  ngOnInit() {
 
-  loadTeamData() {
-    this.managerService.getTeamData().subscribe(
-      (data) => {
-        this.team = data;
-      },
-      (error) => {
-        console.error('Error loading team data:', error);
-      }
-    );
-  }
-
-  loadPlayers() {
-    this.managerService.getPlayers().subscribe(
-      (data) => {
-        this.players = data;
-      },
-      (error) => {
-        console.error('Error loading players:', error);
-      }
-    );
-  }
-
-  saveTeamData() {
-    this.managerService.updateTeamData(this.team).subscribe(
-      () => {
-        alert('Team data saved successfully');
-      },
-      (error) => {
-        console.error('Error saving team data:', error);
-      }
-    );
-  }
-
-  addPlayer() {
-    this.managerService.addPlayer(this.newPlayer).subscribe(
-      (player) => {
-        this.players.push(player);
-        this.newPlayer = {};
-      },
-      (error) => {
-        console.error('Error adding player:', error);
-      }
-    );
-  }
-
-  editPlayer(player: any) {
-    this.editingPlayer = { ...player };
-  }
-
-  updatePlayer() {
-    this.managerService.updatePlayer(this.editingPlayer).subscribe(
-      (updatedPlayer) => {
-        const index = this.players.findIndex(p => p.id === updatedPlayer.id);
-        if (index !== -1) {
-          this.players[index] = updatedPlayer;
-        }
-        this.editingPlayer = null;
-      },
-      (error) => {
-        console.error('Error updating player:', error);
-      }
-    );
-  }
-
-  deletePlayer(playerId: number) {
-    if (confirm('Are you sure you want to delete this player?')) {
-      this.managerService.deletePlayer(playerId).subscribe(
-        () => {
-          this.players = this.players.filter(p => p.id !== playerId);
-        },
-        (error) => {
-          console.error('Error deleting player:', error);
-        }
-      );
+    this.players = [{
+      id: 1, name: 'Juan', email: 'juan@gmail.com', dni: '123456789', photo: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Adrian', goals: 0, assists: 0, penalties: 0, active: true,
+      birthDate: new Date(),
+    },
+    {
+      id: 2, name: 'Pedro', email: 'pedro@gmail.com', dni: '987654321', photo: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Beto', goals: 0, assists: 0, penalties: 0, active: false,
+      birthDate: new Date(),
+    },
+    {
+      id: 3, name: 'Maria', email: 'maria@gmail.com', dni: '456789123', photo: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Carla', goals: 0, assists: 0, penalties: 0, active: true,
+      birthDate: new Date(),
     }
+  ];
   }
+
 }
