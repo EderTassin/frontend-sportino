@@ -1,18 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
   })
   
 export class ManagerService {
-  private apiUrl = 'http://api.example.com'; // Replace with your actual API URL
+  private apiUrl = environment.apiEndpoint;
 
   constructor(private http: HttpClient) { }
 
   getTeamData(): Observable<any> {
     return this.http.get(`${this.apiUrl}/team`);
+  
+  }
+
+  getTeam(teamId: number): Observable<any> {
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    console.log(headers.get('Authorization'));
+
+    return this.http.get(`${this.apiUrl}players/teams/${teamId}`, { headers });
   }
 
   updateTeamData(teamData: any): Observable<any> {

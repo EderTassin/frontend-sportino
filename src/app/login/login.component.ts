@@ -33,11 +33,18 @@ export class LoginComponent {
 
       const decodedToken = this.authService.decodeToken();
 
+      console.log(auth);
+
+      localStorage.setItem('token-header', decodedToken.jti);
+
       if (auth) {
+
+        console.log('ADMIN: ', decodedToken);
+
         if(decodedToken.admin){
           this.router.navigate(['/admin']);
         }else{
-          this.router.navigate(['/user/manager/'+decodedToken.user_id]);
+          this.router.navigate(['/manager/'+decodedToken.team_id]);
         }
       } else {
         alert('Login failed');

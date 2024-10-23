@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ManagerService } from '../manager.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 export interface Player {
@@ -23,9 +24,14 @@ export interface Player {
 export class ManagerComponent implements OnInit {
 
   players: Player[] = [];
+  teamId: number = 0;
   
-  
-  constructor(private managerService: ManagerService) { }
+  constructor(private managerService: ManagerService, private route: ActivatedRoute) { 
+
+    this.route.params.subscribe(params => {
+      this.teamId = params['id'];
+    });
+  }
 
   ngOnInit() {
 
@@ -42,6 +48,14 @@ export class ManagerComponent implements OnInit {
       birthDate: new Date(),
     }
   ];
+
+    this.getTeam();
+  }
+
+  getTeam(){
+    this.managerService.getTeam(this.teamId).subscribe((res: any) => {
+      console.log(res);
+    });
   }
 
 }

@@ -31,7 +31,11 @@ export class AuthService {
 
     try {
       const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;
+    
       localStorage.setItem('token', res.access);
+      console.log(res);
+      
+
       if (res) {
         this.isAuthenticated.next(true);
         localStorage.setItem('isAuthenticated', 'true');
@@ -87,10 +91,13 @@ export class AuthService {
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
 
-    console.log(decodedToken);
-    console.log(decodedToken.manager);
 
-    return decodedToken.manager;
+    if (decodedToken.group.includes('MANAGER')) {
+      return true;
+    }
+
+    this.logout();
+    return false;
   }
 
   public userInteracted() {
