@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -30,18 +29,13 @@ export class LoginComponent {
   async login() {
     if (this.loginForm) {
       const auth = await this.authService.login(this.email, this.password)
-
       const decodedToken = this.authService.decodeToken();
 
-      console.log(auth);
-
-      localStorage.setItem('token-header', decodedToken.jti);
+      console.log("ENTRAAAAA: ",decodedToken);
 
       if (auth) {
-
-        console.log('ADMIN: ', decodedToken);
-
         if(decodedToken.admin){
+          console.log("ADMIN");
           this.router.navigate(['/admin']);
         }else{
           this.router.navigate(['/manager/'+decodedToken.team_id]);

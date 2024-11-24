@@ -31,6 +31,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { CamelcasePipe } from './_services/pipe/camelcase.pipe';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { ToastrModule } from 'ngx-toastr';
     SelectTournamentComponent,
     RegisterComponent,
     LoadingComponent,
-    CamelcasePipe
+    CamelcasePipe,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,7 @@ import { ToastrModule } from 'ngx-toastr';
     MatTabsModule,
     MatFormFieldModule,
     MatFormFieldModule,
+    MatDialogModule,
     MatSelectModule,
     CommonModule,
     FormsModule,

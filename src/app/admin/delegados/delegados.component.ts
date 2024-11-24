@@ -65,9 +65,10 @@ export class DelegadosComponent {
 
   handleActive(delegado: any) {
 
-    this.adminService.updateDelegado(delegado.id, { active: !delegado.active }).subscribe((res) => {
-      console.log(res);
-      delegado.active = !delegado.active;
+    console.log(delegado);
+    
+    this.adminService.updateDelegado(delegado.id).subscribe((res) => {
+      delegado.confirmed = !delegado.confirmed;
     });
 
   }
@@ -76,7 +77,6 @@ export class DelegadosComponent {
     const delegado = this.delegadoDelete;
     try {
       this.adminService.deleteDelegado(delegado.id).subscribe((res) => {
-        console.log(res);
         this.delegados = this.originalDelegados.filter((d) => d.id !== delegado.id);
       });
     } catch (error) {

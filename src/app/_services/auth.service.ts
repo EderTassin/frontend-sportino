@@ -30,12 +30,8 @@ export class AuthService {
     }
 
     try {
-      const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;
-    
+      const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;  
       localStorage.setItem('token', res.access);
-      console.log(res);
-      
-
       if (res) {
         this.isAuthenticated.next(true);
         localStorage.setItem('isAuthenticated', 'true');
@@ -77,6 +73,9 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
+
+    console.log(decodedToken);
+    
     return decodedToken.admin;
   }
 

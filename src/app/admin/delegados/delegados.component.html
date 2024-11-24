@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let delegado of delegados">
-                        <td data-label="Nombre">{{ delegado.full_name }}</td>
+                        <td data-label="Nombre">{{ delegado.username }}</td>
                         <td data-label="Documento">{{ delegado.id_card }}</td>
                         <td data-label="Correo">{{ delegado.email }}</td>
                         <td data-label="Equipo">{{ delegado.team }}</td>
@@ -36,7 +36,7 @@
                                 <span class="material-icons">delete</span>
                             </button>
                             <label class="switch" title="Activar/Desactivar">
-                                <input type="checkbox" [checked]="delegado.active" (change)="handleActive(delegado)">
+                                <input type="checkbox" [checked]="delegado.confirmed" (change)="handleActive(delegado)">
                                 <span class="slider round"></span>
                             </label>
                         </td>
