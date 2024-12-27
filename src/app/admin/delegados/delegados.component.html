@@ -27,7 +27,7 @@
                         <td data-label="Nombre">{{ delegado.username }}</td>
                         <td data-label="Documento">{{ delegado.id_card }}</td>
                         <td data-label="Correo">{{ delegado.email }}</td>
-                        <td data-label="Equipo">{{ delegado.team }}</td>
+                        <td data-label="Equipo">{{ delegado.team.name }}</td>
                         <td data-label="Acciones" class="actions">
                             <button class="btn btn-icon btn-edit" (click)="handleEdit(delegado)" title="Editar">
                                 <span class="material-icons">edit</span>

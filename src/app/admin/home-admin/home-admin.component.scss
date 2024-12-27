@@ -110,6 +110,10 @@ body {
         justify-content: center;
 
         .card-menu {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             background-color: #f4f4f4;
             border-radius: 8px;

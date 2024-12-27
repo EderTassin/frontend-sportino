@@ -42,4 +42,8 @@ export class AdminService {
   updateDelegado(managerId: number): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
+
+  getTournaments(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}calendars/tournament/`);
+  }
 }
