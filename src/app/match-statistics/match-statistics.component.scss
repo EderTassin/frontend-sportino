@@ -139,6 +139,13 @@ section {
     tbody tr:hover {
       background-color: #f9f9f9;
     }
+
+    .team-logo{
+      width: 36px;
+      height: 36px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
   }
 }
 
@@ -202,6 +209,13 @@ section {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+  }
+
+  .team-logo {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    border-radius: 50%;
   }
 
   .match-details {

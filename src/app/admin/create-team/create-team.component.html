@@ -1,49 +1,148 @@
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Panel de Administración de Equipos de Fútbol</h1>
-    <div class="flex justify-between mb-4">
-      <input [(ngModel)]="filter" placeholder="Filtrar por nombre del equipo" class="max-w-sm"/>
-      <button (click)="handleEdit(null)">
-        <span>Agregar Equipo</span>
-      </button>
+<div class="goBack">
+    <button class="btn btn-secondary" routerLink="/admin">
+        <span class="material-icons">arrow_back</span>Volver
+    </button>
+</div>
+
+<div class="container">
+    <h1 class="title">Panel de Administración de Equipos de Fútbol</h1>
+    <div class="toolbar">
+        <input type="text" placeholder="Filtrar por nombre del equipo" [(ngModel)]="filter" class="input"
+            (ngModelChange)="applyFilter()" />
+        <button class="btn btn-primary" (click)="openModal()">
+            <i class="icon icon-plus"></i> Agregar Equipo
+        </button>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="md:col-span-2">
-        <table>
-          <thead>
+
+    <table class="table">
+        <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Liga</th>
-              <th>Entrenador</th>
-              <th>Activo</th>
-              <th>Acciones</th>
+                <th (click)="sort('name')">
+                    <div class="th-container">
+                        Nombre
+                        <span *ngIf="sortColumn === 'name'">
+                            <i *ngIf="sortDirection === 'asc'" class="material-icons">arrow_upward</i>
+                            <i *ngIf="sortDirection === 'desc'" class="material-icons">arrow_downward</i>
+                        </span>
+                    </div>
+                </th>
+                <th (click)="sort('category')">
+                    <div class="th-container">
+                        Categoria
+                        <span *ngIf="sortColumn === 'category'">
+                            <i *ngIf="sortDirection === 'asc'" class="material-icons">arrow_upward</i>
+                            <i *ngIf="sortDirection === 'desc'" class="material-icons">arrow_downward</i>
+                        </span>
+                    </div>
+                </th>
+                <th (click)="sort('responsible')">
+                    Responsable
+                    <span *ngIf="sortColumn === 'responsible'">
+                        <i *ngIf="sortDirection === 'asc'" class="material-icons">arrow_upward</i>
+                        <i *ngIf="sortDirection === 'desc'" class="material-icons">arrow_downward</i>
+                    </span>
+                </th>
+                <th (click)="sort('need_to_pay')">
+                    Pagos
+                    <span *ngIf="sortColumn === 'need_to_pay'">
+                        <i *ngIf="sortDirection === 'asc'" class="material-icons">arrow_upward</i>
+                        <i *ngIf="sortDirection === 'desc'" class="material-icons">arrow_downward</i>
+                    </span>
+                </th>
+                <th (click)="sort('active')">
+                    Activo
+                    <span *ngIf="sortColumn === 'active'">
+                        <i *ngIf="sortDirection === 'asc'" class="material-icons">arrow_upward</i>
+                        <i *ngIf="sortDirection === 'desc'" class="material-icons">arrow_downward</i>
+                    </span>
+                </th>
+                <th>Acciones</th>
             </tr>
-          </thead>
-          <tbody>
-            @for (team of filteredTeams(); track team.id) {
-              <tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let team of filteredTeams">
                 <td>{{ team.name }}</td>
-                <td>{{ getLeagueLabel(team.league) }}</td>
-                <td>{{ team.manager }}</td>
-                <td>{{ team.isActive ? 'Sí' : 'No' }}</td>
-                <td>
-                  <button (click)="handleViewDetails(team)">Ver</button>
-                  <button (click)="handleEdit(team)">Editar</button>
-                  <button (click)="handleDelete(team.id)">Eliminar</button>
+                <td>{{ findCategoryName(team.category) }}</td>
+                <td>{{ team.responsible }}</td>
+                <td>{{ team.need_to_pay ? 'Al Dia' : 'Debe'}}</td>
+                <td>{{ team.active ? 'Sí' : 'No' }}</td>
+                <td class="actions">
+                    <button class="btn-icon" (click)="handleEdit(team)">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="btn-icon" (click)="handleDelete(team.id)">
+                        <i class="material-icons">delete</i>
+                    </button>
                 </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      <!-- <div *ngIf="detailTeam()">
-        <div>
-          <h2>{{ detailTeam().name }}</h2>
-          <img [src]="detailTeam().teamPhoto || '/placeholder.svg'" alt="Team photo" />
-          <img [src]="detailTeam().logo" alt="Team logo" />
-          <p><strong>Liga:</strong> {{ getLeagueLabel(detailTeam().league) }}</p>
-          <!-- More details... -->
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="isModalOpen" class="modal-overlay">
+    <div class="modal">
+        <div class="header-container">
+            <h2>{{ teamForm.get('id')?.value ? 'Editar Equipo' : 'Crear Nuevo Equipo' }}</h2>
         </div>
-      </div> -->
+        <img [src]="urlImage" alt="Logo del Equipo" (error)="defaultImage($event)" class="image-team">
+        <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div>
+                <label for="name">Nombre del Equipo</label>
+                <input formControlName="name"
+                    [class.is-invalid]="teamForm.get('name')?.invalid && teamForm.get('name')?.touched">
+                <div *ngIf="teamForm.get('name')?.invalid && teamForm.get('name')?.touched" class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            <div>
+                <label for="manager">Entrenador</label>
+                <input id="manager" formControlName="manager"
+                    [class.is-invalid]="teamForm.get('manager')?.invalid && teamForm.get('manager')?.touched">
+                <div *ngIf="teamForm.get('manager')?.invalid && teamForm.get('manager')?.touched"
+                    class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            <div>
+                <label for="league">Categoria</label>
+                <select formControlName="league">
+                    <option *ngFor="let league of leagues" [value]="league.id">
+                        {{ league.name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="phone">Teléfono</label>
+                <input id="phone" formControlName="phone" />
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input id="email" formControlName="email" type="email"
+                    [class.is-invalid]="teamForm.get('email')?.invalid && teamForm.get('email')?.touched">
+                <div *ngIf="teamForm.get('email')?.invalid && teamForm.get('email')?.touched" class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            <div>
+                <label for="image">Logo del Equipo</label>
+                <input id="image" type="file" (change)="onFileChange($event)" placeholder="Logo del Equipo"/>
+            </div>
+            <div class="checkbox-container">
+                <label for="isActive">Activo</label>
+                <input type="checkbox" id="isActive" formControlName="isActive" />
+            </div>
+            <div class="checkbox-container">
+                <label for="needToPay">Pago al dia</label>
+                <input type="checkbox" id="needToPay" formControlName="needToPay" />
+            </div>
+            <div class="checkbox-container">
+                <label for="hasSanctions">Tiene Sanciones</label>
+                <input type="checkbox" id="hasSanctions" formControlName="hasSanctions" />
+            </div>
+            <div class="container-button">
+                <button type="button" (click)="closeModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </div>
+        </form>
     </div>
-  </div>
-  
+</div>

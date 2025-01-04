@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EstadisticaPartidosService } from './service/estadistica-partidos.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface Result {
   goals_team_1: number;
@@ -12,9 +13,8 @@ interface Match {
   date: string;
   hour: string;
   team_1: Team;
-  team_1_logo: string;
   team_2: Team;
-  team_2_logo: string;
+  logo_file: string;
   field: number;
   result: Result;
 }
@@ -52,6 +52,7 @@ export class TablaFixtureComponent implements OnInit {
   listFixture: Match[] = [];
   listGoleadores: any;
   listTournament: Tournament[] = [];
+  url: string = environment.apiEndpoint;
 
   constructor(private serviceEstadistica:EstadisticaPartidosService,private router: Router) { }
 

@@ -13,7 +13,7 @@ body {
   width: 100%;
   max-width: 400px;
   margin: auto;
-  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .register-card {
@@ -85,4 +85,21 @@ body {
   .register-card {
     padding: 1.5rem;
   }
+}
+
+.password-input-container {
+  position: relative;
+}
+
+.password-input-container input {
+  padding-right: 40px; /* Ajusta este valor según el tamaño de tu icono */
+}
+
+.visibility-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #33333382;
 }

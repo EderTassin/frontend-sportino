@@ -1,0 +1,168 @@
+<div class="container mx-auto mt-10">
+  <div class="container-header">
+    <h1>Gestión de Jugadores</h1>
+    <div class="logo flex items-center gap-4">
+      <img [src]="team.logo_file" alt="Logo" class="rounded-full w-32 border-2 border-gray-300" (error)="defaultImage($event)">
+      
+      <div class="flex flex-col">
+        <h1 class="text-2xl font-bold">{{team.name}}</h1>
+        <h3 class="text-gray-500">{{team.category.name}}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end items-center">
+    <button class="relative inline-flex items-center bg-white justify-center p-0.5 mb-2 me-2 border-solid border-2 border-gray-300 rounded-md" (click)="openModalPlayer()">
+      <span class="relative px-5 py-2.5 rounded-md text-gray-900 font-bold flex items-center gap-2">
+        <span class="material-symbols-outlined text-xl">
+          add
+        </span>
+        Agregar Jugador
+      </span>
+      </button>
+  </div>
+
+  <div class="container-table relative overflow-x-auto shadow-md sm:rounded-lg h-full">
+    <table class="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-white">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th></th>
+          <th scope="col" class="px-6 py-3">Nombre</th>
+          <th scope="col" class="px-6 py-3">Email</th>
+          <th scope="col" class="px-6 py-3">DNI</th>
+          <th scope="col" class="px-6 py-3">Estado</th>
+          <th scope="col" class="px-2 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players">
+          <td> <img [src]="player.picture_file" (error)="defaultImage($event)" alt="Player Photo" class="w-10 h-10 rounded-full"></td>
+          <td class="px-6 py-4">{{player.full_name}}</td>
+          <td class="px-6 py-4">{{player.email}}</td>
+          <td class="px-6 py-4">{{player.id_card}}</td>
+          <td class="px-6 py-4">
+            <span class="bg-green-500 text-white px-2 py-1 rounded-md" *ngIf="player.active">Activo</span>
+            <span class="bg-red-500 text-white px-2 py-1 rounded-md" *ngIf="!player.active">Inactivo</span>
+          </td>
+          <td class="px-2 py-4">
+            <button class="buttons" mat-button [matMenuTriggerFor]="menu">
+              <span class="material-symbols-outlined text-gray-500 font-bold text-xl">
+                more_vert
+              </span>
+            </button>
+          
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openModalEditPlayer(player)">Editar</button>
+              <button mat-menu-item (click)="deletePlayer(player.id)">Eliminar</button>
+            </mat-menu>
+          </td>
+        </tr>
+        <tr *ngIf="players.length === 0" class="h-20">
+          <td colspan="6" class="text-center">No hay jugadores</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="modal" [ngClass]="{ 'open': showModal }">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <div class="player-form">
+      <h2>Agregar Jugador</h2>
+      <form (ngSubmit)="onSubmit()">
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="newPlayer.full_name" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" [(ngModel)]="newPlayer.email" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="year">Domicilio:</label>
+          <input type="text" id="year" name="year" [(ngModel)]="newPlayer.street" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="dni">DNI:</label>
+          <input type="text" id="dni" name="dni" [(ngModel)]="newPlayer.dni" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="birthDate">Fecha de Nacimiento:</label>
+          <input type="date" id="birthDate" name="birthDate" [(ngModel)]="newPlayer.birthDate" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="dni">Telefono:</label>
+          <input type="text" id="dni" name="dni" [(ngModel)]="newPlayer.phone" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="photo">Foto:</label>
+          <img [src]="newPlayer.photo" alt="Player Photo" class="w-10 h-10 rounded-full"  (error)="defaultImage($event)">
+          <input id="image" type="file" (change)="onFileChange($event)" placeholder="Foto del jugador"/>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="medicalCertificate">Certificado Médico:</label>
+          <input id="medicalCertificate" type="file" (change)="onFileChange($event)" placeholder="Certificado Médico"/>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="active">Activo:</label>
+          <input type="checkbox" id="active" name="active" [(ngModel)]="newPlayer.active" required>
+        </div>
+
+        <button type="submit">Agregar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal" [ngClass]="{ 'open': showEditModal }">
+  <div class="modal-content">
+    <span class="close" (click)="closeEditModal()">&times;</span>
+    <div class="player-form">
+      <h2>Editar Jugador</h2>
+      <form (ngSubmit)="onSubmitEdit()" enctype="multipart/form-data">
+        <!-- Campos del formulario de edición -->
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="selectedPlayer.full_name" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="email">Email:</label>
+            <input type="email" id="email" name="email" [(ngModel)]="selectedPlayer.email" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="year">Domicilio:</label>
+            <input type="text" id="year" name="year" [(ngModel)]="selectedPlayer.street" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="dni">DNI:</label>
+          <input type="text" id="dni" name="dni" [(ngModel)]="selectedPlayer.dni" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="birthDate">Fecha de Nacimiento:</label>
+          <input type="date" id="birthDate" name="birthDate" [(ngModel)]="selectedPlayer.birthday" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="dni">Telefono:</label>
+          <input type="text" id="dni" name="dni" [(ngModel)]="selectedPlayer.phone" required>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="photo">Foto:</label>
+          <img [src]="selectedPlayer.picture_file" alt="Player Photo" class="w-10 h-10 rounded-full"  (error)="defaultImage($event)">
+          <input id="image" type="file" (change)="onFileChange($event)" placeholder="Foto del jugador" />
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="medicalCertificate">Certificado Médico:</label>
+          <input id="medicalCertificate" type="file" (change)="onFileChange($event)" placeholder="Certificado Médico"/>
+        </div>
+        <div class="flex items-center gap-2 w-full justify-between">
+          <label for="active">Activo:</label>
+          <input type="checkbox" id="active" name="active" [(ngModel)]="selectedPlayer.active" required>
+        </div>
+
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -8,35 +11,50 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(localStorage.getItem('isAuthenticated') === 'true');
   private timeoutHandle: any;
-  private readonly TIMEOUT_DURATION = 5 * 60 * 1000;
+  private readonly TIMEOUT_DURATION = 50 * 60 * 1000;
 
+  private apiUrl = environment.apiEndpoint;
   authStatus = this.isAuthenticated.asObservable();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     if (this.isAuthenticated.value) {
       this.resetTimeout();
     }
   }
 
   async login(email: string, pass: string): Promise<boolean> {
-    if (email === "admin@sportino.com" && pass === "admin123") {
-      this.isAuthenticated.next(true);
-      localStorage.setItem('isAuthenticated', 'true');
-      this.resetTimeout();
-      return true;
+
+    const body = {
+      email: email,
+      password: pass
     }
+
+    try {
+      const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;  
+      localStorage.setItem('token', res.access);
+      if (res) {
+        this.isAuthenticated.next(true);
+        localStorage.setItem('isAuthenticated', 'true');
+        return true;
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+
     return false;
   }
 
   logout() {
     this.isAuthenticated.next(false);
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
     this.clearTimeout();
     this.router.navigate(['/']);
   }
 
-  checkAuth(): boolean {
-    return this.isAuthenticated.value;
+  checkAuth(): Observable<boolean> {
+    const isAuthenticated = this.isAuthenticated.value;
+    return of(isAuthenticated);
   }
 
   private resetTimeout() {
@@ -48,6 +66,37 @@ export class AuthService {
     if (this.timeoutHandle) {
       clearTimeout(this.timeoutHandle);
     }
+  }
+
+
+  public isAdmin(): boolean {
+    const token = localStorage.getItem('token');
+    const jwtHelper = new JwtHelperService();
+    const decodedToken = jwtHelper.decodeToken(token as string);
+
+    console.log(decodedToken);
+    
+    return decodedToken.admin;
+  }
+
+  public decodeToken(): any {
+    const token = localStorage.getItem('token');
+    const jwtHelper = new JwtHelperService();
+    return jwtHelper.decodeToken(token as string);
+  }
+
+  public isManager(): boolean {
+    const token = localStorage.getItem('token');
+    const jwtHelper = new JwtHelperService();
+    const decodedToken = jwtHelper.decodeToken(token as string);
+
+
+    if (decodedToken.group.includes('MANAGER')) {
+      return true;
+    }
+
+    this.logout();
+    return false;
   }
 
   public userInteracted() {

@@ -58,6 +58,22 @@ export class EstadisticaPartidosService {
     return res;
   }
 
+  async getTournamentById(id: number): Promise<Tournament[]> {
+    const url = `${this.url}calendars/tournament/${id}/`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
   async getCalendarsWidgets(id?: number, date?: Date) {
 
     let url = `${this.url}calendars/widgets`;
@@ -99,8 +115,40 @@ export class EstadisticaPartidosService {
     return res;
   }
 
+  async getAllTeams() {
+    const url = `${this.url}players/teams/`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
   async getMatchDetail(idMatch: number) {
     const url = `${this.url}calendars/full-game/${idMatch}/`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
+  async getCategories() {
+    const url = `${this.url}players/categories/`;
     const headers = {
       headers: {
         'Content-Type': 'application/json'

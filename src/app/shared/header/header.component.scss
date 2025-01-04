@@ -17,8 +17,8 @@ body {
 
 .title-header {
   color: white;
-  padding: 12px;
-  background-color: transparent;
+    position: relative;
+    background-color: transparent;
 
   h1,
   span {
@@ -30,8 +30,7 @@ body {
   }
 
   img{
-    width: 150px;
-    margin-bottom: 20px;
+    width: 215px;
   }
 }
 
@@ -75,7 +74,7 @@ body {
 
 .buttons-header{
   display: flex;
-    width: 600px;
+    width: 500px;
     justify-content: space-around;
     color: #c9c9c9;
 
@@ -96,5 +95,24 @@ body {
       color: white !important;
       font-weight: 500;
     }
+  }
+}
+
+.user-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px;
+}
+
+.buttons-header-login{
+  display: flex;
+  width: 100px;
+  justify-content: space-around;
+
+  .notification, .profile{
+    font-size: 30px;
+    color: #c9c9c9;
+    padding: 10px;
   }
 }

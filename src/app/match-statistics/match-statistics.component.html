@@ -1,7 +1,7 @@
 <div class="match-statistics-container">
   <header>
     <h1>Detalles Torneo</h1>
-    <h3>Torneo Apertura 2024</h3>
+    <h3>{{tournament.name}}</h3>
   </header>
 
   <section class="matches">
@@ -52,10 +52,10 @@
     <h2 class="top-scorers__title">Goleadores</h2>
     <div class="top-scorers">
       <div class="top-scorers__list">
-        <div *ngFor="let scorer of goleadores" class="top-scorers__item">
+        <div *ngFor="let scorer of goleadores; let i = index" class="top-scorers__item">
           <div *ngIf="scorer.player_full_name">
-            <span class="top-scorers__player">{{ scorer.player_full_name }}</span>:
-            <!-- <span class="top-scorers__team">({{ scorer.team }})</span>: -->
+            
+            <span class="top-scorers__player">{{ i + 1 }}. {{ scorer.player_full_name }}</span>
           </div>
           <span *ngIf="scorer.player_full_name" class="top-scorers__goals">{{ scorer.goals }} goles</span>
         </div>
@@ -69,6 +69,7 @@
       <table>
         <thead>
           <tr>
+            <th width="70px"></th>
             <th title="Nombre del equipo" matTooltip="Nombre del equipo">Equipos</th>
             <th title="Puntos acumulados" matTooltip="Puntos acumulados">Pts</th>
             <th title="Partidos jugados" matTooltip="Partidos jugados">PJ</th>
@@ -82,6 +83,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let team of listPosicion?.positions">
+            <td>
+              <img [src]="team.logo" alt="{{ team.team }} logo" class="team-logo" (error)="defaultImage($event)">
+            </td>
             <td><b>{{ team.team }}</b></td>
             <td>{{ team.points }}</td>
             <td>{{ team.games.total }}</td>
@@ -108,9 +112,9 @@
           <span>{{ selectedMatch?.team_1.name }}</span>
         </div>
         <div class="team-result">
-          <span>{{ selectedMatch?.result.goals_team_1 }}</span>
+          <span>{{ selectedMatch?.result?.goals_team_1 }}</span>
           <span>-</span>
-          <span>{{ selectedMatch?.result.goals_team_2 }}</span>
+          <span>{{ selectedMatch?.result?.goals_team_2 }}</span>
         </div>
         <div class="team-detail">
           <span>{{ selectedMatch?.team_2.name }}</span>
