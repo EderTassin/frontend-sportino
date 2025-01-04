@@ -31,7 +31,7 @@
         <div *ngFor="let match of listFixture" class="match">
           <div class="container-teams">
             <div class="team">
-              <img [src]="match.team_1_logo" alt="{{ match.team_1 }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="url + match.logo_file" alt="{{ match?.team_1?.name }} logo" class="team-logo" (error)="defaultImage($event)">
               <span class="team-name">{{ match.team_1.name }}</span>
             </div>
               <div class="score">
@@ -40,8 +40,8 @@
                 <span>{{ match.result ? match.result.goals_team_2 : '-' }}</span>
               </div>
             <div class="team">
-              <span class="team-name">{{ match.team_2.name }}</span>
-              <img [src]="match.team_2_logo" alt="{{ match.team_2 }} logo" class="team-logo" (error)="defaultImage($event)">
+              <span class="team-name">{{ match?.team_2?.name }}</span>
+              <img [src]="url + match?.logo_file" alt="{{ match?.team_2?.name }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
           <div class="match-details">
@@ -95,7 +95,7 @@
           </table>
         </div>
       </div>
-      <button class="complete-stats-button" (click)="selectTournament(2)" >Estadísticas Completas</button>
+      <button class="complete-stats-button" (click)="selectTournament(selectedTournament)" >Estadísticas Completas</button>
     </div>
   </div>
 </div>

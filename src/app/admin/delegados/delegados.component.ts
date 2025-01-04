@@ -20,13 +20,9 @@ export class DelegadosComponent {
 
   constructor(private adminService: AdminService, private router: Router) { }
 
-  // ngAfterViewInit(): void {
-  //   this.modalDelete.nativeElement.classList.add('block');
-  // }
-
   ngOnInit(): void {
     this.loadDelegados();
-    this.modalDelete.nativeElement.classList.add('block');
+    this.modalDelete?.nativeElement.classList.add('block');
   }
 
   async loadDelegados() {
@@ -41,9 +37,16 @@ export class DelegadosComponent {
   }
 
   applyFilter() {
-    this.delegados = this.originalDelegados.filter((delegado) =>
-      delegado.full_name.toLowerCase().includes(this.filter.toLowerCase())
-    );
+    console.log(this.filter);
+    
+    if(this.filter.length > 0){
+      this.delegados = this.originalDelegados.filter((delegado) =>
+        delegado.username.toLowerCase().includes(this.filter.toLowerCase())
+      );
+    }else{
+      this.delegados = this.originalDelegados;
+    }
+    
   }
 
   openModal() {
@@ -65,9 +68,10 @@ export class DelegadosComponent {
 
   handleActive(delegado: any) {
 
-    this.adminService.updateDelegado(delegado.id, { active: !delegado.active }).subscribe((res) => {
-      console.log(res);
-      delegado.active = !delegado.active;
+    console.log(delegado);
+    
+    this.adminService.updateDelegado(delegado.id).subscribe((res) => {
+      delegado.confirmed = !delegado.confirmed;
     });
 
   }
@@ -76,7 +80,6 @@ export class DelegadosComponent {
     const delegado = this.delegadoDelete;
     try {
       this.adminService.deleteDelegado(delegado.id).subscribe((res) => {
-        console.log(res);
         this.delegados = this.originalDelegados.filter((d) => d.id !== delegado.id);
       });
     } catch (error) {

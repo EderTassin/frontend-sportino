@@ -15,7 +15,7 @@ import { DelegadosComponent } from './delegados/delegados.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
-  { path: 'tournaments', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
+  { path: 'torneos', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
   { path: 'equipos', component: CreateTeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] },
   { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] }

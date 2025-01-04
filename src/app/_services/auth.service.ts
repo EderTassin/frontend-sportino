@@ -30,7 +30,7 @@ export class AuthService {
     }
 
     try {
-      const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;
+      const res = await firstValueFrom(this.http.post(`${this.apiUrl}api-token-auth/`, body)) as any;  
       localStorage.setItem('token', res.access);
       if (res) {
         this.isAuthenticated.next(true);
@@ -73,6 +73,9 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
+
+    console.log(decodedToken);
+    
     return decodedToken.admin;
   }
 
@@ -87,10 +90,13 @@ export class AuthService {
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
 
-    console.log(decodedToken);
-    console.log(decodedToken.manager);
 
-    return decodedToken.manager;
+    if (decodedToken.group.includes('MANAGER')) {
+      return true;
+    }
+
+    this.logout();
+    return false;
   }
 
   public userInteracted() {

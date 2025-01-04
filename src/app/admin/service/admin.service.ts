@@ -39,7 +39,11 @@ export class AdminService {
     return this.http.delete<any>(`${this.apiUrl}players/managers/${id}/`);
   }
 
-  updateDelegado(id: number, data: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}users/confirmation/${id}/`, data);
+  updateDelegado(managerId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
+  }
+
+  getTournaments(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}calendars/tournament/`);
   }
 }

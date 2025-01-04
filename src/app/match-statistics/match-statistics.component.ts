@@ -9,10 +9,9 @@ import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadi
 })
 
 export class MatchStatisticsComponent {
-  tournamentId: string | null = "";
+  tournamentId: number = 0;
   filterDate: string = '';
   filterCategory: string = '';
-  categories: string[] = ['Categoria 1', 'Categoria 2', 'Categoria 3'];
   showModal = false;
   selectedMatch: any;
   activeTab = 'team1';
@@ -22,28 +21,29 @@ export class MatchStatisticsComponent {
   goleadores: any;
   selectedDate: any;
   listPosicion: any;
+  tournament: any;
 
   constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) { }
 
   ngOnInit(): void {
-    this.tournamentId = this.route.snapshot.paramMap.get('id');
+    this.tournamentId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadDataForm();
   }
   
-  filterMatchesByDate() {
-    this.fixtureFilter = this.fixture.filter( (item:any) => item.date === this.selectedDate);
-  }
-  
   async loadDataForm(){
+    this.tournament = await this.estadisticaPartidosService.getTournamentById(this.tournamentId)
+    console.log(this.tournament);
+
     const dates = await this.estadisticaPartidosService.getDatesTournaments();
-    this.datesSelects = dates.filter((item:any) => item.tournament.includes(Number(this.tournamentId)))
+    this.datesSelects = dates.filter((item:any) => item.tournament.includes(this.tournamentId))
     this.selectedDate = this.datesSelects[0].date;
 
-    const allData = await this.estadisticaPartidosService.getCalendarsWidgets(Number(this.tournamentId));
+    const allData = await this.estadisticaPartidosService.getCalendarsWidgets(this.tournamentId);
+    
     this.fixture = allData.fixture;
     this.goleadores = allData.goleadores.slice(0,16);
 
-    this.listPosicion = await this.estadisticaPartidosService.getPosiciones(Number(this.tournamentId));
+    this.listPosicion = await this.estadisticaPartidosService.getPosiciones(this.tournamentId);
     
     this.filterMatchesByDate();
   }
@@ -71,5 +71,9 @@ export class MatchStatisticsComponent {
 
   createArray(length: number): any[] {
     return new Array(length);
+  } 
+  
+  filterMatchesByDate() {
+    this.fixtureFilter = this.fixture.filter( (item:any) => item.date === this.selectedDate);
   }
 }
