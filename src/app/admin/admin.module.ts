@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateTournamentsComponent } from './create-tournaments/create-tournaments.component';
-import { CreateTeamComponent } from './create-team/create-team.component';
+import { TeamComponent } from './team/team.component';
 import { LoadDataMatchComponent } from './load-data-match/load-data-match.component';
 import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -11,20 +10,21 @@ import { FilterPipe } from '../_services/pipe/filter.pipe';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../_services/auth.interceptor';
 import { DelegadosComponent } from './delegados/delegados.component';
+import { TournamentsComponent } from './tournaments/tournaments.component';
 
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
-  { path: 'torneos', component: CreateTournamentsComponent, canActivate: [AuthGuard] },
-  { path: 'equipos', component: CreateTeamComponent, canActivate: [AuthGuard] },
+  { path: 'torneos', component: TournamentsComponent, canActivate: [AuthGuard] },
+  { path: 'equipos', component: TeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] },
   { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
   declarations: [
-    CreateTournamentsComponent,
-    CreateTeamComponent,
+    TournamentsComponent,
+    TeamComponent,
     LoadDataMatchComponent,
     HomeAdminComponent,
     FilterPipe,

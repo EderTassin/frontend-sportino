@@ -21,11 +21,11 @@ interface FootballTeam {
 }
 
 @Component({
-  selector: 'app-create-team',
-  templateUrl: './create-team.component.html',
-  styleUrls: ['./create-team.component.scss']
+  selector: 'app-team',
+  templateUrl: './team.component.html',
+  styleUrls: ['./team.component.scss']
 })
-export class CreateTeamComponent implements OnInit {
+export class TeamComponent implements OnInit {
  
   filter = '';
   teams: FootballTeam[] = []; 

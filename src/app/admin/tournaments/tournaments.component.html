@@ -9,7 +9,7 @@
     <h1 class="title">Panel de Administración de Equipos de Fútbol</h1>
     <div class="toolbar">
         <input type="text" placeholder="Filtrar por nombre del equipo" [(ngModel)]="filter" class="input"
-            (ngModelChange)="applyFilter($event)" />
+            (ngModelChange)="applyFilter()" />
         <button class="btn btn-primary" (click)="openModal()">
             <i class="icon icon-plus"></i> Crear Torneo
         </button>
