@@ -4,9 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --aot --build-optimizer --output-hashing=all",
-    "build:stats": "ng build --prod --stats-json",
-    "watch": " --prod --aot --outputHashing=all",
+    "build": "ng build --aot --build-optimizer --output-hashing=all",
+    "build:stats": "ng build --stats-json",
     "test": "ng test"
   },
   "private": true,
