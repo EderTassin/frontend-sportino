@@ -36,7 +36,7 @@ export class TournamentsComponent {
   }
 
   openModal() {
-    //document.getElementById('myModal').style.display = 'block';
+    this.router.navigate(['/create-tournament']);
   }
 
   applyFilter() {

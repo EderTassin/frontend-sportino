@@ -12,6 +12,12 @@ export class CreateTournamentsComponent {
   categories: string[] = ['Senior', 'Maxi Senior', 'Juvenil', 'Infantil'];
   steps = ['Información del Torneo', 'Fechas a Jugar', 'Programar Partidos', 'Resumen'];
 
+
+  ngOnInit(): void {
+    console.log("ENTRAAA");
+    
+  }
+
   handleNext(data: any): void {
     if (this.currentStep === 1) {
       this.tournamentData = {

@@ -11,7 +11,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../_services/auth.interceptor';
 import { DelegadosComponent } from './delegados/delegados.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
-import { CreateTournamentsComponent } from './create-tournaments/create-tournaments.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -28,8 +27,7 @@ const routes: Routes = [
     LoadDataMatchComponent,
     HomeAdminComponent,
     FilterPipe,
-    DelegadosComponent,
-    CreateTournamentsComponent
+    DelegadosComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
