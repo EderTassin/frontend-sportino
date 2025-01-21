@@ -73,9 +73,6 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
-
-    console.log(decodedToken);
-    
     return decodedToken.admin;
   }
 
@@ -89,7 +86,6 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
-
 
     if (decodedToken.group.includes('MANAGER')) {
       return true;

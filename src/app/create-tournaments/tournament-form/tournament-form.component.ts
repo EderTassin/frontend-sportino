@@ -1,12 +1,60 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
 
 @Component({
   selector: 'app-tournament-form',
   templateUrl: './tournament-form.component.html',
   styleUrls: ['./tournament-form.component.scss']
 })
-export class TournamentFormComponent {
+export class TournamentFormComponent implements OnInit {
   @Input() initialData: any;
-  @Input() categories: string[] = [];
   @Output() formSubmit = new EventEmitter<any>();
+  @Output() formValid = new EventEmitter<boolean>();
+
+  categories: any[] = [];
+  form: FormGroup;
+  selectedCategories: number[] = [];
+
+  constructor(private tournamentService: EstadisticaPartidosService, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      date_from: ['', Validators.required],
+      date_to: ['', Validators.required],
+      categories: [[], Validators.required]
+    });
+    this.form.statusChanges.subscribe(status => {
+      this.formValid.emit(status === 'VALID');
+    });
+  }
+
+  ngOnInit() {
+    this.getCategories();
+
+    if (this.initialData) {
+      this.form.patchValue(this.initialData);
+    }
+  }
+
+  async getCategories() {
+    this.categories = await this.tournamentService.getCategories();
+  }
+  
+  onCategoryChange(event: any, categoryId: number) {
+    if (event.target.checked) {
+      this.selectedCategories.push(categoryId);
+    } else {
+      this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
+    }
+    this.form.patchValue({ categories: this.selectedCategories });
+  }
+
+  getFormData() {
+    if (this.form.valid) {
+      return this.form.value;
+    }
+    this.form.markAllAsTouched();
+    return null;
+  }
 }

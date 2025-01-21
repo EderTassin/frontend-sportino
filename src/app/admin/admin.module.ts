@@ -11,6 +11,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../_services/auth.interceptor';
 import { DelegadosComponent } from './delegados/delegados.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -36,7 +39,11 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)],
+    RouterModule.forChild(routes),
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule
+  ],
   exports: [RouterModule]
 })
 

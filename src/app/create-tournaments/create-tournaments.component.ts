@@ -1,41 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TournamentService } from './service/tournament.service';
+import { TournamentFormComponent } from './tournament-form/tournament-form.component';
+import { DatesFormComponent } from './dates-form/dates-form.component';
+import { MatchesFormComponent } from './matches-form/matches-form.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-tournaments',
   templateUrl: './create-tournaments.component.html',
   styleUrls: ['./create-tournaments.component.scss']
 })
+export class CreateTournamentsComponent implements OnInit {
+  currentStep: number = 0;
+  tournamentData: any[] = [];
+  steps: string[] = ['Información del Torneo', 'Fechas a Jugar', 'Programar Partidos', 'Resumen'];
+  isCurrentFormValid = false;
 
-export class CreateTournamentsComponent {
-  currentStep = 0;
-  tournamentData: any = {};
-  categories: string[] = ['Senior', 'Maxi Senior', 'Juvenil', 'Infantil'];
-  steps = ['Información del Torneo', 'Fechas a Jugar', 'Programar Partidos', 'Resumen'];
+  @ViewChild(TournamentFormComponent) tournamentFormComponent!: TournamentFormComponent;
+  @ViewChild(DatesFormComponent) datesFormComponent!: DatesFormComponent;
+  @ViewChild(MatchesFormComponent) matchesFormComponent!: MatchesFormComponent;
 
+  constructor(private tournamentService: TournamentService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
-    console.log("ENTRAAA");
-    
+    console.log("Componente inicializado");
   }
 
-  handleNext(data: any): void {
-    if (this.currentStep === 1) {
-      this.tournamentData = {
-        ...this.tournamentData,
-        ...data,
-        dates: [...(this.tournamentData.dates || []), ...data.dates]
-      };
-    } else {
-      this.tournamentData = { ...this.tournamentData, ...data };
+  handleNext() {
+    const currentFormData = this.getCurrentFormData();
+    if (currentFormData) {
+      this.tournamentData.push(currentFormData);
+
+      if (this.currentStep === 0 && this.tournamentData[0].id == undefined) {
+        this.createTournament();
+      }
     }
-    this.currentStep = Math.min(this.currentStep + 1, this.steps.length - 1);
+  }
+
+  changeStep() {
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+    }
   }
 
   handleBack(): void {
     this.currentStep = Math.max(this.currentStep - 1, 0);
   }
 
-  submitCurrentForm(){
-    
+  getCurrentFormData() {
+    switch (this.currentStep) {
+      case 0:
+        return this.tournamentFormComponent.getFormData();
+      case 1:
+        return this.datesFormComponent.getFormData();
+      case 2:
+        return this.matchesFormComponent.getFormData();
+      default:
+        return {};
+    }
+  }
+
+  async createTournament() {
+    try {
+      const response = await this.tournamentService.createTournament(this.tournamentData[0]);
+      this.tournamentData[0].id = response.id;
+      this.changeStep();
+    } catch (error: any) { 
+      console.error(error.error.detail);
+      this.toastr.error(error.error.detail);
+    }
+  }
+
+  onFormValidityChange(isValid: boolean) {
+    this.isCurrentFormValid = isValid;
   }
 }

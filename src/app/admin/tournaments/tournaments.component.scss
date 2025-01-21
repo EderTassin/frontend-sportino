@@ -189,21 +189,6 @@
     margin-right: 0.5rem;
   }
   
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
-    margin-right: 0.5rem;
-  }
-  
-  button[type="button"] {
-    background-color: #6c757d;
-  }
-  
   @media (max-width: 600px) {
     .modal {
       width: 100%;

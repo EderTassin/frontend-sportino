@@ -1,56 +1,43 @@
 <div class="card w-full max-w-4xl mx-auto">
-    <div class="card-header">
-      <h2 class="card-title">Crear Torneo de Fútbol</h2>
-    </div>
-    
-    <div class="card-content">
-      <div class="mb-4">
+  <div class="card-header">
+    <h2 class="card-title">Crear Torneo de Fútbol</h2>
+  </div>
+
+  <div class="card-content">
+    <div class="tabs-container mb-2 overflow-x-auto">
+      <div class="tabs-wrapper flex mb-4">
         <span *ngFor="let step of steps; let i = index"
               [class.bg-primary]="i === currentStep"
               [class.bg-secondary]="i !== currentStep"
-              class="inline-block px-3 py-1 mr-2 rounded-full text-sm">
+              class="inline-block px-3 py-1 mr-2 rounded-full text-sm whitespace-nowrap">
           {{i + 1}}. {{step}}
         </span>
       </div>
-  
-      <ng-container [ngSwitch]="currentStep">
-        <app-tournament-form 
-          *ngSwitchCase="0"
-          [initialData]="tournamentData"
-          [categories]="categories"
-          (formSubmit)="handleNext($event)">
-        </app-tournament-form>
-  
-        <app-dates-form
-          *ngSwitchCase="1"
-          [initialData]="tournamentData"
-          (formSubmit)="handleNext($event)">
-        </app-dates-form>
-  
-        <app-matches-form
-          *ngSwitchCase="2"
-          [initialData]="tournamentData"
-          (formSubmit)="handleNext($event)">
-        </app-matches-form>
-  
-        <app-tournament-summary
-          *ngSwitchCase="3"
-          [data]="tournamentData">
-        </app-tournament-summary>
-      </ng-container>
     </div>
-  
-    <div class="card-footer flex justify-between">
-      <button (click)="handleBack()" 
-              [disabled]="currentStep === 0"
-              class="btn btn-primary">
-        Atrás
-      </button>
-      <button *ngIf="currentStep < steps.length - 1"
-              (click)="submitCurrentForm()"
-              class="btn btn-primary">
-        Siguiente
-      </button>
-    </div>
+
+    <ng-container [ngSwitch]="currentStep">
+      <app-tournament-form *ngSwitchCase="1" (formValid)="onFormValidityChange($event)" [initialData]="tournamentData[0]"></app-tournament-form>
+
+      <app-dates-form *ngSwitchCase="0"></app-dates-form>
+
+      <app-matches-form *ngSwitchCase="2"></app-matches-form>
+
+      <app-tournament-summary *ngSwitchCase="3"[data]="tournamentData"></app-tournament-summary>
+    </ng-container>
   </div>
-  
+
+  <div class="card-footer flex justify-between">
+    <button (click)="handleBack()" 
+            [disabled]="currentStep === 0"
+            class="bg-secondary text-white px-4 py-2 rounded-md">
+      Atrás
+    </button>
+    <button *ngIf="currentStep < steps.length - 1"
+            (click)="handleNext()"
+            [disabled]="!isCurrentFormValid"
+            class="bg-primary text-white px-4 py-2 rounded-md"
+            [ngClass]="{'opacity-50 cursor-not-allowed': !isCurrentFormValid}">
+      Siguiente
+    </button>
+  </div>
+</div>

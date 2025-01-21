@@ -1,1 +1,55 @@
-<p>tournament-form works!</p>
+<form [formGroup]="form">
+    <section class="card">
+        <div class="flex flex-col gap-2 mb-2">
+            <label class="text-sm font-bold" for="name">Nombre del Torneo</label>
+            <input formControlName="name" type="text" id="name" class="form-control input" 
+                   [ngClass]="{'border-red-500': form.get('name')?.invalid && form.get('name')?.touched}">
+            <span class="text-red-500 text-sm" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                El nombre es requerido
+            </span>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-2">
+            <label class="text-sm font-bold" for="description">Descripción del Torneo</label>
+            <input formControlName="description" type="text" id="description" class="form-control input"
+                   [ngClass]="{'border-red-500': form.get('description')?.invalid && form.get('description')?.touched}">
+            <span class="text-red-500 text-sm" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+                La descripción es requerida
+            </span>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-2">
+            <label class="text-sm font-bold" for="date_from">Fecha de inicio</label>
+            <input formControlName="date_from" type="date" id="date_from" class="form-control input "
+                   [ngClass]="{'border-red-500': form.get('date_from')?.invalid && form.get('date_from')?.touched}">
+            <span class="text-red-500 text-sm" *ngIf="form.get('date_from')?.invalid && form.get('date_from')?.touched">
+                La fecha de inicio es requerida
+            </span>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-2">
+            <label class="text-sm font-bold" for="date_to">Fecha de fin</label>
+            <input formControlName="date_to" type="date" id="date_to" class="form-control input"
+                   [ngClass]="{'border-red-500': form.get('date_to')?.invalid && form.get('date_to')?.touched}">
+            <span class="text-red-500 text-sm" *ngIf="form.get('date_to')?.invalid && form.get('date_to')?.touched">
+                La fecha de fin es requerida
+            </span>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-2">
+            <label class="text-sm font-bold">Categoría</label>
+            <div formArrayName="categories" class="ml-4">
+                <ng-container *ngFor="let category of categories; let i = index">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" [id]="'category-' + i" 
+                               (change)="onCategoryChange($event, category.id)" class="checkbox">
+                        <label [for]="'category-' + i" class="cursor-pointer">{{category.name}}</label>
+                    </div>
+                </ng-container>
+            </div>
+            <span class="text-red-500 text-sm" *ngIf="form.get('categories')?.invalid && form.get('categories')?.touched">
+                Debe seleccionar al menos una categoría
+            </span>
+        </div>
+    </section>
+</form>
