@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://api.sportino.com.ar/api/",
+    "logLevel": "debug"
+  }
+}
+  
