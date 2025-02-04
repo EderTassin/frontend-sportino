@@ -15,11 +15,15 @@ export class TournamentService {
     return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/tournament/`, data));
   }
 
-  addDates(tournamentId: string, dates: any[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/tournaments/${tournamentId}/dates`, { dates });
+  async addDates(data: any): Promise<any> {
+    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/dates/`, data));
   }
 
   addMatches(tournamentId: string, matches: any[]): Observable<any> {
     return this.http.post(`${this.apiUrl}/tournaments/${tournamentId}/matches`, { matches });
+  }
+
+  async deleteDate(dateId: string): Promise<any> {
+    return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/dates/${dateId}`));
   }
 }

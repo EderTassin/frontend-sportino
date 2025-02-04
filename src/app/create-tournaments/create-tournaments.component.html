@@ -16,11 +16,11 @@
     </div>
 
     <ng-container [ngSwitch]="currentStep">
-      <app-tournament-form *ngSwitchCase="1" (formValid)="onFormValidityChange($event)" [initialData]="tournamentData[0]"></app-tournament-form>
+      <app-tournament-form *ngSwitchCase="2" (formValid)="onFormValidityChange($event)" [initialData]="tournamentData"></app-tournament-form>
 
-      <app-dates-form *ngSwitchCase="0"></app-dates-form>
+      <app-dates-form *ngSwitchCase="1" [initialData]="tournamentData" (datesChange)="onDatesChange($event)"></app-dates-form>
 
-      <app-matches-form *ngSwitchCase="2"></app-matches-form>
+      <app-matches-form *ngSwitchCase="0" [initialData]="tournamentData"></app-matches-form>
 
       <app-tournament-summary *ngSwitchCase="3"[data]="tournamentData"></app-tournament-summary>
     </ng-container>

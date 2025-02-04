@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { TournamentService } from '../service/tournament.service';
 
 @Component({
   selector: 'app-dates-form',
@@ -10,15 +11,25 @@ export class DatesFormComponent {
 
   @Input() initialData: any;
   @Output() formSubmit = new EventEmitter<any>();
-  @Output() datesChange = new EventEmitter<any[]>();
+  @Output() datesChange = new EventEmitter<boolean>();
 
   form: FormGroup;
   dates: any[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private tournamentService: TournamentService) {
     this.form = this.fb.group({
       dates: ['', Validators.required]
     });
+    this.form.statusChanges.subscribe(status => {
+      this.datesChange.emit(status === 'VALID');
+    });
+  }
+
+  ngOnInit() {
+    if (this.initialData[1]) {
+      this.dates = this.initialData[1];
+      this.form.patchValue({ dates: this.dates });
+    }
   }
 
   get datesControl() {
@@ -36,11 +47,14 @@ export class DatesFormComponent {
     });
 
     this.form.reset();
-    this.datesChange.emit(this.dates);
+    this.datesChange.emit(true);
   }
 
   removeDate(index: number) {
     this.dates.splice(index, 1);
-    this.datesChange.emit(this.dates);
+
+    if (this.dates[index]?.id) {
+      this.tournamentService.deleteDate(this.dates[index].id);
+    }
   }
 }

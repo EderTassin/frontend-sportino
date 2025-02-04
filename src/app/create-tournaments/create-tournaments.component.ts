@@ -28,11 +28,16 @@ export class CreateTournamentsComponent implements OnInit {
 
   handleNext() {
     const currentFormData = this.getCurrentFormData();
+
     if (currentFormData) {
-      this.tournamentData.push(currentFormData);
+      this.tournamentData[this.currentStep] = currentFormData;
 
       if (this.currentStep === 0 && this.tournamentData[0].id == undefined) {
         this.createTournament();
+      }
+
+      if (this.currentStep === 1) {
+        this.createDates();
       }
     }
   }
@@ -71,7 +76,36 @@ export class CreateTournamentsComponent implements OnInit {
     }
   }
 
+  async createDates() {
+    if (this.tournamentData[1][0]?.id != undefined) this.changeStep();
+
+    try {
+      for (const date of this.tournamentData[1]) {
+        const objDate = {
+          date: date.date,
+          tournament: [this.tournamentData[0].id],
+          active: true
+        }
+
+        const response = await this.tournamentService.addDates(objDate);
+        const dateToUpdate = this.tournamentData[1].find((d: any) => d.date === date.date);
+        if (dateToUpdate) {
+          dateToUpdate.id = response.id;
+        }
+      }
+      this.changeStep();
+    } catch (error: any) {
+      console.error(error.error.detail);
+      this.toastr.error(error.error.detail);
+    }
+  }
+
   onFormValidityChange(isValid: boolean) {
     this.isCurrentFormValid = isValid;
   }
+
+  onDatesChange(isValid: boolean) {
+    this.isCurrentFormValid = isValid;
+  }
 }
+  
