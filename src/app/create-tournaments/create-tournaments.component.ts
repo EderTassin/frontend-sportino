@@ -4,6 +4,7 @@ import { TournamentFormComponent } from './tournament-form/tournament-form.compo
 import { DatesFormComponent } from './dates-form/dates-form.component';
 import { MatchesFormComponent } from './matches-form/matches-form.component';
 import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-tournaments',
@@ -20,10 +21,42 @@ export class CreateTournamentsComponent implements OnInit {
   @ViewChild(DatesFormComponent) datesFormComponent!: DatesFormComponent;
   @ViewChild(MatchesFormComponent) matchesFormComponent!: MatchesFormComponent;
 
-  constructor(private tournamentService: TournamentService, private toastr: ToastrService) {}
+  constructor(
+    private tournamentService: TournamentService, 
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     console.log("Componente inicializado");
+
+    // Verificar si hay un ID en la URL
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.loadExistingTournament(params['id']);
+      }
+    });
+  }
+
+  async loadExistingTournament(id: number) {
+    try {
+      // Cargar datos del torneo
+      const tournament = await this.tournamentService.getTournamentById(id);
+      this.tournamentData[0] = tournament;
+      
+      // Cargar fechas del torneo
+      const dates = await this.tournamentService.getDatesByTournament(id);
+      this.tournamentData[1] = dates;
+      
+      // Si hay datos, avanzar al último paso completado
+      if (this.tournamentData[0]) {
+        this.currentStep = dates.length > 0 ? 2 : 1;
+      }
+    } catch (error: any) {
+      this.toastr.error('Error al cargar el torneo');
+      console.error(error);
+    }
   }
 
   handleNext() {
@@ -69,6 +102,7 @@ export class CreateTournamentsComponent implements OnInit {
     try {
       const response = await this.tournamentService.createTournament(this.tournamentData[0]);
       this.tournamentData[0].id = response.id;
+      this.router.navigate(['/create-tournament', response.id]);
       this.changeStep();
     } catch (error: any) { 
       console.error(error.error.detail);
@@ -80,19 +114,18 @@ export class CreateTournamentsComponent implements OnInit {
     if (this.tournamentData[1][0]?.id != undefined) this.changeStep();
 
     try {
-      for (const date of this.tournamentData[1]) {
-        const objDate = {
+      const listDate = this.tournamentData[1].map((date: any) => {
+        return {
           date: date.date,
           tournament: [this.tournamentData[0].id],
           active: true
         }
+      })
 
-        const response = await this.tournamentService.addDates(objDate);
-        const dateToUpdate = this.tournamentData[1].find((d: any) => d.date === date.date);
-        if (dateToUpdate) {
-          dateToUpdate.id = response.id;
-        }
-      }
+      const response = await this.tournamentService.addDates(listDate);
+            
+      this.tournamentData[1] = response;
+      
       this.changeStep();
     } catch (error: any) {
       console.error(error.error.detail);

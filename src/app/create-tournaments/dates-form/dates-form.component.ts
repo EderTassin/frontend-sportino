@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TournamentService } from '../service/tournament.service';
+import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
 
 @Component({
   selector: 'app-dates-form',
@@ -16,7 +17,7 @@ export class DatesFormComponent {
   form: FormGroup;
   dates: any[] = [];
 
-  constructor(private fb: FormBuilder, private tournamentService: TournamentService) {
+  constructor(private fb: FormBuilder, private tournamentService: TournamentService, private estadisticaPartidosService: EstadisticaPartidosService) {
     this.form = this.fb.group({
       dates: ['', Validators.required]
     });
@@ -30,6 +31,7 @@ export class DatesFormComponent {
       this.dates = this.initialData[1];
       this.form.patchValue({ dates: this.dates });
     }
+    
   }
 
   get datesControl() {

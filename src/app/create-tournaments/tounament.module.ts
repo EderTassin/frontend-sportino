@@ -11,15 +11,18 @@ import { DatesFormComponent } from './dates-form/dates-form.component';
 import { MatchesFormComponent } from './matches-form/matches-form.component';
 import { AuthGuard } from '../_services/auth-guard.service';
 
-
 const routes: Routes = [
   { 
     path: '', 
     component: CreateTournamentsComponent, 
     canActivate: [AuthGuard] 
+  },
+  { 
+    path: ':id', 
+    component: CreateTournamentsComponent, 
+    canActivate: [AuthGuard] 
   }
 ];
-
 
 @NgModule({
   declarations: [

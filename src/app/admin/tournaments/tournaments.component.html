@@ -56,12 +56,12 @@
                     <button mat-icon-button [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item>
+                    <mat-menu #menu="matMenu" class="bg-white">
+                        <button mat-menu-item (click)="editTournament(team.id)" class="text-primary">
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>
-                        <button mat-menu-item>
+                        <button mat-menu-item (click)="deleteTournament(team.id)" class="text-red-500">
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>
                         </button>

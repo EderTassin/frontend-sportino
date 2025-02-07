@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
+import { TournamentService } from '../service/tournament.service';
 
 @Component({
   selector: 'app-matches-form',
@@ -13,10 +14,10 @@ export class  MatchesFormComponent {
 
   form: FormGroup;
   teams: any[] = [];
-  listDates: any[] = ['01-01-2025', '02-01-2025', '03-01-2025', '04-01-2025', '05-01-2025'];
+  listDates: any[] = [];
   listMatches: any[] = [];
 
-  constructor(private fb: FormBuilder, private tournamentService: EstadisticaPartidosService) {
+  constructor(private fb: FormBuilder, private tournamentService: TournamentService, private estadisticaPartidosService: EstadisticaPartidosService) {
     this.form = this.fb.group({
       dates: ['', Validators.required],
       teamA: ['', Validators.required],
@@ -32,11 +33,21 @@ export class  MatchesFormComponent {
       dates: this.initialData.dates
     });
 
+    this.listDates = this.initialData[1];
+    console.log('MatchesFormComponent: ', this.initialData);
+
     this.getTeams();
+    this.getDatesByTournament();
   }
 
+  async getDatesByTournament() {
+    const response = await this.tournamentService.getDatesByTournament(this.initialData[0].id)
+    this.listDates = response;
+  }
+
+
   async getTeams() {
-    const teams = await this.tournamentService.getAllTeams();
+    const teams = await this.estadisticaPartidosService.getAllTeams();
     const sortedTeams = teams.sort((a: any, b: any) => a.name.localeCompare(b.name));
     this.teams = sortedTeams;
   }

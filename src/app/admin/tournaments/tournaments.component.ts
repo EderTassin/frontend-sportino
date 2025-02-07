@@ -26,9 +26,6 @@ export class TournamentsComponent {
       this.tournaments = tournaments;
       this.tournamentsOriginal = tournaments;
     });
-
-    console.log(this.tournaments);
-    
   }
 
   goBack() {
@@ -39,6 +36,10 @@ export class TournamentsComponent {
     this.router.navigate(['/create-tournament']);
   }
 
+  editTournament(id: number) {
+    this.router.navigate(['/create-tournament', id]);
+  }
+
   applyFilter() {
     if (!this.filter || this.filter === '') {
       this.tournaments = this.tournamentsOriginal;
@@ -47,6 +48,12 @@ export class TournamentsComponent {
         return tournament.name.toLowerCase().includes(this.filter.toLowerCase());
       }
     );
+  }
+
+  deleteTournament(id: number) {
+    this.tournamentsService.deleteTournament(id).subscribe(() => {
+      this.getTournaments();
+    });
   }
 
 }

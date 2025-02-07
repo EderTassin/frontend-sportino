@@ -19,10 +19,10 @@ export class TournamentFormComponent implements OnInit {
   constructor(private tournamentService: EstadisticaPartidosService, private fb: FormBuilder) {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       date_from: ['', Validators.required],
       date_to: ['', Validators.required],
-      categories: [[], Validators.required]
+      category: [[], Validators.required]
     });
     this.form.statusChanges.subscribe(status => {
       this.formValid.emit(status === 'VALID');

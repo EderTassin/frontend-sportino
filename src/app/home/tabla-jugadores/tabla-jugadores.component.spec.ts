@@ -25,4 +25,9 @@ describe('TablaJugadoresComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should contain the main container in the template', () => {
+    const container = fixture.debugElement.query(By.css('.tabla-jugadores-container'));
+    expect(container).toBeTruthy();
+  });
 });

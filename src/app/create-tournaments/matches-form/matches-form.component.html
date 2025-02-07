@@ -27,7 +27,7 @@
                     <label for="date" class="font-semibold">Fecha</label>
                     <select formControlName="date" id="date" class="form-select w-full input">
                         <option value="">Selecciona una fecha</option>
-                        <option *ngFor="let date of listDates" [value]="date">{{date}}</option>
+                        <option *ngFor="let date of listDates" [value]="date">{{date.date | date: "fullDate"}}</option>
                     </select>
                 </div>
 
@@ -40,7 +40,7 @@
             <div class="flex flex-col gap-2 mb-2">
                 <label for="court" class="font-semibold">Cancha</label>
                 <select formControlName="court" id="court" class="form-select w-full input max-w-500">
-                    <option value="">Selecciona una cancha</option>
+                    <option value="0">Selecciona una cancha</option>
                     <option value="1">Cancha 1</option>
                     <option value="2">Cancha 2</option>
                     <option value="3">Cancha 3</option>

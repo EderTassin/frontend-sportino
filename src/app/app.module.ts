@@ -1,5 +1,7 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule, isDevMode, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +35,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RateLimitingInterceptor } from './_services/rate-limiter.interceptor';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [
@@ -83,7 +87,8 @@ import { RateLimitingInterceptor } from './_services/rate-limiter.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     provideHttpClient(
       withInterceptors([RateLimitingInterceptor])
-    )
+    ),
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
   bootstrap: [AppComponent]
 })

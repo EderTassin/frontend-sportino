@@ -46,4 +46,8 @@ export class AdminService {
   getTournaments(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}calendars/tournament/`);
   }
+
+  deleteTournament(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}calendars/tournament/${id}/`);
+  }
 }

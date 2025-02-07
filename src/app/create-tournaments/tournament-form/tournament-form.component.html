@@ -21,7 +21,7 @@
         <div class="flex flex-col gap-2 mb-2">
             <label class="text-sm font-bold" for="date_from">Fecha de inicio</label>
             <input formControlName="date_from" type="date" id="date_from" class="form-control input "
-                   [ngClass]="{'border-red-500': form.get('date_from')?.invalid && form.get('date_from')?.touched}">
+                   [ngClass]="{'border-red-500': form.get('date_from')?.invalid && form.get('date_from')?.touched}" format="dd/MM/yyyy">
             <span class="text-red-500 text-sm" *ngIf="form.get('date_from')?.invalid && form.get('date_from')?.touched">
                 La fecha de inicio es requerida
             </span>
@@ -30,15 +30,15 @@
         <div class="flex flex-col gap-2 mb-2">
             <label class="text-sm font-bold" for="date_to">Fecha de fin</label>
             <input formControlName="date_to" type="date" id="date_to" class="form-control input"
-                   [ngClass]="{'border-red-500': form.get('date_to')?.invalid && form.get('date_to')?.touched}">
+                   [ngClass]="{'border-red-500': form.get('date_to')?.invalid && form.get('date_to')?.touched}" format="dd/MM/yyyy">
             <span class="text-red-500 text-sm" *ngIf="form.get('date_to')?.invalid && form.get('date_to')?.touched">
                 La fecha de fin es requerida
             </span>
         </div>
-
+        
         <div class="flex flex-col gap-2 mb-2">
             <label class="text-sm font-bold">Categoría</label>
-            <div formArrayName="categories" class="ml-4">
+            <div formArrayName="category" class="ml-4">
                 <ng-container *ngFor="let category of categories; let i = index">
                     <div class="flex items-center gap-2">
                         <input type="checkbox" [id]="'category-' + i" 
@@ -47,7 +47,7 @@
                     </div>
                 </ng-container>
             </div>
-            <span class="text-red-500 text-sm" *ngIf="form.get('categories')?.invalid && form.get('categories')?.touched">
+            <span class="text-red-500 text-sm" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
                 Debe seleccionar al menos una categoría
             </span>
         </div>
