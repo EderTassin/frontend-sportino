@@ -6,7 +6,7 @@ const requests: Map<string, number[]> = new Map();
 
 export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
   const RATE_LIMIT_INTERVAL = 60000; // 60 segundos
-  const REQUEST_LIMIT = 5;
+  const REQUEST_LIMIT = 10;
 
   const currentTime = Date.now();
   const requestKey = `${req.method}:${req.urlWithParams}`;
@@ -16,6 +16,10 @@ export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const timestamps = requests.get(requestKey);
+
+  console.log("Request Key: ", requestKey);
+  console.log("Timestamps: ", timestamps);
+
   if (timestamps) {
     // Removemos los timestamps que excedieron el intervalo de 60 segundos
     while (timestamps.length > 0 && currentTime - timestamps[0] > RATE_LIMIT_INTERVAL) {
@@ -23,7 +27,6 @@ export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
     }
 
     if (timestamps.length >= REQUEST_LIMIT) {
-      // Se excedió el límite; se lanza un error 429 sin modificar el historial de requests.
       return throwError(() => new HttpErrorResponse({ 
         status: 429,
         statusText: 'Too Many Requests',

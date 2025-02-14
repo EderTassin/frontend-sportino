@@ -16,6 +16,7 @@ export class  MatchesFormComponent {
   teams: any[] = [];
   listDates: any[] = [];
   listMatches: any[] = [];
+  listMatchesDescription: any[] = [];
 
   constructor(private fb: FormBuilder, private tournamentService: TournamentService, private estadisticaPartidosService: EstadisticaPartidosService) {
     this.form = this.fb.group({
@@ -53,18 +54,60 @@ export class  MatchesFormComponent {
   }
 
   getFormData() {
-    return this.form.value;
+    return this.listMatches;
   }
 
   addMatch() {
-    if(this.form.value.teamA && this.form.value.teamB && this.form.value.date 
-      && this.form.value.hour && this.form.value.court) {
+    // Optional safeguard: check teams is loaded 
+    if (!this.teams || !this.teams.length) {
+      console.error('Teams not loaded yet or empty');
+      return;
+    }
+
+    if (this.form.value.teamA && this.form.value.teamB && this.form.value.date 
+        && this.form.value.hour && this.form.value.court) {
+      
       this.listMatches.push(this.form.value);
+
+      const teamA = this.teams.find(t => t.id.toString() == this.form.value.teamA.toString());
+      const teamB = this.teams.find(t => t.id.toString() == this.form.value.teamB.toString());
+      const dateObj = this.listDates.find(d => d.id.toString() == this.form.value.date.toString());
+
+      const newMatchDescription = {
+        teamA: teamA ? teamA.name : 'Equipo desconocido',
+        teamB: teamB ? teamB.name : 'Equipo desconocido',
+        date: dateObj ? dateObj : { date: 'Fecha desconocida' },
+        hour: this.form.value.hour,
+        court: this.form.value.court
+      };
+
+      this.listMatchesDescription.push(newMatchDescription);
       this.form.reset();
     }
   }
 
   deleteMatch(match: any) {
     this.listMatches = this.listMatches.filter(m => m !== match);
+  }
+
+  formatHour(event: any) {
+    let input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + ':' + value.substring(2);
+    }
+    if (value.length > 4) {
+      value = value.substring(0, 5);
+    }
+    let parts = value.split(':');
+    if (parts[0] && parseInt(parts[0]) > 23) {
+      parts[0] = '23';
+      value = parts.join(':');
+    }
+    if (parts[1] && parseInt(parts[1]) > 59) {
+      parts[1] = '59';
+      value = parts.join(':');
+    }
+    this.form.patchValue({ hour: value });
   }
 }

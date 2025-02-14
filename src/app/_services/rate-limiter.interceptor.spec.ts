@@ -28,7 +28,7 @@ describe('RateLimitingInterceptor con endpoint externo', () => {
 
   it('debería permitir 5 solicitudes y bloquear la sexta con error 429', (done) => {
     // Simulamos 5 solicitudes al endpoint
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       httpClient.get(testUrl).subscribe({
         next: () => {
           // Respuesta exitosa

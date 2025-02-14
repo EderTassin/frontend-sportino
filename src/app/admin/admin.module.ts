@@ -14,13 +14,15 @@ import { TournamentsComponent } from './tournaments/tournaments.component';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { ImprimirDocumentosComponent } from './imprimir-documentos/imprimir-documentos.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
   { path: 'torneos', component: TournamentsComponent, canActivate: [AuthGuard] },
   { path: 'equipos', component: TeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] },
-  { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] }
+  { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] },
+  { path: 'imprimir-documentos', component: ImprimirDocumentosComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -30,7 +32,8 @@ const routes: Routes = [
     LoadDataMatchComponent,
     HomeAdminComponent,
     FilterPipe,
-    DelegadosComponent
+    DelegadosComponent,
+    ImprimirDocumentosComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

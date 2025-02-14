@@ -16,40 +16,37 @@ export class CreateTournamentsComponent implements OnInit {
   tournamentData: any[] = [];
   steps: string[] = ['Información del Torneo', 'Fechas a Jugar', 'Programar Partidos', 'Resumen'];
   isCurrentFormValid = false;
+  idTournament: number = 0;
+  originalTournamentData: any;
 
   @ViewChild(TournamentFormComponent) tournamentFormComponent!: TournamentFormComponent;
   @ViewChild(DatesFormComponent) datesFormComponent!: DatesFormComponent;
   @ViewChild(MatchesFormComponent) matchesFormComponent!: MatchesFormComponent;
 
   constructor(
-    private tournamentService: TournamentService, 
+    private tournamentService: TournamentService,
     private toastr: ToastrService,
-    private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    console.log("Componente inicializado");
-
-    // Verificar si hay un ID en la URL
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.loadExistingTournament(params['id']);
+        this.idTournament = params['id'];
       }
     });
   }
 
   async loadExistingTournament(id: number) {
     try {
-      // Cargar datos del torneo
       const tournament = await this.tournamentService.getTournamentById(id);
       this.tournamentData[0] = tournament;
-      
-      // Cargar fechas del torneo
+      this.originalTournamentData = { ...tournament };
+
       const dates = await this.tournamentService.getDatesByTournament(id);
       this.tournamentData[1] = dates;
-      
-      // Si hay datos, avanzar al último paso completado
+
       if (this.tournamentData[0]) {
         this.currentStep = dates.length > 0 ? 2 : 1;
       }
@@ -61,17 +58,70 @@ export class CreateTournamentsComponent implements OnInit {
 
   handleNext() {
     const currentFormData = this.getCurrentFormData();
-
     if (currentFormData) {
       this.tournamentData[this.currentStep] = currentFormData;
-
-      if (this.currentStep === 0 && this.tournamentData[0].id == undefined) {
-        this.createTournament();
+  
+      if (this.currentStep === 0) {
+        if (this.idTournament) {
+          this.handleUpdateTournament();
+        } else {
+          this.createTournament();
+        }
       }
-
+  
       if (this.currentStep === 1) {
         this.createDates();
       }
+
+      if (this.currentStep === 2) {
+        this.createMatches();
+      }
+    }
+  }
+
+  async createMatches() {
+    try {
+      const listMatches = this.tournamentData[2].map((match: any) => {
+        return {
+          date: match.date,
+          team_1: match.teamA,
+          team_2: match.teamB,
+          tournament: this.tournamentData[0].id,
+          active: true
+        }
+      })
+
+      const response = await this.tournamentService.addMatches(listMatches);
+
+      this.tournamentData[2] = response;
+      this.changeStep();
+    } catch (error: any) {
+      console.error(error.error.detail);
+      this.toastr.error(error.error.detail);
+    }
+  }
+
+  handleUpdateTournament() {
+    const currentFormData = this.getCurrentFormData();
+    if (this.hasTournamentDataChanged(this.originalTournamentData, currentFormData)) {
+      this.updateTournament();
+    } else {
+      this.changeStep();
+    }
+  }
+
+  hasTournamentDataChanged(existingData: any, newData: any): boolean {
+    return JSON.stringify(existingData) !== JSON.stringify(newData);
+  }
+
+  async updateTournament() {
+    try {
+      await this.tournamentService.updateTournament(this.idTournament,this.tournamentData[0]);
+      this.toastr.success('Torneo actualizado con éxito');
+      this.changeStep();
+    } catch (error: any) {
+      console.error(error.error.detail);
+      this.toastr.error(error.error.detail);
     }
   }
 
@@ -102,30 +152,28 @@ export class CreateTournamentsComponent implements OnInit {
     try {
       const response = await this.tournamentService.createTournament(this.tournamentData[0]);
       this.tournamentData[0].id = response.id;
-      this.router.navigate(['/create-tournament', response.id]);
       this.changeStep();
-    } catch (error: any) { 
+    } catch (error: any) {
       console.error(error.error.detail);
       this.toastr.error(error.error.detail);
     }
   }
 
   async createDates() {
-    if (this.tournamentData[1][0]?.id != undefined) this.changeStep();
+    if (this.tournamentData[1][0]?.id != undefined) {
+      this.changeStep();
+      return;
+    }
 
     try {
-      const listDate = this.tournamentData[1].map((date: any) => {
-        return {
-          date: date.date,
-          tournament: [this.tournamentData[0].id],
-          active: true
-        }
-      })
+      const listDate = this.tournamentData[1].map((date: any) => ({
+        date: date.date,
+        tournament: [this.tournamentData[0].id],
+        active: true
+      }));
 
       const response = await this.tournamentService.addDates(listDate);
-            
       this.tournamentData[1] = response;
-      
       this.changeStep();
     } catch (error: any) {
       console.error(error.error.detail);
@@ -141,4 +189,3 @@ export class CreateTournamentsComponent implements OnInit {
     this.isCurrentFormValid = isValid;
   }
 }
-  

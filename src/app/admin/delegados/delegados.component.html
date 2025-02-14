@@ -1,5 +1,5 @@
 <div class="goBack">
-    <button (click)="goBack()" class="btn btn-secondary">
+    <button (click)="goBack()" class="btn btn-secondary d-flex align-items-center gap-2">
         <span class="material-icons">arrow_back</span>Volver
     </button>
 </div>
@@ -19,7 +19,8 @@
                         <th>Documento</th>
                         <th>Correo</th> 
                         <th>Equipo</th>
-                        <th>Acciones</th>
+                        <th>Activar/Desactivar</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,17 +29,28 @@
                         <td data-label="Documento">{{ delegado.id_card }}</td>
                         <td data-label="Correo">{{ delegado.email }}</td>
                         <td data-label="Equipo">{{ delegado.team.name }}</td>
-                        <td data-label="Acciones" class="actions">
-                            <button class="btn btn-icon btn-edit" (click)="handleEdit(delegado)" title="Editar">
-                                <span class="material-icons">edit</span>
-                            </button>
-                            <button class="btn btn-icon btn-delete" (click)="handleDelete(delegado)" title="Eliminar">
-                                <span class="material-icons">delete</span>
-                            </button>
+                        <td data-label="Activar/Desactivar">
                             <label class="switch" title="Activar/Desactivar">
                                 <input type="checkbox" [checked]="delegado.confirmed" (change)="handleActive(delegado)">
                                 <span class="slider round"></span>
                             </label>
+                        </td>
+                        <td data-label="Acciones" class="actions d-flex gap-2 align-items-center justify-content-center">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" title="Más opciones" class="bg-white">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            
+
+                            <mat-menu #menu="matMenu" class="bg-white">
+                                <button mat-menu-item (click)="handleEdit(delegado)" class="text-primary">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>Editar</span>
+                                </button>
+                                <button mat-menu-item (click)="handleDelete(delegado)" class="text-red-500">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>Eliminar</span>
+                                </button>
+                            </mat-menu>
                         </td>
                     </tr>
                 </tbody>

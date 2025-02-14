@@ -15,6 +15,10 @@ export class TournamentService {
     return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/tournament/`, data));
   }
 
+  async updateTournament(tournamentId: number, data: any): Promise<any> {
+    return await firstValueFrom(this.http.put(`${this.apiUrl}calendars/tournament/${tournamentId}`, data));
+  }
+
   async getTournamentById(tournamentId: number): Promise<any> {
     return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/tournament/${tournamentId}`));
   }
@@ -23,8 +27,8 @@ export class TournamentService {
     return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/dates/`, data));
   }
 
-  addMatches(tournamentId: string, matches: any[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/tournaments/${tournamentId}/matches`, { matches });
+  async addMatches(data: any): Promise<any> {
+    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/games/`, data));
   }
 
   async getDatesByTournament(tournamentId: number): Promise<any> {

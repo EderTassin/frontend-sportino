@@ -37,19 +37,20 @@
         </div>
         
         <div class="flex flex-col gap-2 mb-2">
-            <label class="text-sm font-bold">Categoría</label>
-            <div formArrayName="category" class="ml-4">
-                <ng-container *ngFor="let category of categories; let i = index">
-                    <div class="flex items-center gap-2">
-                        <input type="checkbox" [id]="'category-' + i" 
-                               (change)="onCategoryChange($event, category.id)" class="checkbox">
-                        <label [for]="'category-' + i" class="cursor-pointer">{{category.name}}</label>
-                    </div>
-                </ng-container>
-            </div>
-            <span class="text-red-500 text-sm" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
-                Debe seleccionar al menos una categoría
-            </span>
+          <label class="text-sm font-bold">Categoría</label>
+          <div formArrayName="category" class="ml-4">
+            <ng-container *ngFor="let category of categories; let i = index">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" [id]="'category-' + i" 
+                       (change)="onCategoryChange($event, category.id)" 
+                       [checked]="selectedCategories.includes(category.id)" class="checkbox">
+                <label [for]="'category-' + i" class="cursor-pointer">{{category.name}}</label>
+              </div>
+            </ng-container>
+          </div>
+          <span class="text-red-500 text-sm" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
+            Debe seleccionar al menos una categoría
+          </span>
         </div>
     </section>
 </form>

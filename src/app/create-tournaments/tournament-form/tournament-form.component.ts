@@ -1,6 +1,33 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+
+interface Tournament {
+  id?: number;
+  name: string;
+  description?: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
+  category: number[];
+}
+
+interface TournamentDate {
+  id?: number;
+  date: string;
+  tournament: number[];
+  active: boolean;
+}
+
+interface TournamentMatch {
+  date: string;
+  team1: number;
+  team2: number;
+  tournament: number;
+  active: boolean;
+}
 
 @Component({
   selector: 'app-tournament-form',
@@ -12,11 +39,13 @@ export class TournamentFormComponent implements OnInit {
   @Output() formSubmit = new EventEmitter<any>();
   @Output() formValid = new EventEmitter<boolean>();
 
+  currentStep: number = 1;
+
   categories: any[] = [];
   form: FormGroup;
   selectedCategories: number[] = [];
 
-  constructor(private tournamentService: EstadisticaPartidosService, private fb: FormBuilder) {
+  constructor(private tournamentService: EstadisticaPartidosService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: [''],
@@ -31,9 +60,15 @@ export class TournamentFormComponent implements OnInit {
 
   ngOnInit() {
     this.getCategories();
-
+  
+    console.log('Initial Data', this.initialData[0]);
+  
     if (this.initialData[0]) {
-      this.form.patchValue(this.initialData[0]);
+      this.form.patchValue({
+        ...this.initialData[0],
+        category: this.initialData[0].category || [] // Ensure category is an array
+      });
+      this.selectedCategories = this.initialData[0].category || [];
     }
   }
 
@@ -47,7 +82,7 @@ export class TournamentFormComponent implements OnInit {
     } else {
       this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
     }
-    this.form.patchValue({ categories: this.selectedCategories });
+    this.form.patchValue({ category: this.selectedCategories });
   }
 
   getFormData() {
@@ -57,4 +92,5 @@ export class TournamentFormComponent implements OnInit {
     this.form.markAllAsTouched();
     return null;
   }
+
 }
