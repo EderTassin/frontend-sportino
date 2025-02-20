@@ -21,6 +21,11 @@ const routes: Routes = [
     path: ':id', 
     component: CreateTournamentsComponent, 
     canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'tournament-summary/:id', 
+    component: TournamentSummaryComponent, 
+    canActivate: [AuthGuard] 
   }
 ];
 

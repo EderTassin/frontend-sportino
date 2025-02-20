@@ -1,6 +1,14 @@
 <div class="card w-full max-w-4xl mx-auto">
+
+  <div class="card-header flex justify-between w-full">
+    <button (click)="handleVolver()" class="btn btn-secondary d-flex align-items-center bg-gray-800 text-white px-4 py-2 p-0 rounded-md">
+      <span class="material-symbols-outlined text-lg">arrow_back</span>
+      <span class="text-lg">Volver</span>
+    </button>
+  </div>
+
   <div class="card-header">
-    <h2 class="card-title">Crear Torneo de Fútbol</h2>
+    <h2 class="card-title mb-0">Crear Torneo de Fútbol</h2>
   </div>
 
   <div class="card-content">
@@ -19,12 +27,11 @@
       <app-tournament-form *ngSwitchCase="0" (formValid)="onFormValidityChange($event)" 
       [initialData]="tournamentData"></app-tournament-form>
 
-      <app-dates-form *ngSwitchCase="1" [initialData]="tournamentData" (datesChange)="onDatesChange($event)">
-      </app-dates-form>
+      <app-dates-form *ngSwitchCase="1" [initialData]="tournamentData" (datesChange)="onDatesChange($event)"></app-dates-form>
 
       <app-matches-form *ngSwitchCase="2" [initialData]="tournamentData"></app-matches-form>
 
-      <app-tournament-summary *ngSwitchCase="3"[data]="tournamentData"></app-tournament-summary>
+      <app-tournament-summary *ngSwitchCase="3" [tournament]="tournamentData"></app-tournament-summary>
     </ng-container>
   </div>
 

@@ -22,7 +22,11 @@ const routes: Routes = [
   { path: 'equipos', component: TeamComponent, canActivate: [AuthGuard] },
   { path: 'load-data-match', component: LoadDataMatchComponent, canActivate: [AuthGuard] },
   { path: 'participantes', component: DelegadosComponent, canActivate: [AuthGuard] },
-  { path: 'imprimir-documentos', component: ImprimirDocumentosComponent, canActivate: [AuthGuard] }
+  { path: 'imprimir-documentos', component: ImprimirDocumentosComponent, canActivate: [AuthGuard] },
+  { 
+    path: 'tournament-summary/:id', 
+    loadChildren: () => import('../create-tournaments/tounament.module').then(m => m.TournamentModule) 
+  }
 ];
 
 @NgModule({

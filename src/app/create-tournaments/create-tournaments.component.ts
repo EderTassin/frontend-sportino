@@ -30,12 +30,12 @@ export class CreateTournamentsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.loadExistingTournament(params['id']);
-        this.idTournament = params['id'];
-      }
-    });
+    // this.route.params.subscribe(params => {
+    //   if (params['id']) {
+    //     this.loadExistingTournament(params['id']);
+    //     this.idTournament = params['id'];
+    //   }
+    // });
   }
 
   async loadExistingTournament(id: number) {
@@ -87,6 +87,8 @@ export class CreateTournamentsComponent implements OnInit {
           team_1: match.teamA,
           team_2: match.teamB,
           tournament: this.tournamentData[0].id,
+          field: match.field,
+          hour: match.hour,
           active: true
         }
       })
@@ -187,5 +189,9 @@ export class CreateTournamentsComponent implements OnInit {
 
   onDatesChange(isValid: boolean) {
     this.isCurrentFormValid = isValid;
+  }
+
+  handleVolver() {
+    window.history.back();
   }
 }

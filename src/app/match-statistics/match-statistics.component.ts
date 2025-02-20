@@ -32,8 +32,7 @@ export class MatchStatisticsComponent {
   
   async loadDataForm(){
     this.tournament = await this.estadisticaPartidosService.getTournamentById(this.tournamentId)
-    console.log(this.tournament);
-
+    
     const dates = await this.estadisticaPartidosService.getDatesTournaments();
     this.datesSelects = dates.filter((item:any) => item.tournament.includes(this.tournamentId))
     this.selectedDate = this.datesSelects[0].date;
@@ -53,10 +52,7 @@ export class MatchStatisticsComponent {
   }
 
   async openModal(match: any) {
-    console.log(match);
     this.selectedMatch = await this.estadisticaPartidosService.getMatchDetail(match.id);
-
-    console.log(this.selectedMatch);
 
     this.showModal = true;
   }

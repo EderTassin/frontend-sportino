@@ -35,8 +35,6 @@ export class  MatchesFormComponent {
     });
 
     this.listDates = this.initialData[1];
-    console.log('MatchesFormComponent: ', this.initialData);
-
     this.getTeams();
     this.getDatesByTournament();
   }

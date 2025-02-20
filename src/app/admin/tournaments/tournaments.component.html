@@ -1,6 +1,7 @@
 <div class="goBack d-flex justify-content-center">
-    <button (click)="goBack()" class="btn btn-secondary">
-        <span class="material-icons">arrow_back</span>Volver
+    <button (click)="goBack()" class="btn btn-secondary bg-gray-800 text-white px-2 py-1 p-0 rounded-md">
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        <span class="text-lg">Volver</span>
     </button>
 </div>
 
@@ -48,7 +49,7 @@
         <tbody>
             <tr *ngFor="let team of tournaments">
                 <td>{{ team.id }}</td>
-                <td>{{ team.name }}</td>
+                <td (click)="goToTournament(team.id)">{{ team.name }}</td>
                 <td>{{ team.date_from }}</td>
                 <td>{{ team.date_to}}</td>
                 <td>{{ team.active ? 'Sí' : 'No' }}</td>
@@ -71,3 +72,4 @@
         </tbody>
     </table>
 </div>
+

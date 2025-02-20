@@ -61,12 +61,10 @@ export class TournamentFormComponent implements OnInit {
   ngOnInit() {
     this.getCategories();
   
-    console.log('Initial Data', this.initialData[0]);
-  
     if (this.initialData[0]) {
       this.form.patchValue({
         ...this.initialData[0],
-        category: this.initialData[0].category || [] // Ensure category is an array
+        category: this.initialData[0].category || []
       });
       this.selectedCategories = this.initialData[0].category || [];
     }

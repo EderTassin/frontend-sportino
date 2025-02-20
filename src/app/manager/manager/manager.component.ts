@@ -59,7 +59,6 @@ export class ManagerComponent implements OnInit {
 
   getTeam(){
     this.managerService.getTeam(this.teamId).subscribe((res: any) => {
-      console.log(res);
       this.players = res.players;
       this.team = res;
     });
@@ -74,13 +73,10 @@ export class ManagerComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.newPlayer);
-    console.log(this.teamId);
     this.newPlayer.birthDate = new Date(this.newPlayer.birthDate);
     
     this.managerService.addPlayer(this.newPlayer, this.teamId, this.selectedFile).subscribe(
       (response) => {
-        console.log('Player added successfully:', response);
         this.players.push(response);
         this.newPlayer = {} as Player;
         this.selectedFile = null;
@@ -123,9 +119,7 @@ export class ManagerComponent implements OnInit {
   }
 
   openModalEditPlayer(player: Player) {
-    this.selectedPlayer = { ...player };
-
-    console.log(this.selectedPlayer);
+    this.selectedPlayer = { ...player };  
     this.showEditModal = true;
   }
 
@@ -134,7 +128,6 @@ export class ManagerComponent implements OnInit {
     
     this.managerService.updatePlayer(this.selectedPlayer, this.selectedFile).subscribe(
       (response) => {
-        console.log('Player updated successfully:', response);
         const index = this.players.findIndex(player => player.id === this.selectedPlayer.id);
         this.players[index] = response;
         this.selectedPlayer = {} as Player;

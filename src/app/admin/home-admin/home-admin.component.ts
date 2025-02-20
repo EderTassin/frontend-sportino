@@ -16,10 +16,13 @@ export class HomeAdminComponent {
 
   toggleAdminPanel() {
     this.isAdminPanelVisible = !this.isAdminPanelVisible;
-    console.log('Panel visibility:', this.isAdminPanelVisible);
   }
 
   navigateTo(section: string): void {
     this.router.navigate([`admin/${section}`]);
+  }
+
+  redirectToCreateTournament(): void {
+    this.router.navigate(['/create-tournament']);
   }
 }

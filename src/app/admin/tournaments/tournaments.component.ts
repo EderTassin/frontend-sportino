@@ -55,4 +55,8 @@ export class TournamentsComponent {
       this.getTournaments();
     });
   }
+
+  goToTournament(id: number) {
+    this.router.navigate(['/admin/tournament-summary/', id]);
+  }
 }
