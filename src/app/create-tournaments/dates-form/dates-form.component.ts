@@ -52,11 +52,11 @@ export class DatesFormComponent {
     this.datesChange.emit(true);
   }
 
-  removeDate(index: number) {
+  async removeDate(index: number) {
     this.dates.splice(index, 1);
 
     if (this.dates[index]?.id) {
-      this.tournamentService.deleteDate(this.dates[index].id);
+      await this.tournamentService.deleteDate(this.dates[index].id);
     }
   }
 }

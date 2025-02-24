@@ -27,8 +27,16 @@ export class TournamentService {
     return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/dates/`, data));
   }
 
+  async getDates(): Promise<any> {
+    return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/dates/`));
+  }
+
   async addMatches(data: any): Promise<any> {
     return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/games/`, data));
+  }
+
+  async getMatchesByDate(dateId: number): Promise<any> {
+    return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/games/${dateId}`));
   }
 
   async getDatesByTournament(tournamentId: number): Promise<any> {
@@ -36,6 +44,6 @@ export class TournamentService {
   }
 
   async deleteDate(dateId: string): Promise<any> {
-    return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/dates/${dateId}`));
+    return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/dates/${dateId}/`));
   }
 }

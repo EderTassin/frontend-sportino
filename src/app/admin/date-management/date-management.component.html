@@ -1,0 +1,129 @@
+<div class="p-6 bg-white rounded-lg shadow">
+
+  <div class="flex flex-row gap-2 justify-between items-center mb-6">
+    <button class="bg-slate-300 rounded-md px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors justify-center align-middle flex items-center gap-2" (click)="goBack()">
+      <span class="material-icons align-middle">arrow_back</span>
+      Volver
+    </button>
+  </div>
+
+
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Gestión de Fechas</h2>
+    <button 
+      (click)="openNewDateModal()"
+      class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+    >
+      Crear Nueva Fecha
+    </button>
+  </div>
+
+  <div class="overflow-x-auto rounded-lg border">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer flex" (click)="sortDatesId('id')">
+            <span>ID</span>
+            <span class="material-icons transition-transform duration-200" 
+              [class.rotate-180]="sortDirectionId === 'desc'">arrow_drop_down</span>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" (click)="sortDates('date')">
+            <span>Fecha</span>
+            <span class="material-icons transition-transform duration-200"
+              [class.rotate-180]="sortDirectionDate === 'desc'">arrow_drop_down</span>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Torneo</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- Fila de ejemplo -->
+        <tr class="hover:bg-gray-50 transition-colors" *ngFor="let date of dates; let index = index">
+        <td class="px-6 py-4 whitespace-nowrap">{{date.id}}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{date.date | date: 'dd/MM/yyyy'}}</td>
+          <td class="px-6 py-4">{{date.tournament}}</td>
+          <td class="px-6 py-4">
+            <span class="px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{'bg-green-100 text-green-800': date.active, 'bg-red-100 text-red-800': !date.active}">
+              {{date.active ? 'Active' : 'Inactive'}}
+            </span>
+          </td>
+          <td class="px-6 py-4 flex space-x-2">
+            <button class="text-red-600 hover:text-red-900" (click)="deleteDate(index, date.id)">🗑️ Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Nueva Fecha -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Crear Nueva Fecha</h3>
+      <form class="space-y-4">
+        <section class="header-selector mb-2">
+            <h2>Seleccionar Fechas</h2>
+            <div class="flex flex-col gap-2">
+              <label class="text-sm w-[30%]">Nueva fecha</label>
+                <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
+                    <div class="flex flex-row w-full items-center justify-between">
+                        <input 
+                            type="date" 
+                            class="form-control input w-full" 
+                            [formControl]="datesControl" 
+                            format="dd/MM/yyyy"
+                            required>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <section class="header-card mb-1 mt-2">
+                <h2>Torneo</h2>
+                <div class="flex flex-row gap-2">
+                    <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
+                        <select 
+                            class="form-control input w-full" 
+                            [(ngModel)]="selectedTournament" 
+                            name="tournament" 
+                            required>
+                            <option *ngFor="let tournament of tournaments" [value]="tournament.id">
+                                {{tournament.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex flex-row gap-2 justify-end w-full mt-2">
+              <button class="bg-slate-900 text-white px-4 py-2 rounded-md"
+                 (click)="addDate()" [disabled]="!datesControl.valid">Agregar Fecha</button>
+            </div>
+            
+        </section>
+    
+        <section class="header-card mb-2">
+            <h2>Fechas Elegidas</h2>
+            <div class="flex flex-row flex-wrap gap-2">
+                <div *ngFor="let date of datesSelected" class="px-3 py-2 bg-gray-300 rounded-md flex items-center gap-2">
+                    <span class="text-sm">{{date.date | date: 'dd/MM/yyyy'}} - {{date.date | date: "fullDate"}}</span>
+                    <button class="text-red-500 hover:text-red-700 hover:text-bold" (click)="removeDate(date.index - 1)">
+                        <span class="material-icons z-10 text-sm align-middle">
+                            close
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <div class="flex flex-row gap-2 justify-between w-full mt-2">
+          <button class="text-white bg-slate-500 px-4 py-2 rounded-md" (click)="closeModal()">
+            Cancelar  
+          </button>
+          <button class="bg-slate-900 text-white px-4 py-2 rounded-md" (click)="createDates()">
+            Crear Fechas
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -21,11 +21,10 @@ export class TournamentsComponent {
   }
 
 
-  getTournaments() {
-    this.tournamentsService.getTournaments().subscribe((tournaments) => {
-      this.tournaments = tournaments;
-      this.tournamentsOriginal = tournaments;
-    });
+  async getTournaments() {
+    const tournaments = await this.tournamentsService.getTournaments();
+    this.tournaments = tournaments;
+    this.tournamentsOriginal = tournaments;
   }
 
   goBack() {

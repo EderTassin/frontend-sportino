@@ -15,6 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { ImprimirDocumentosComponent } from './imprimir-documentos/imprimir-documentos.component';
+import { DateManagementComponent } from './date-management/date-management.component';
+import { ResultsComponent } from './results/results.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -26,7 +28,9 @@ const routes: Routes = [
   { 
     path: 'tournament-summary/:id', 
     loadChildren: () => import('../create-tournaments/tounament.module').then(m => m.TournamentModule) 
-  }
+  },
+  { path: 'gestionar-fechas', component: DateManagementComponent, canActivate: [AuthGuard] },
+  { path: 'cargar-resultados', component: ResultsComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -37,7 +41,9 @@ const routes: Routes = [
     HomeAdminComponent,
     FilterPipe,
     DelegadosComponent,
-    ImprimirDocumentosComponent
+    ImprimirDocumentosComponent,
+    DateManagementComponent,
+    ResultsComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

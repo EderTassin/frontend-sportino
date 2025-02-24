@@ -87,6 +87,8 @@ export class AuthService {
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
 
+    console.log(decodedToken);
+
     if (decodedToken.group.includes('MANAGER')) {
       return true;
     }

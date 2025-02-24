@@ -43,8 +43,8 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
 
-  getTournaments(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}calendars/tournament/`);
+   async getTournaments(): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/`));
   }
 
   deleteTournament(id: number): Observable<any> {

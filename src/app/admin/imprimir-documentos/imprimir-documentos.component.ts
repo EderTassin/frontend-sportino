@@ -20,11 +20,9 @@ export class ImprimirDocumentosComponent implements OnInit {
     this.cargarTorneosActivos();
   }
 
-  cargarTorneosActivos(): void {
-    this.adminService.getTournaments().subscribe({
-      next: (torneos: any) => this.tournaments = torneos,
-      error: (error: any) => console.error('Error cargando torneos', error)
-    });
+  async cargarTorneosActivos(): Promise<void> {
+    const res = await this.adminService.getTournaments();
+    this.tournaments = res;
   }
 
   async cargarFechas(): Promise<void> {
