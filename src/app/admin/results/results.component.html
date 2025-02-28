@@ -1,4 +1,13 @@
 <div class="max-w-4xl mx-auto p-6 space-y-8">
+
+  <div class="flex flex-row gap-2 justify-between items-center mb-6">
+    <button class="bg-slate-300 rounded-md px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors justify-center align-middle flex items-center gap-2" (click)="goBack()">
+      <span class="material-icons align-middle">arrow_back</span>
+      Volver
+    </button>
+  </div>
+
+
   <!-- Selectores de Torneo y Fecha -->
   <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
     <h2 class="text-2xl font-bold text-gray-800">Seleccionar Partido</h2>
@@ -20,26 +29,33 @@
     </div>
   </div>
 
+
   <!-- Listado de Partidos -->
   <div class="space-y-4" *ngIf="matches && matches.length > 0" [@fadeInOut]>
     <div *ngFor="let match of matches" 
          class="bg-white rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-      <div class="p-4 cursor-pointer" (click)="toggleMatch(match.id)">
+      <div class="p-4 cursor-pointer" (click)="toggleMatch(match)">
         <div class="flex items-center justify-between">
           <div class="flex-1 text-center">
-            <p class="font-bold text-lg">{{ match.localTeam }}</p>
             <p class="text-gray-500 text-sm">Local</p>
+            <div class="flex items-center justify-between">
+              <p class="font-bold text-lg">{{ match?.team_1?.name }}</p>
+              <p class="font-bold">{{ match?.result?.goals_team_1 }}</p>
+            </div>
           </div>
-          <div class="mx-4">
-            <span class="text-xl font-bold">VS</span>
-          </div>
+          <div class="mx-4 text-center mt-2">
+            <span class="text-lg font-bold">VS</span>
+          </div> 
           <div class="flex-1 text-center">
-            <p class="font-bold text-lg">{{ match.visitorTeam }}</p>
             <p class="text-gray-500 text-sm">Visitante</p>
+            <div class="flex items-center justify-between">
+              <p class="font-bold">{{ match?.result?.goals_team_2 }}</p>
+              <p class="font-bold text-lg">{{ match?.team_2?.name }}</p>
+            </div>
           </div>
         </div>
         <div class="mt-2 text-center text-sm text-gray-500">
-          {{ match.date | date:'dd/MM/yyyy HH:mm' }}
+          {{ match.date | date:'dd/MM/yyyy' }} - {{ match.hour }}
         </div>
       </div>
 
@@ -48,30 +64,69 @@
         <!-- Sección de Goles -->
         <div class="mb-8">
           <h3 class="text-xl font-semibold mb-4">Registro de Goles</h3>
-          <div class="bg-gray-100 p-4 rounded-lg">
+          
+          <!-- Formulario para el equipo local -->
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <h4 class="font-medium text-lg mb-3">{{ match?.team_1?.name }} (Local)</h4>
             <form class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">Jugador</label>
-                <select [(ngModel)]="newGoal.player" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                  <option *ngFor="let p of players" [value]="p.id">{{ p.name }}</option>
+                <select [(ngModel)]="newGoalTeam1.player" name="playerTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                  <option *ngFor="let p of playersTeam1" [value]="p.id">{{ p.full_name }}</option>
                 </select>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">Cantidad de Goles</label>
-                <input type="number" [(ngModel)]="newGoal.goals" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                <input type="number" [(ngModel)]="newGoalTeam1.goals" name="goalsTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
               </div>
               <div class="self-end">
-                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addGoal(match.id)">
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addGoal(match.id, 1)">
                   Agregar Gol
                 </button>
               </div>
             </form>
             
-            <!-- Lista de goles registrados -->
+            <!-- Lista de goles registrados para equipo local -->
             <div class="mt-4 space-y-2">
-              <div *ngFor="let goal of goals" class="flex items-center justify-between bg-white p-3 rounded shadow">
-                <span>{{ goal.player.name }} - {{ goal.goals }} goles</span>
-                <button class="text-red-500 hover:text-red-700" (click)="removeGoal(goal)">×</button>
+              <div *ngFor="let goal of goalsTeam1" class="flex items-center justify-between bg-white p-3 rounded shadow">
+                <span>{{ goal.playerName }} - {{ goal.goals }} goles</span>
+                <button class="text-red-500 hover:text-red-700" (click)="removeGoal(goal, 1)">×</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Formulario para el equipo visitante -->
+          <div class="bg-gray-100 p-4 rounded-lg">
+            <h4 class="font-medium text-lg mb-3">{{ match?.team_2?.name }} 
+              <span class="text-gray-500 text-sm">
+                <span *ngFor="let goal of goalsTeam2">
+                  {{ goal.playerName }} - {{ goal.goals }} goles
+                </span>
+              </span>
+            </h4>
+            <form class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Jugador</label>
+                <select [(ngModel)]="newGoalTeam2.player" name="playerTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                  <option *ngFor="let p of playersTeam2" [value]="p.id">{{ p.full_name }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Cantidad de Goles</label>
+                <input type="number" [(ngModel)]="newGoalTeam2.goals" name="goalsTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              </div>
+              <div class="self-end">
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addGoal(match.id, 2)">
+                  Agregar Gol
+                </button>
+              </div>
+            </form>
+            
+            <!-- Lista de goles registrados para equipo visitante -->
+            <div class="mt-4 space-y-2">
+              <div *ngFor="let goal of goalsTeam2 " class="flex items-center justify-between bg-white p-3 rounded shadow">
+                <span>{{ goal.playerName }} - {{ goal.goals }} goles</span>
+                <button class="text-red-500 hover:text-red-700" (click)="removeGoal(goal, 2)">×</button>
               </div>
             </div>
           </div>
@@ -80,39 +135,49 @@
         <!-- Sección de Sanciones -->
         <div class="mb-8">
           <h3 class="text-xl font-semibold mb-4">Registro de Sanciones</h3>
-          <div class="bg-gray-100 p-4 rounded-lg">
+          
+          <!-- Sanciones para equipo local -->
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <h4 class="font-medium text-lg mb-3">{{ match?.team_1?.name }} (Local)</h4>
             <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Tipo de Sanción</label>
                   <div class="mt-1 space-x-4">
                     <label class="inline-flex items-center">
-                      <input type="radio" name="sanction_type" value="P" [(ngModel)]="newSanction.type" class="text-blue-500">
+                      <input type="radio" name="sanction_type_team1" value="P" [(ngModel)]="newSanctionTeam1.type" class="text-blue-500">
                       <span class="ml-2">Jugador</span>
                     </label>
                     <label class="inline-flex items-center">
-                      <input type="radio" name="sanction_type" value="T" [(ngModel)]="newSanction.type" class="text-blue-500">
+                      <input type="radio" name="sanction_type_team1" value="T" [(ngModel)]="newSanctionTeam1.type" class="text-blue-500">
                       <span class="ml-2">Equipo</span>
                     </label>
                   </div>
                 </div>
                 
+                <div *ngIf="newSanctionTeam1.type === 'P'">
+                  <label class="block text-sm font-medium text-gray-700">Jugador</label>
+                  <select [(ngModel)]="newSanctionTeam1.playerId" name="playerSanctionTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <option *ngFor="let p of playersTeam1" [value]="p.id">{{ p.full_name }}</option>
+                  </select>
+                </div>
+                
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Razón</label>
-                  <input type="text" [(ngModel)]="newSanction.reason" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                  <input type="text" [(ngModel)]="newSanctionTeam1.reason" name="reasonTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 </div>
               </div>
 
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Fechas de Suspensión</label>
-                  <input type="number" [(ngModel)]="newSanction.missedDates" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                  <input type="number" [(ngModel)]="newSanctionTeam1.missedDates" name="missedDatesTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 </div>
             
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Tarjetas Amarillas</label>
-                    <select [(ngModel)]="newSanction.yellowCards" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <select [(ngModel)]="newSanctionTeam1.yellowCards" name="yellowCardsTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                       <option value="0">0</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -121,7 +186,7 @@
                   
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Tarjetas Rojas</label>
-                    <select [(ngModel)]="newSanction.redCard" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <select [(ngModel)]="newSanctionTeam1.redCard" name="redCardTeam1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                       <option value="0">0</option>
                       <option value="1">1</option>
                     </select>
@@ -130,23 +195,103 @@
               </div>
               
               <div class="md:col-span-2">
-                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addSanction(match.id)">
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addSanction(match.id, 1)">
                   Agregar Sanción
                 </button>
               </div>
             </form>
             
             <div class="mt-4 space-y-2">
-              <div *ngFor="let sanction of sanctions" class="flex items-center justify-between bg-white p-3 rounded shadow">
+              <div *ngFor="let sanction of sanctionsTeam1" class="flex items-center justify-between bg-white p-3 rounded shadow">
                 <span>
                   {{ sanction.type === 'P' ? 
-                    (sanction.player?.name || 'Jugador') : 
-                    (sanction.team?.name || 'Equipo') 
+                    (sanction.playerName || 'Jugador') : 
+                    (match?.team_1?.name || 'Equipo') 
                   }} - {{ sanction.missedDates }} fechas | 
                   {{ sanction.yellowCards }} Amarillas, 
                   {{ sanction.redCard }} Rojas
                 </span>
-                <button class="text-red-500 hover:text-red-700" (click)="removeSanction(sanction)">×</button>
+                <button class="text-red-500 hover:text-red-700" (click)="removeSanction(sanction, 1)">×</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sanciones para equipo visitante -->
+          <div class="bg-gray-100 p-4 rounded-lg">
+            <h4 class="font-medium text-lg mb-3">{{ match?.team_2?.name }} (Visitante)</h4>
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Tipo de Sanción</label>
+                  <div class="mt-1 space-x-4">
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="sanction_type_team2" value="P" [(ngModel)]="newSanctionTeam2.type" class="text-blue-500">
+                      <span class="ml-2">Jugador</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="sanction_type_team2" value="T" [(ngModel)]="newSanctionTeam2.type" class="text-blue-500">
+                      <span class="ml-2">Equipo</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div *ngIf="newSanctionTeam2.type === 'P'">
+                  <label class="block text-sm font-medium text-gray-700">Jugador</label>
+                  <select [(ngModel)]="newSanctionTeam2.playerId" name="playerSanctionTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <option *ngFor="let p of playersTeam2" [value]="p.id">{{ p.full_name }}</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Razón</label>
+                  <input type="text" [(ngModel)]="newSanctionTeam2.reason" name="reasonTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Fechas de Suspensión</label>
+                  <input type="number" [(ngModel)]="newSanctionTeam2.missedDates" name="missedDatesTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+            
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Tarjetas Amarillas</label>
+                    <select [(ngModel)]="newSanctionTeam2.yellowCards" name="yellowCardsTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Tarjetas Rojas</label>
+                    <select [(ngModel)]="newSanctionTeam2.redCard" name="redCardTeam2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="md:col-span-2">
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="addSanction(match.id, 2)">
+                  Agregar Sanción
+                </button>
+              </div>
+            </form>
+            
+            <div class="mt-4 space-y-2">
+              <div *ngFor="let sanction of sanctionsTeam2" class="flex items-center justify-between bg-white p-3 rounded shadow">
+                <span>
+                  {{ sanction.type === 'P' ? 
+                    (sanction.playerName || 'Jugador') : 
+                    (match?.team_2?.name || 'Equipo') 
+                  }} - {{ sanction.missedDates }} fechas | 
+                  {{ sanction.yellowCards }} Amarillas, 
+                  {{ sanction.redCard }} Rojas
+                </span>
+                <button class="text-red-500 hover:text-red-700" (click)="removeSanction(sanction, 2)">×</button>
               </div>
             </div>
           </div>

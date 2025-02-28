@@ -36,7 +36,7 @@ export class TournamentService {
   }
 
   async getMatchesByDate(dateId: number): Promise<any> {
-    return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/games/${dateId}`));
+    return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/games-by-date/${dateId}`));
   }
 
   async getDatesByTournament(tournamentId: number): Promise<any> {
@@ -45,5 +45,38 @@ export class TournamentService {
 
   async deleteDate(dateId: string): Promise<any> {
     return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/dates/${dateId}/`));
+  }
+
+  async createGoal(newGoal: any): Promise<any> {
+    console.log('Servicio - Enviando datos de gol:', newGoal);
+    
+    // Configurar headers específicos que podrían ser necesarios
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+    
+    try {
+      const response = await firstValueFrom(
+        this.http.post(`${this.apiUrl}calendars/goals/`, newGoal, { headers })
+      );
+      console.log('Servicio - Respuesta del servidor:', response);
+      return response;
+    } catch (error) {
+      console.error('Servicio - Error al crear gol:', error);
+      throw error;
+    }
+  }
+
+  async deleteGoal(goalId: number): Promise<any> {
+    return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/goals/${goalId}/`));
+  }
+
+  async createSanction(newSanction: any): Promise<any> {
+    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/sanctions/`, newSanction));
+  }
+
+  async deleteSanction(sanctionId: number): Promise<any> {
+    return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/sanctions/${sanctionId}/`));
   }
 }

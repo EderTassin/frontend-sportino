@@ -2,19 +2,8 @@ import { Component } from '@angular/core';
 import { TournamentService } from 'src/app/create-tournaments/service/tournament.service';
 import { AdminService } from '../service/admin.service';
 import { trigger, transition, style, animate } from '@angular/animations';
-
-interface Match {
-  id: number;
-  localTeam: string;
-  visitorTeam: string;
-  date: Date;
-  tournamentId: number;
-}
-
-interface Player {
-  id: number;
-  name: string;
-}
+import { ManagerService } from 'src/app/manager/manager.service';
+import { Router } from '@angular/router';
 
 interface Team {
   id: number;
@@ -23,24 +12,29 @@ interface Team {
 
 interface Sanction {
   id: number;
+  matchId: number;
   type: string;
   reason: string;
   playerId: number;
   teamId: number;
-  player?: Player;
-  team?: Team;
+  player?: any;
+  team?: any;
+  playerName?: string;
   missedDates: number;
   yellowCards: string;
   redCard: string;
+  idPost?: number;
 }
 
 interface Goal {
   id: number;
   matchId: number;
   teamId: number;
-  player: Player;
-  minute: number;
-  goals: Goal[];
+  player: any;
+  minute?: number;
+  goals: number;
+  playerName?: string;
+  idPost?: number;
 }
 
 @Component({
@@ -60,36 +54,50 @@ export class ResultsComponent {
   selectedTournament: number = 0;
   selectedDate: number = 0;
   selectedMatchId: number | null = null;
+  playersTeam1: any[] = [];
+  playersTeam2: any[] = [];
 
-  goals: Goal[] = [];
-  sanctions: Sanction[] = [];
+  goalsTeam1: Goal[] = [];
+  goalsTeam2: Goal[] = [];
+  sanctionsTeam1: Sanction[] = [];
+  sanctionsTeam2: Sanction[] = [];
 
-  players = [
-    { id: 1, name: 'Jugador 1' },
-    { id: 2, name: 'Jugador 2' },
-    { id: 3, name: 'Jugador 3' }
-  ];
-
-  newSanction: Sanction = {
+  newGoalTeam1: any = {
+    player: 0,
+    goals: 0,
+    teamId: 0,
+    playerName: ''
+  };
+  newGoalTeam2: any = {
+    player: 0,
+    goals: 0,
+    teamId: 0,
+    playerName: ''
+  };
+  newSanctionTeam1: Sanction = {
     id: 0,
     type: 'P',
+    matchId: 0,
     reason: '',
     playerId: 0,
     teamId: 0,
+    playerName: '',
     missedDates: 0,
     yellowCards: '0',
     redCard: '0'
   };
-
-  newGoal: Goal = {
+  newSanctionTeam2: Sanction = {
     id: 0,
+    type: 'P',
     matchId: 0,
+    reason: '',
+    playerId: 0,
     teamId: 0,
-    player: { id: 0, name: '' },
-    minute: 0,
-    goals: []
+    playerName: '',
+    missedDates: 0,
+    yellowCards: '0',
+    redCard: '0'
   };
-  
   tournaments = [
     { id: 1, name: 'Torneo Apertura 2023' },
     { id: 2, name: 'Torneo Clausura 2024' }
@@ -97,7 +105,9 @@ export class ResultsComponent {
 
   dates: any;
   matches: any;
-  constructor( private tournamentService: TournamentService, private adminService: AdminService) {}
+  constructor( private tournamentService: TournamentService, private adminService: AdminService, 
+    private managerService: ManagerService, private router: Router
+  ) {}
 
 
   ngOnInit(): void {
@@ -117,8 +127,30 @@ export class ResultsComponent {
   }
 
 
-  toggleMatch(matchId: number): void {
-    this.selectedMatchId = this.selectedMatchId === matchId ? null : matchId;
+  async toggleMatch(match: any) {
+    this.playersTeam1 = [];
+    this.playersTeam2 = [];
+    this.goalsTeam1 = [];
+    this.goalsTeam2 = [];
+    this.sanctionsTeam1 = [];
+    this.sanctionsTeam2 = [];
+    
+    this.managerService.getTeam(match.team_1.id).subscribe((res: any) => {
+      console.log('Jugadores equipo local:', res.players);
+      this.playersTeam1 = res.players;
+      this.newGoalTeam1.teamId = match.team_1.id;
+      this.newSanctionTeam1.teamId = match.team_1.id;
+    });
+    
+    // Cargar jugadores del equipo visitante
+    this.managerService.getTeam(match.team_2.id).subscribe((res: any) => {
+      console.log('Jugadores equipo visitante:', res.players);
+      this.playersTeam2 = res.players;
+      this.newGoalTeam2.teamId = match.team_2.id;
+      this.newSanctionTeam2.teamId = match.team_2.id;
+    });
+
+    this.selectedMatchId = this.selectedMatchId === match.id ? null : match.id;
   }
 
   async getDates(){
@@ -129,17 +161,228 @@ export class ResultsComponent {
     this.matches = await this.tournamentService.getMatchesByDate(this.selectedDate);
   }
 
-  addGoal(id: number): void {
+  addGoal(matchId: number, teamNumber: number): void {
+    if (teamNumber === 1) {
+      if (!this.newGoalTeam1.player || this.newGoalTeam1.goals <= 0) {
+        alert('Debe seleccionar un jugador y especificar una cantidad válida de goles');
+        return;
+      }
+
+      const player = this.playersTeam1.find(p => p.id === this.newGoalTeam1.player);
+      const playerName = player ? player.full_name : 'Jugador desconocido';
+      
+      const newGoal = {
+        ...this.newGoalTeam1,
+        matchId: matchId,
+        id: this.goalsTeam1.length + 1,
+        playerName: playerName
+      };
+
+      this.createGoal(newGoal, 1);
+
+      this.newGoalTeam1 = {
+        player: 0,
+        goals: 0,
+        teamId: this.newGoalTeam1.teamId,
+        playerName: ''
+      };
+    } else {
+      if (!this.newGoalTeam2.player || this.newGoalTeam2.goals <= 0) {
+        console.error('Debe seleccionar un jugador y especificar una cantidad válida de goles');
+        return;
+      }
+
+      const player = this.playersTeam2.find(p => p.id === this.newGoalTeam2.player);
+      const playerName = player ? player.full_name : 'Jugador desconocido';
+      
+      const newGoal = {
+        ...this.newGoalTeam2,
+        matchId: matchId,
+        id: this.goalsTeam2.length + 1,
+        playerName: playerName
+      };
+
+      this.createGoal(newGoal, 2);
+
+      this.newGoalTeam2 = {
+        player: 0,
+        goals: 0,
+        teamId: this.newGoalTeam2.teamId,
+        playerName: ''
+      };
+    }
   }
 
-  addSanction(id: number): void {
+
+  async createGoal(goal: Goal, teamNumber: number): Promise<void> {
+    try {
+      const goalData = {
+        goal_number: Number(goal.goals) || 0,
+        game: Number(goal.matchId) || 0,
+        player: Number(goal.player) || 0
+      }
+
+      if (goalData.goal_number <= 0 || !goalData.game || !goalData.player) {
+        console.error('Datos de gol inválidos:', goalData);
+        return;
+      }
+
+      const res = await this.tournamentService.createGoal(goalData);
+
+      const newGoal = {
+        ...goal,
+        idPost: res.id
+      }
+
+      if (teamNumber === 1) {
+        this.goalsTeam1.push(newGoal);
+      } else {
+        this.goalsTeam2.push(newGoal);
+      }
+      
+    } catch (error) {
+      console.error('Error al crear gol:', error);
+    }
   }
 
-  removeGoal(goal: Goal): void {
-    this.goals = this.goals.filter(g => g !== goal);
+  addSanction(matchId: number, teamNumber: number): void {
+    if (teamNumber === 1) {
+      if (this.newSanctionTeam1.type === 'P' && !this.newSanctionTeam1.playerId) {
+        alert('Debe seleccionar un jugador para la sanción');
+        return;
+      }
+      
+      let playerName = '';
+      if (this.newSanctionTeam1.type === 'P') {
+        const player = this.playersTeam1.find(p => p.id === this.newSanctionTeam1.playerId);
+        playerName = player ? player.full_name : 'Jugador desconocido';
+      }
+      
+      const newSanction = {
+        ...this.newSanctionTeam1,
+        id: this.sanctionsTeam1.length + 1,
+        matchId: matchId,
+        playerName: playerName
+      };
+
+      this.createSanction(newSanction, 1);
+      
+      this.newSanctionTeam1 = {
+        id: 0,
+        type: 'P',
+        reason: '',
+        playerId: 0,
+        teamId: this.newSanctionTeam1.teamId,
+        playerName: '',
+        missedDates: 0,
+        yellowCards: '0',
+        redCard: '0',
+        matchId: matchId
+      };
+    } else {
+      if (this.newSanctionTeam2.type === 'P' && !this.newSanctionTeam2.playerId) {
+        console.error('Debe seleccionar un jugador para la sanción');
+        return;
+      }
+      
+      let playerName = '';
+      if (this.newSanctionTeam2.type === 'P') {
+        const player = this.playersTeam2.find(p => p.id === this.newSanctionTeam2.playerId);
+        playerName = player ? player.full_name : 'Jugador desconocido';
+      }
+      
+      const newSanction = {
+        ...this.newSanctionTeam2,
+        id: this.sanctionsTeam2.length + 1,
+        matchId: matchId,
+        playerName: playerName
+      };
+
+      this.createSanction(newSanction, 2);
+      
+      this.newSanctionTeam2 = {
+        id: 0,
+        type: 'P',
+        reason: '',
+        playerId: 0,
+        teamId: this.newSanctionTeam2.teamId,
+        playerName: '',
+        missedDates: 0,
+        yellowCards: '0',
+        matchId: matchId,
+        redCard: '0'
+      };
+    }
   }
 
-  removeSanction(sanction: Sanction): void {
-    this.sanctions = this.sanctions.filter(s => s.id !== sanction.id);
+  async createSanction(sanction: Sanction, teamNumber: number): Promise<void> {
+    try {
+      const sanctionData = {
+        sanction_for: sanction.type,
+        reason: sanction.reason || '',
+        missed_dates: Number(sanction.missedDates) || 0,
+        yellow_cards: Number(sanction.yellowCards) || 0,
+        red_card: Number(sanction.redCard) || 0,
+        game: Number(sanction.matchId) || 0,
+        player: sanction.type === 'P' ? Number(sanction.playerId) || 0 : null
+      }
+
+      if (!sanctionData.game || (sanctionData.sanction_for === 'P' && !sanctionData.player)) {
+        console.error('Datos de sanción inválidos:', sanctionData);
+        return;
+      }
+
+      const res = await this.tournamentService.createSanction(sanctionData);  
+
+      const newSanction = {
+        ...sanction,
+        idPost: res.id
+      }
+
+      if (teamNumber === 1) {
+        this.sanctionsTeam1.push(newSanction);
+      } else {
+        this.sanctionsTeam2.push(newSanction);
+      }
+      
+    } catch (error) {
+      console.error('Error al crear sanción:', error);
+    }
+  }
+
+  removeGoal(goal: Goal, teamNumber: number): void {
+
+    if (teamNumber === 1) {
+      if (goal.idPost) {
+        this.tournamentService.deleteGoal(goal.idPost);
+      }
+
+      this.goalsTeam1 = this.goalsTeam1.filter(g => g !== goal);
+    } else {
+      if (goal.idPost) {
+        this.tournamentService.deleteGoal(goal.idPost);
+      }
+
+      this.goalsTeam2 = this.goalsTeam2.filter(g => g !== goal);
+    }
+  }
+
+  removeSanction(sanction: Sanction, teamNumber: number): void {
+    if (teamNumber === 1) {
+      if (sanction.idPost) {
+        this.tournamentService.deleteSanction(sanction.idPost);
+      }
+
+      this.sanctionsTeam1 = this.sanctionsTeam1.filter(s => s.id !== sanction.id);
+    } else {
+      if (sanction.idPost) {
+        this.tournamentService.deleteSanction(sanction.idPost);
+      }
+      this.sanctionsTeam2 = this.sanctionsTeam2.filter(s => s.id !== sanction.id);
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin']);
   }
 }
