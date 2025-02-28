@@ -21,14 +21,10 @@ export class TournamentsComponent {
   }
 
 
-  getTournaments() {
-    this.tournamentsService.getTournaments().subscribe((tournaments) => {
-      this.tournaments = tournaments;
-      this.tournamentsOriginal = tournaments;
-    });
-
-    console.log(this.tournaments);
-    
+  async getTournaments() {
+    const tournaments = await this.tournamentsService.getTournaments();
+    this.tournaments = tournaments;
+    this.tournamentsOriginal = tournaments;
   }
 
   goBack() {
@@ -36,7 +32,11 @@ export class TournamentsComponent {
   }
 
   openModal() {
-    //document.getElementById('myModal').style.display = 'block';
+    this.router.navigate(['/create-tournament']);
+  }
+
+  editTournament(id: number) {
+    this.router.navigate(['/create-tournament', id]);
   }
 
   applyFilter() {
@@ -49,4 +49,13 @@ export class TournamentsComponent {
     );
   }
 
+  deleteTournament(id: number) {
+    this.tournamentsService.deleteTournament(id).subscribe(() => {
+      this.getTournaments();
+    });
+  }
+
+  goToTournament(id: number) {
+    this.router.navigate(['/admin/tournament-summary/', id]);
+  }
 }

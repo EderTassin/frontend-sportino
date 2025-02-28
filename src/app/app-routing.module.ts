@@ -13,7 +13,8 @@ const routes: Routes = [
   {path:'tournament', component: SelectTournamentComponent},
   {path:'match-statistics/:id', component: MatchStatisticsComponent },
   {path:'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
-  {path:'manager', loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule) }
+  {path:'manager', loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule) },
+  {path:'create-tournament', loadChildren: () => import('./create-tournaments/tounament.module').then(m => m.TournamentModule) }
 ];
 
 @NgModule({

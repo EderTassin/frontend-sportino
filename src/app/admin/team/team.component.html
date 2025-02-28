@@ -67,12 +67,19 @@
                 <td>{{ team.need_to_pay ? 'Al Dia' : 'Debe'}}</td>
                 <td>{{ team.active ? 'Sí' : 'No' }}</td>
                 <td class="actions">
-                    <button class="btn-icon" (click)="handleEdit(team)">
-                        <i class="material-icons">edit</i>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button class="btn-icon" (click)="handleDelete(team.id)">
-                        <i class="material-icons">delete</i>
-                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="handleEdit(team)">
+                            <i class="material-icons">edit</i>
+                            Editar
+                        </button>
+                        <button mat-menu-item (click)="handleDelete(team.id)">
+                            <i class="material-icons">delete</i>
+                            Borrar
+                        </button>
+                    </mat-menu>
                 </td>
             </tr>
         </tbody>
@@ -140,8 +147,8 @@
                 <input type="checkbox" id="hasSanctions" formControlName="hasSanctions" />
             </div>
             <div class="container-button">
-                <button type="button" (click)="closeModal()">Cancelar</button>
-                <button type="submit" class="btn-primary">Guardar</button>
+                <button type="button" (click)="closeModal()" class="button">Cancelar</button>
+                <button type="submit" class="button">Guardar</button>
             </div>
         </form>
     </div>

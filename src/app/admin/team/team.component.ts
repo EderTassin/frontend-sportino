@@ -137,7 +137,6 @@ export class TeamComponent implements OnInit {
       }
       this.closeModal();
     } else {
-      console.log("Formulario:", this.teamForm.value);
       this.markFormGroupTouched(this.teamForm)
     }
   }
@@ -168,7 +167,6 @@ export class TeamComponent implements OnInit {
 
     try {
       const res = await this.adminService.createTeam(formData);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

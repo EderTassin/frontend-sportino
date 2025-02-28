@@ -1,7 +1,7 @@
-
-<div class="goBack">
-    <button (click)="goBack()" class="btn btn-secondary">
-        <span class="material-icons">arrow_back</span>Volver
+<div class="goBack d-flex justify-content-center">
+    <button (click)="goBack()" class="btn btn-secondary bg-gray-800 text-white px-2 py-1 p-0 rounded-md">
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        <span class="text-lg">Volver</span>
     </button>
 </div>
 
@@ -43,25 +43,33 @@
                         Activo
                     </div>
                 </th>
-                <th>Acciones</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let team of tournaments">
                 <td>{{ team.id }}</td>
-                <td>{{ team.name }}</td>
+                <td (click)="goToTournament(team.id)">{{ team.name }}</td>
                 <td>{{ team.date_from }}</td>
                 <td>{{ team.date_to}}</td>
                 <td>{{ team.active ? 'Sí' : 'No' }}</td>
                 <td class="actions">
-                    <button class="btn-icon">
-                        <i class="material-icons">edit</i>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button class="btn-icon">
-                        <i class="material-icons">delete</i>
-                    </button>
+                    <mat-menu #menu="matMenu" class="bg-white">
+                        <button mat-menu-item (click)="editTournament(team.id)" class="text-primary">
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteTournament(team.id)" class="text-red-500">
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                        </button>
+                    </mat-menu>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
+

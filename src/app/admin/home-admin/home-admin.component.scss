@@ -31,13 +31,19 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 250px;
+            //width: 250px;
             text-align: center;
 
             .title {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 max-width: 250px;
+                margin-bottom: 1rem;
+                h2{
+                    margin-bottom: 0px;
+                    margin-right: 1rem;
+                }
             }
 
             .content {

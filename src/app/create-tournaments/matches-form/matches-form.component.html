@@ -1,0 +1,98 @@
+<form [formGroup]="form">
+    <section class="card">
+        <div class="card-content">
+
+            <div class="matches flex flex-col md:flex-row gap-2 mb-2 w-full">
+                <div class="flex flex-col gap-2 mb-2 w-full md:w-1/2">
+                    <label for="teamA" class="font-semibold">Equipo A</label>
+                    <select formControlName="teamA" id="teamA" class="form-select w-full input">
+                        <option value="">Selecciona un equipo</option>
+                        <option *ngFor="let team of teams" [value]="team.id">{{team.name}}</option>
+                    </select>
+                </div>
+                
+                <span class="text-center text-sm font-bold text-primary vs md:mt-0">vs</span>
+            
+                <div class="flex flex-col gap-2 mb-2 w-full md:w-1/2">
+                    <label for="teamB" class="font-semibold">Equipo B</label>
+                    <select formControlName="teamB" id="teamB" class="form-select w-full input">
+                        <option value="">Selecciona un equipo</option>
+                        <option *ngFor="let team of teams" [value]="team.id">{{team.name}}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="matches flex flex-col md:flex-row gap-2 mb-2 w-full">
+                <div class="flex flex-col gap-2 mb-2 w-full md:w-1/2">
+                    <label for="date" class="font-semibold">Fecha</label>
+                    <select formControlName="date" id="date" class="form-select w-full input">
+                        <option value="0">Selecciona una fecha</option>
+                        <option *ngFor="let date of listDates" [value]="date.id">{{date.date | date: "fullDate"}}</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-2 mb-2 w-full md:w-1/2">
+                    <label for="hour" class="font-semibold">Hora</label>
+                    <input 
+                        type="text" 
+                        formControlName="hour" 
+                        id="hour" 
+                        class="form-input w-full input"
+                        pattern="^([0-1]\d|2[0-3]):[0-5]\d$"
+                        placeholder="HH:mm"
+                        (keyup)="formatHour($event)"
+                        maxlength="5">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2 mb-2">
+                <label for="court" class="font-semibold">Cancha</label>
+                <select formControlName="court" id="court" class="form-select w-full input max-w-500">
+                    <option value="0">Selecciona una cancha</option>
+                    <option value="1">Cancha 1</option>
+                    <option value="2">Cancha 2</option>
+                    <option value="3">Cancha 3</option>
+                    <option value="4">Cancha 4</option>
+                    <option value="5">Cancha 5</option> 
+                    <option value="6">Cancha 6</option>
+                    <option value="7">Cancha 7</option>
+                    <option value="8">Cancha 8</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end w-full mb-2">
+                <button class="bg-gray-900 text-white px-4 py-2 rounded-md" (click)="addMatch()">Guardar</button>
+            </div>
+            
+            <div class="matches-container max-h-40 overflow-y-auto mb-4 max-w-70">
+                <div class="bg-white shadow-md rounded-lg p-4 mb-2" *ngFor="let match of listMatchesDescription">
+                    <div class="flex items-center justify-between mb-2 text-center">
+                        <h3 class="text-lg font-semibold m-0">{{match.teamA}} <span class="text-sm text-blue-900">vs</span> {{match.teamB}}</h3>
+                        <span class="text-sm text-gray-500">Cancha {{match.court}}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="text-gray-700">{{match.date.date}}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="text-gray-700">{{match.hour}}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined text-red-500 cursor-pointer" (click)="deleteMatch(match)">
+                                delete
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

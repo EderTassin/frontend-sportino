@@ -1,0 +1,89 @@
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- Encabezado -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Resumen del Torneo</h1>
+            <p class="text-gray-600">Revisa los detalles de tu torneo antes de confirmar</p>
+        </div>
+
+        <!-- Tarjeta principal -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <!-- Información básica -->
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Información General</h2>
+                <div class="grid gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Nombre -->
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Nombre del Torneo</label>
+                            <p class="text-gray-900 font-medium">{{ tournamentData.name }}</p>
+                        </div>
+                        <!-- Categoría -->
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Categoría</label>
+                            <ng-container *ngFor="let category of tournamentData.category">
+                                <p class="text-gray-900 bg-gray-100 rounded-md px-2 py-1 font-medium">{{ getCategoryName(category) }}</p>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="space-y-1">
+                        <label class="text-sm font-medium text-gray-500">Descripción</label>
+                        <p class="text-gray-900">{{ tournamentData.description }}</p>
+                    </div>
+
+                    <!-- Fechas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Fecha de inicio</label>
+                            <p class="text-gray-900">{{ tournamentData.date_from | date:'fullDate' }}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Fecha de finalización</label>
+                            <p class="text-gray-900">{{ tournamentData.date_to | date:'fullDate' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipos -->
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Equipos</h2>
+
+                <div class="container-matches max-h-96 overflow-y-auto">
+                    <ng-container *ngFor="let match of matches">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-500">Equipo 1</label>
+                                <p class="text-gray-900">{{ match.team_1.name }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-500">Equipo 2</label>
+                                <p class="text-gray-900">{{ match.team_2.name }}</p>
+                            </div>
+                        </div>
+                    
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Fecha:
+                                <p class="text-gray-900">{{ match.date | date:'fullDate' }} - {{ match.hour }}</p>
+                            </label>
+                        </div>
+                    
+                        <div class="space-y-1">
+                            <label class="text-sm font-medium text-gray-500">Cancha</label>
+                            <p class="text-gray-900">{{ match.field }}</p>
+                        </div>
+
+                        <div class="border-t border-gray-200 my-4"></div>
+                    </ng-container>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="p-6 border-b border-gray-200 flex justify-end">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md" (click)="confirmTournament()">Confirmar</button>
+        </div>
+    </div>
+</div>  

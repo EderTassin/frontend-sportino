@@ -18,8 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
           this.router.navigate(['/login']);
           return throwError(() => new Error('No autenticado'));
         }
-
-        // Si el usuario está autenticado, añadimos el token a la cabecera Authorization
         const token = localStorage.getItem('token');
         if (token) {
           req = req.clone({
@@ -33,7 +31,6 @@ export class AuthInterceptor implements HttpInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Cerramos sesión
           this.authService.logout();
           this.router.navigate(['/login']);
         }

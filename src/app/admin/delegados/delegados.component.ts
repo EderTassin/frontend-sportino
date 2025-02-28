@@ -37,8 +37,6 @@ export class DelegadosComponent {
   }
 
   applyFilter() {
-    console.log(this.filter);
-    
     if(this.filter.length > 0){
       this.delegados = this.originalDelegados.filter((delegado) =>
         delegado.username.toLowerCase().includes(this.filter.toLowerCase())
@@ -46,7 +44,6 @@ export class DelegadosComponent {
     }else{
       this.delegados = this.originalDelegados;
     }
-    
   }
 
   openModal() {
@@ -67,13 +64,9 @@ export class DelegadosComponent {
   }
 
   handleActive(delegado: any) {
-
-    console.log(delegado);
-    
     this.adminService.updateDelegado(delegado.id).subscribe((res) => {
       delegado.confirmed = !delegado.confirmed;
     });
-
   }
 
   onConfirm() {

@@ -1,5 +1,7 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule, isDevMode, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,7 +19,7 @@ import { TablaJugadoresComponent } from './home/tabla-jugadores/tabla-jugadores.
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MatchStatisticsComponent } from './match-statistics/match-statistics.component';
 import { SelectTournamentComponent } from './select-tournament/select-tournament.component';
 import { AuthService } from './_services/auth.service';
@@ -27,12 +29,14 @@ import { LoadingComponent } from './shared/loader/loading.component';
 import { LoadingService } from './shared/loader/loading.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
 import { CamelcasePipe } from './_services/pipe/camelcase.pipe';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { RateLimitingInterceptor } from './_services/rate-limiter.interceptor';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [
@@ -77,9 +81,14 @@ import { MatDialogModule } from '@angular/material/dialog';
     }),
     ToastrModule.forRoot()
   ],
-  providers: [AuthService,
+  providers: [
+    AuthService,
     LoadingService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    provideHttpClient(
+      withInterceptors([RateLimitingInterceptor])
+    ),
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
   bootstrap: [AppComponent]
 })

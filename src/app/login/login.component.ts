@@ -30,12 +30,8 @@ export class LoginComponent {
     if (this.loginForm) {
       const auth = await this.authService.login(this.email, this.password)
       const decodedToken = this.authService.decodeToken();
-
-      console.log("ENTRAAAAA: ",decodedToken);
-
       if (auth) {
         if(decodedToken.admin){
-          console.log("ADMIN");
           this.router.navigate(['/admin']);
         }else{
           this.router.navigate(['/manager/'+decodedToken.team_id]);
