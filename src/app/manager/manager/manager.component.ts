@@ -3,6 +3,7 @@ import { ManagerService } from '../manager.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
+import { environment } from 'src/environments/environment.prod';
 
 
 export interface Player {
@@ -45,6 +46,14 @@ export class ManagerComponent implements OnInit {
   defaultLogo: string = 'https://static.vecteezy.com/system/resources/previews/000/356/368/non_2x/leader-of-group-vector-icon.jpg';
   selectedPlayer: Player ={} as Player;
   showEditModal: boolean = false;
+  showEditTeamModal = false;
+  editTeamForm = {
+    name: '',
+    logo_file: null
+  };
+  previewImage: string | ArrayBuffer | null = null;
+
+  urlEnvironment = environment.apiEndpoint;
 
   
   constructor(private managerService: ManagerService, private route: ActivatedRoute, private dialog: MatDialog) { 
@@ -54,6 +63,7 @@ export class ManagerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.urlEnvironment = this.urlEnvironment.replace('/api/', '');
     this.getTeam();
   }
 
@@ -65,7 +75,9 @@ export class ManagerComponent implements OnInit {
   }
 
   openModalPlayer() {
-    this.showModal = true;
+    if (this.team.manager.active) {
+      this.showModal = true;
+    }
   }
 
   closeModal() {
@@ -103,13 +115,19 @@ export class ManagerComponent implements OnInit {
 
   onFileChange(event: any): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.selectedFile = input.files[0];
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. El tamaño máximo es 2MB.');
+        return;
+      }
+      this.selectedFile = file;
+
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.newPlayer.photo = e.target.result;
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
       };
-      reader.readAsDataURL(this.selectedFile);
+      reader.readAsDataURL(file);
     }
   }
 
@@ -120,7 +138,9 @@ export class ManagerComponent implements OnInit {
 
   openModalEditPlayer(player: Player) {
     this.selectedPlayer = { ...player };  
-    this.showEditModal = true;
+    if (this.team.manager.active) {
+      this.showEditModal = true;
+    }
   }
 
   onSubmitEdit() {
@@ -141,5 +161,49 @@ export class ManagerComponent implements OnInit {
 
   closeEditModal() {
     this.showEditModal = false;
+  }
+
+  openEditTeamModal() {
+    this.editTeamForm.name = this.team?.name || '';
+    this.previewImage = null;
+    this.showEditTeamModal = true;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. El tamaño máximo es 2MB.');
+        return;
+      }
+      
+      this.editTeamForm.logo_file = file;
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewImage = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  updateTeamInfo() {
+    const formData = new FormData();
+
+    formData.append('name', this.editTeamForm.name);
+    if (this.editTeamForm.logo_file) {
+      formData.append('logo_file', this.editTeamForm.logo_file);
+    }
+    
+    this.managerService.updateTeamData(formData, this.teamId).subscribe(
+      (response) => {
+        console.log('Equipo actualizado:', response);
+        this.showEditTeamModal = false;
+        this.getTeam();
+      },
+      (error) => {
+        console.error('Error al actualizar el equipo:', error);
+      }
+    );
   }
 }

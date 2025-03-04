@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
 import { AdminService } from '../service/admin.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface FootballTeam {
   id: number;
@@ -15,9 +16,16 @@ interface FootballTeam {
   logo_file: string | null;
   need_to_pay: boolean;
   active: boolean;
-  category: number;
+  category: {
+    id: number;
+    name: string;
+  };
   company: string | null;
   activeSanctions: boolean;
+  manager: {
+    id: number;
+    username: string;
+  }
 }
 
 @Component({
@@ -40,6 +48,8 @@ export class TeamComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   sortedTeams: FootballTeam[] = [];
   selectedFile: File | null = null;
+  currentTeamPlayers: any[] = [];
+  urlEnvironment = environment.apiEndpoint;
 
   constructor(private fb: FormBuilder, 
       private serviceEstadistica: EstadisticaPartidosService,
@@ -63,6 +73,10 @@ export class TeamComponent implements OnInit {
   ngOnInit(): void {
     this.getTeams();
     this.getCategories();
+    
+    this.urlEnvironment = environment.apiEndpoint.replace('/api/', '');
+    console.log(this.urlEnvironment);
+    
   }
 
   async getTeams() {
@@ -125,6 +139,7 @@ export class TeamComponent implements OnInit {
     this.isModalOpen = false;
     this.urlImage = '';
     this.teamForm.reset();
+    this.currentTeamPlayers = [];
   }
 
   onSubmit(): void {
@@ -177,15 +192,18 @@ export class TeamComponent implements OnInit {
   }
 
   async updateTeam(teamData: any) {
+    console.log('Updating team with data:', teamData);
 
     const formData = new FormData();
+    formData.append("id", teamData.id);
     formData.append("name", teamData.name);
     formData.append("responsible", teamData.manager);
-    formData.append("phone", teamData.phone);
-    formData.append("email", teamData.email);
-    formData.append("need_to_pay", teamData.needToPay);
-    formData.append("active", teamData.isActive);
-    formData.append("category", teamData.league);
+    formData.append("phone", teamData.phone || '');
+    formData.append("email", teamData.email || '');
+    formData.append("need_to_pay", teamData.needToPay.toString());
+    formData.append("active", teamData.isActive.toString());
+    formData.append("category", teamData.league.toString());
+    formData.append("active_sanctions", teamData.hasSanctions.toString());
     
     if (this.selectedFile) {
       formData.append("logo_file", this.selectedFile, this.selectedFile.name);
@@ -193,11 +211,10 @@ export class TeamComponent implements OnInit {
 
     try {
       const res = await this.adminService.updateTeam(formData);
+      console.log('Update response:', res);
     } catch (error) {
-      console.log(error);
-    }
-
-    finally {
+      console.error('Error updating team:', error);
+    } finally {
       this.getTeams();
       this.closeModal();
     }
@@ -209,20 +226,25 @@ export class TeamComponent implements OnInit {
     this.teamForm.patchValue(team);
   }
 
-  handleEdit(team: FootballTeam): void {
+  handleEdit(team: any): void {
+    console.log('Editing team:', team);
+    
+    this.urlImage = team.logo_file || '';
+    
+    this.currentTeamPlayers = team.players || [];
+    
     this.teamForm.patchValue({
       id: team.id,
       name: team.name,
-      manager: team.responsible,
-      league: team.category,
-      stadium: team.documents,
-      phone: team.phone,
-      email: team.email,
-      isActive: team.active,
-      hasSanctions: team.activeSanctions,
-      needToPay: team.need_to_pay
+      manager: team.manager?.username || team.responsible || '',
+      league: team.category?.id || '',
+      phone: team.phone || '',
+      email: team.email || '',
+      isActive: team.active || false,
+      hasSanctions: team.active_sanctions || false,
+      needToPay: team.need_to_pay || false
     });
-    this.urlImage = team.logo_file ?? ''; 
+    
     this.openModal();
   }
 

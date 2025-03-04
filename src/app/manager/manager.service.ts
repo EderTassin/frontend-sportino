@@ -33,8 +33,12 @@ export class ManagerService {
     );
   }
 
-  updateTeamData(teamData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/team`, teamData);
+  updateTeamData(teamData: any, teamId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.put(`${this.apiUrl}players/teams/${teamId}/`, teamData, { headers });
   }
 
   getPlayers(): Observable<any[]> {
