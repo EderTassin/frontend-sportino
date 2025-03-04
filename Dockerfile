@@ -11,10 +11,10 @@ COPY . ./
 RUN rm ./proxy.conf.json
 COPY proxy.conf-prod.json ./proxy.conf.json
 
-RUN npm run build
+# Ajustar la memoria máxima para Node.js
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 # Stage 2: Serve the app with Nginx
-
 FROM nginx:alpine
 
 COPY --from=build /app/dist/sportino-app /usr/share/nginx/html
