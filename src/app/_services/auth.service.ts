@@ -57,7 +57,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
-    const resp = await firstValueFrom(this.http.get(`${this.apiUrl}api/v1/users/${decodedToken.user_id}/`)) as any;
+    const resp = await firstValueFrom(this.http.get(`${this.apiUrl}users/users/${decodedToken.user_id}/`)) as any;
     return resp;
   }
 

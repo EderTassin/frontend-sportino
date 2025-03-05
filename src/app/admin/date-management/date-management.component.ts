@@ -54,7 +54,6 @@ export class DateManagementComponent {
     });
 
     this.dates.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    console.log(this.dates);
     
   }
 
@@ -117,8 +116,6 @@ export class DateManagementComponent {
   }
 
   async deleteDate(index: number, id: number) {
-    console.log(id);
-    console.log(index);
     try {
       await this.tournamentsService.deleteDate(id.toString());
       this.dates.splice(index, 1);

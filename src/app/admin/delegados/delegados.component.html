@@ -6,20 +6,33 @@
 </div>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 pt-2">Delegados</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 pt-2">Administrar Delegados</h1>
     
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="p-4 border-b border-gray-200">
-            <div class="relative w-full sm:w-96">
-                <input 
-                    type="text" 
-                    placeholder="Filtrar por nombre del delegado" 
-                    [(ngModel)]="filter" 
-                    (ngModelChange)="applyFilter()"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-gray-400"
-                />
-                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <span class="material-icons text-gray-400">search</span>
+            <div class="flex justify-between items-center gap-4">
+                <div class="flex-1 max-w-96">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            placeholder="Filtrar por nombre del delegado" 
+                            [(ngModel)]="filter" 
+                            (ngModelChange)="applyFilter()"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-gray-400"
+                        />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <span class="material-icons text-gray-400">search</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shrink-0" style="width: 30%;">
+                    <mat-form-field appearance="outline" class="bg-white w-full" >
+                        <mat-label>Estado de delegados</mat-label>
+                        <mat-select (valueChange)="toggleDelegados($event)">
+                            <mat-option [value]="true">Activar todos</mat-option>
+                            <mat-option [value]="false">Desactivar todos</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
             </div>
         </div>
@@ -56,17 +69,28 @@
                         </td>
                         <td class="px-2 py-4 whitespace-nowrap text-sm text-gray-500">
                             <label class="relative inline-flex items-center cursor-pointer" title="Activar/Desactivar">
-                                <input type="checkbox" [checked]="delegado.active" (change)="handleActive(delegado)" class="sr-only peer">
+                                <input type="checkbox" [checked]="delegado.active" class="sr-only peer">
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </td>
                         <td class="px-2 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center justify-center">
-                                <button mat-icon-button [matMenuTriggerFor]="menu" title="Más opciones" class="bg-white">
+                                <!-- Notificación de no confirmado -->
+                                <div *ngIf="!delegado.confirmed" class="relative">
+                                    <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"
+                                          matTooltip="Delegado pendiente de confirmación"></span>
+                                </div>
+                                
+                                <button mat-icon-button [matMenuTriggerFor]="menu" title="Más opciones" class="bg-white relative">
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 
                                 <mat-menu #menu="matMenu" class="bg-white">
+                                    <button mat-menu-item (click)="handleActive(delegado)" class="text-primary" *ngIf="!delegado.confirmed">
+                                        <mat-icon>check</mat-icon>
+                                        <span>Confirmar Delegado</span>
+                                    </button>
+                                    
                                     <button mat-menu-item (click)="handleEdit(delegado)" class="text-primary">
                                         <mat-icon>edit</mat-icon>
                                         <span>Editar</span>

@@ -48,9 +48,6 @@ export class TournamentService {
   }
 
   async createGoal(newGoal: any): Promise<any> {
-    console.log('Servicio - Enviando datos de gol:', newGoal);
-    
-    // Configurar headers específicos que podrían ser necesarios
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -60,7 +57,6 @@ export class TournamentService {
       const response = await firstValueFrom(
         this.http.post(`${this.apiUrl}calendars/goals/`, newGoal, { headers })
       );
-      console.log('Servicio - Respuesta del servidor:', response);
       return response;
     } catch (error) {
       console.error('Servicio - Error al crear gol:', error);

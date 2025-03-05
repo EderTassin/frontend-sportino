@@ -1,0 +1,56 @@
+// Estilos para el toggle checkbox
+.toggle-checkbox {
+  transition: all 0.3s;
+  &:checked {
+    right: 0;
+    border-color: #3b82f6;
+  }
+  &:checked + .toggle-label {
+    background-color: #3b82f6;
+  }
+}
+
+.toggle-label {
+  transition: all 0.3s;
+}
+
+// Estilos para la imagen ampliada
+.enlarged-image-container {
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Estilos para las tarjetas de jugadores
+.player-card {
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// Estilos para la imagen de perfil al hacer hover
+.profile-image-container {
+  &:hover {
+    .profile-image {
+      transform: scale(1.05);
+    }
+    .image-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.profile-image {
+  transition: transform 0.3s ease;
+}
+
+.image-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.3);
+}

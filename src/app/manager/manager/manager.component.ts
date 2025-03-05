@@ -197,7 +197,6 @@ export class ManagerComponent implements OnInit {
     
     this.managerService.updateTeamData(formData, this.teamId).subscribe(
       (response) => {
-        console.log('Equipo actualizado:', response);
         this.showEditTeamModal = false;
         this.getTeam();
       },

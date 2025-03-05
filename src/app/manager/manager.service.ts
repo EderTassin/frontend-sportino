@@ -117,6 +117,14 @@ export class ManagerService {
     return this.http.delete(`${this.apiUrl}/players/${playerId}`);
   }
 
+  updatePlayerMedicalCertificate(player: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.put(`${this.apiUrl}players/players/${player.id}/`, player, { headers });
+  }
+
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);

@@ -36,7 +36,6 @@ export class HeaderComponent implements OnInit {
 
   async getUser() {
     this.user = await this.authService.getUser();
-    console.log(this.user);
   }
 
   installPWA() {

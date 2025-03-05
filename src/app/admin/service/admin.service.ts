@@ -56,4 +56,8 @@ export class AdminService {
       responseType: 'blob'
     });
   }
+
+  toggleDelegados(active: boolean): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}players/toggle-managers-active-status/?active=${active}`, null);
+  }
 }

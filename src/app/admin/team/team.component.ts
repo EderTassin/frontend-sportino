@@ -4,6 +4,7 @@ import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/e
 import { AdminService } from '../service/admin.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { ManagerService } from 'src/app/manager/manager.service';
 
 interface FootballTeam {
   id: number;
@@ -28,6 +29,27 @@ interface FootballTeam {
   } 
 }
 
+interface Player {
+  id: number;
+  full_name: string;
+  birthday: string;
+  id_card: string;
+  year: string;
+  street: string;
+  number: string;
+  neighborhood: string;
+  phone: string;
+  cell_phone: string;
+  email: string;
+  picture_file: string | null;
+  medical_certificate: boolean;
+  date_certificate: string | null;
+  date: string;
+  active: boolean;
+  team: number;
+  active_sanctions: boolean;
+}
+
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
@@ -39,6 +61,11 @@ export class TeamComponent implements OnInit {
   teams: FootballTeam[] = []; 
   filteredTeams: FootballTeam[] = [];
   isModalOpen = false;
+  isPlayersModalOpen = false;
+  isImageEnlarged = false;
+  enlargedImageSrc = '';
+  selectedTeam: FootballTeam | null = null;
+  teamPlayers: Player[] = [];
   defaultLogo: string = 'https://static.vecteezy.com/system/resources/previews/000/356/368/non_2x/leader-of-group-vector-icon.jpg';
   defaultTeamPhoto: string = '';
   teamForm: FormGroup;
@@ -54,6 +81,7 @@ export class TeamComponent implements OnInit {
   constructor(private fb: FormBuilder, 
       private serviceEstadistica: EstadisticaPartidosService,
       private adminService: AdminService,
+      private playerService: ManagerService,
       private router: Router) {
     this.teamForm = this.fb.group({
       id: [null],
@@ -75,8 +103,6 @@ export class TeamComponent implements OnInit {
     this.getCategories();
     
     this.urlEnvironment = environment.apiEndpoint.replace('/api/', '');
-    console.log(this.urlEnvironment);
-    
   }
 
   async getTeams() {
@@ -192,8 +218,6 @@ export class TeamComponent implements OnInit {
   }
 
   async updateTeam(teamData: any) {
-    console.log('Updating team with data:', teamData);
-
     const formData = new FormData();
     formData.append("id", teamData.id);
     formData.append("name", teamData.name);
@@ -211,7 +235,6 @@ export class TeamComponent implements OnInit {
 
     try {
       const res = await this.adminService.updateTeam(formData);
-      console.log('Update response:', res);
     } catch (error) {
       console.error('Error updating team:', error);
     } finally {
@@ -227,8 +250,6 @@ export class TeamComponent implements OnInit {
   }
 
   handleEdit(team: any): void {
-    console.log('Editing team:', team);
-    
     this.urlImage = team.logo_file || '';
     
     this.currentTeamPlayers = team.players || [];
@@ -276,5 +297,60 @@ export class TeamComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/admin/']);
+  }
+
+  openPlayersModal(team: FootballTeam): void {
+    this.selectedTeam = team;
+    this.getTeamPlayers(team.id);
+    this.isPlayersModalOpen = true;
+  }
+
+  closePlayersModal(): void {
+    this.isPlayersModalOpen = false;
+    this.selectedTeam = null;
+    this.teamPlayers = [];
+  }
+
+  getTeamPlayers(teamId: number) {
+    try {
+      const result = this.playerService.getTeam(teamId);
+      result.subscribe((data: any) => {
+        this.teamPlayers = data.players as Player[];
+      }); 
+    } catch (error) {
+      console.error('Error fetching team players:', error);
+      this.teamPlayers = [];
+    }
+  }
+
+  enlargeImage(player: Player): void {
+    if (player.picture_file) {
+      this.enlargedImageSrc = this.urlEnvironment + player.picture_file;
+      this.isImageEnlarged = true;
+    }
+  }
+
+  closeEnlargedImage(): void {
+    this.isImageEnlarged = false;
+    this.enlargedImageSrc = '';
+  }
+
+  async toggleMedicalCertificate(player: Player): Promise<void> {
+    try {
+      player.medical_certificate = !player.medical_certificate;
+      
+      const updateData = {
+        id: player.id,
+        medical_certificate: player.medical_certificate,
+      };
+      
+      this.playerService.updatePlayerMedicalCertificate(updateData).subscribe((data: any) => {
+        console.log('Updated medical certificate:', data);
+      });
+      
+    } catch (error) {
+      console.error('Error updating medical certificate:', error);
+      player.medical_certificate = !player.medical_certificate;
+    }
   }
 }

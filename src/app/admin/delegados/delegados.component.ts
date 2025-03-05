@@ -79,4 +79,16 @@ export class DelegadosComponent {
       console.log(error);
     }
   }
+
+  toggleDelegados(active: boolean) {
+    this.adminService.toggleDelegados(active).subscribe((res) => {
+      if (active) {
+        this.delegados = this.originalDelegados.map(d => ({ ...d, confirmed: true }));
+      } else {
+        this.delegados = this.originalDelegados.map(d => ({ ...d, confirmed: false }));
+      }
+
+      this.loadDelegados();
+    });
+  }
 }
