@@ -18,9 +18,9 @@ export class HomeComponent implements OnInit {
   private intervalId: any;
 
   private images: string[] = [
-    '../../assets/carousel/3.jpeg',
-    '../../assets/carousel/4.jpeg',
-    '../../assets/carousel/5.jpeg',
+    '../../assets/carousel/3.webp',
+    '../../assets/carousel/4.webp',
+    '../../assets/carousel/5.webp',
   ];
 
 

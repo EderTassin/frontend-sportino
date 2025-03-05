@@ -1,8 +1,6 @@
-<div class="container-header">
-
-  <div class="title-header" (click)="redirect()">
-    <img src="../../../assets/pagina wb.png" alt="">
-  </div>
+<div class="container-header" style="position: relative; height: 50px;">
+  <div class="title-header" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: pointer; width: 200px;" (click)="redirect()"></div>
+  <img src="../../../assets/pagina wb.png" alt="" style="height: 90px; display: block;">
   
   <div class="buttons-header" *ngIf="isLoggin">
     <button routerLink="/" (click)="scrollToTop()">
@@ -31,7 +29,7 @@
     <mat-menu #menu="matMenu">
       <div class="user-info">
         <h3>Usuario:</h3>
-        <span>adminadmin.com</span>
+        <span *ngIf="user">{{ user.email }}</span>
       </div>
       <hr>
       <button mat-menu-item> <h3>Configuracion</h3></button>

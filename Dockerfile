@@ -1,18 +1,19 @@
-# Stage 1: Build the React app
+# Stage 1: Build the Angular app
 FROM node:18 AS build
 
 WORKDIR /app
 
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci
+RUN npm ci 
 
 COPY . ./
 RUN rm ./proxy.conf.json
 COPY proxy.conf-prod.json ./proxy.conf.json
 
-# Ajustar la memoria máxima para Node.js
-RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
+# Ajustar la memoria máxima para Node.js (incrementar a 4096 MB)
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build && \
+    npm cache clean --force
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine

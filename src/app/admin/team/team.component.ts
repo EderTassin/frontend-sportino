@@ -7,25 +7,25 @@ import { environment } from 'src/environments/environment';
 
 interface FootballTeam {
   id: number;
-  name: string;
-  responsible: string;
-  documents: string;
-  phone: string;
-  email: string;
-  pictureFile: string | null;
-  logo_file: string | null;
-  need_to_pay: boolean;
-  active: boolean;
-  category: {
-    id: number;
-    name: string;
-  };
-  company: string | null;
-  activeSanctions: boolean;
-  manager: {
-    id: number;
-    username: string;
-  }
+  name?: string;
+  responsible?: string;
+  documents?: string;
+  phone?: string;
+  email?: string;
+  pictureFile?: string | null;
+  logo_file?: string | null;
+  need_to_pay?: boolean;
+  active?: boolean;
+  category?: {
+    id?: number;
+    name?: string;
+  } | null;
+  company?: string | null;
+  activeSanctions?: boolean;
+  manager?: {
+    id?: number;
+    username?: string;
+  } 
 }
 
 @Component({

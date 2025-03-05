@@ -31,7 +31,7 @@
     <button 
       class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition flex items-center gap-2"
       (click)="openModalPlayer()"
-      [disabled]="!team.manager.active"
+      [disabled]="!team?.manager?.active"
     >
       <span class="material-symbols-outlined">add</span>
       <span>Agregar Jugador</span>

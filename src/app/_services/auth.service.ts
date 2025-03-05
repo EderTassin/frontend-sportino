@@ -35,6 +35,7 @@ export class AuthService {
       if (res) {
         this.isAuthenticated.next(true);
         localStorage.setItem('isAuthenticated', 'true');
+
         return true;
       }
     } catch (error) {
@@ -50,6 +51,14 @@ export class AuthService {
     localStorage.removeItem('token');
     this.clearTimeout();
     this.router.navigate(['/']);
+  }
+
+  async getUser(): Promise<any> {
+    const token = localStorage.getItem('token');
+    const jwtHelper = new JwtHelperService();
+    const decodedToken = jwtHelper.decodeToken(token as string);
+    const resp = await firstValueFrom(this.http.get(`${this.apiUrl}api/v1/users/${decodedToken.user_id}/`)) as any;
+    return resp;
   }
 
   checkAuth(): Observable<boolean> {
@@ -86,9 +95,6 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const jwtHelper = new JwtHelperService();
     const decodedToken = jwtHelper.decodeToken(token as string);
-
-    console.log(decodedToken);
-
     if (decodedToken.group.includes('MANAGER')) {
       return true;
     }
