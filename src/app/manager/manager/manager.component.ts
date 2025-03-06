@@ -86,9 +86,6 @@ export class ManagerComponent implements OnInit {
 
   onSubmit() {
     this.newPlayer.birthDate = new Date(this.newPlayer.birthDate);
-
-    console.log(this.newPlayer);
-    
     this.managerService.addPlayer(this.newPlayer, this.teamId, this.selectedFile).subscribe(
       (response) => {
         this.players.push(response);
