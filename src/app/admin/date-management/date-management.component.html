@@ -1,126 +1,367 @@
 <div class="p-6 bg-white rounded-lg shadow">
 
   <div class="flex flex-row gap-2 justify-between items-center mb-6">
-    <button class="bg-slate-300 rounded-md px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors justify-center align-middle flex items-center gap-2" (click)="goBack()">
+    <button
+      class="bg-slate-300 rounded-md px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors justify-center align-middle flex items-center gap-2"
+      (click)="selectedDate ? backToDatesList() : goBack()">
       <span class="material-icons align-middle">arrow_back</span>
-      Volver
+      {{ selectedDate ? 'Volver a Fechas' : 'Volver' }}
     </button>
   </div>
 
+  <!-- Date List View -->
+  <div *ngIf="!selectedDate">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Gestión de Fechas</h2>
+    </div>
 
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-gray-800">Gestión de Fechas</h2>
-    <button 
-      (click)="openNewDateModal()"
-      class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-    >
-      Crear Nueva Fecha
-    </button>
+    <!-- Tournament Filter -->
+    <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div class="w-full sm:w-2/3">
+          <select class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [(ngModel)]="selectedFilterTournament">
+            <option [value]="null">Todos los torneos</option>
+            <option *ngFor="let tournament of tournaments" [value]="tournament.id">
+              {{ tournament.name }}
+            </option>
+          </select>
+        </div>
+        <div class="flex gap-2">
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            (click)="filterDatesByTournament()">
+            Filtrar
+          </button>
+          <button class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors"
+            (click)="resetFilter()">
+            Limpiar
+          </button>
+        </div>
+
+        <div class="flex gap-2">
+          <button (click)="openNewDateModal()"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+            Crear Nueva Fecha
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading" class="overflow-x-auto rounded-lg border">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer flex"
+              (click)="sortDatesId('id')">
+              <span>ID</span>
+              <span class="material-icons transition-transform duration-200"
+                [class.rotate-180]="sortDirectionId === 'desc'">arrow_drop_down</span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer"
+              (click)="sortDates('date')">
+              <span>Fecha</span>
+              <span class="material-icons transition-transform duration-200"
+                [class.rotate-180]="sortDirectionDate === 'desc'">arrow_drop_down</span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Torneo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr class="hover:bg-gray-50 transition-colors cursor-pointer" *ngFor="let date of filteredDates; let index = index" 
+              (click)="viewGames(date)">
+            <td class="px-6 py-4 whitespace-nowrap">{{date.id}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{date.date | date: 'dd/MM/yyyy'}}</td>
+            <td class="px-6 py-4">{{date.tournament}}</td>
+            <td class="px-6 py-4">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                [ngClass]="{'bg-green-100 text-green-800': date.active, 'bg-red-100 text-red-800': !date.active}">
+                {{date.active ? 'Active' : 'Inactive'}}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex space-x-2">
+                <button class="text-red-600 hover:text-red-900" (click)="deleteDate(index, date.id); $event.stopPropagation()">
+                  🗑️ Delete
+                </button>
+                <button class="text-green-600 hover:text-green-900" (click)="viewGames(date); $event.stopPropagation()">
+                 
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="overflow-x-auto rounded-lg border">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer flex" (click)="sortDatesId('id')">
-            <span>ID</span>
-            <span class="material-icons transition-transform duration-200" 
-              [class.rotate-180]="sortDirectionId === 'desc'">arrow_drop_down</span>
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" (click)="sortDates('date')">
-            <span>Fecha</span>
-            <span class="material-icons transition-transform duration-200"
-              [class.rotate-180]="sortDirectionDate === 'desc'">arrow_drop_down</span>
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Torneo</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <!-- Fila de ejemplo -->
-        <tr class="hover:bg-gray-50 transition-colors" *ngFor="let date of dates; let index = index">
-        <td class="px-6 py-4 whitespace-nowrap">{{date.id}}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{date.date | date: 'dd/MM/yyyy'}}</td>
-          <td class="px-6 py-4">{{date.tournament}}</td>
-          <td class="px-6 py-4">
-            <span class="px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{'bg-green-100 text-green-800': date.active, 'bg-red-100 text-red-800': !date.active}">
-              {{date.active ? 'Active' : 'Inactive'}}
-            </span>
-          </td>
-          <td class="px-6 py-4 flex space-x-2">
-            <button class="text-red-600 hover:text-red-900" (click)="deleteDate(index, date.id)">🗑️ Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Games View -->
+  <div *ngIf="selectedDate">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Partidos para la fecha: {{ selectedDate.date | date: 'dd/MM/yyyy' }}</h2>
+        <p class="text-gray-600">{{ selectedDate.tournament }}</p>
+      </div>
+      <button (click)="openGameModal()"
+        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+        Crear Nuevo Partido
+      </button>
+    </div>
+
+    <!-- Category Tags -->
+    <div class="mb-4 flex flex-wrap gap-2">
+      <div *ngFor="let category of categoryTags" 
+           class="px-4 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+        {{ category }}
+      </div>
+      <div *ngIf="categoryTags.size === 0" class="text-gray-500 italic">No hay categorías asociadas</div>
+    </div>
+
+    <!-- Games List -->
+    <div *ngIf="!gamesLoading && games.length === 0" class="bg-gray-50 p-8 text-center rounded-lg border">
+      <p class="text-gray-600">No hay partidos programados para esta fecha.</p>
+    </div>
+
+    <div *ngIf="!gamesLoading && games.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div *ngFor="let game of games" class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-gray-50 px-4 py-3 border-b flex justify-between items-center">
+          <p class="font-semibold">{{ game.hour | slice:0:5 }}hs</p>
+          <div class="flex gap-2">
+            <button (click)="openGameModal(game)" class="text-blue-600 hover:text-blue-900 p-1">
+              ✏️ Editar
+            </button>
+            <button (click)="deleteGame(game.id!)" class="text-red-600 hover:text-red-900 p-1">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded-full overflow-hidden mr-3">
+                <img *ngIf="game.team_1.logo_file" [src]="urlEnvironment + game.team_1.logo_file" alt="Team 1 Logo" class="w-full h-full object-cover">
+                <div *ngIf="!game.team_1.logo_file" class="w-full h-full flex items-center justify-center text-gray-400">🏆</div>
+              </div>
+              <div>
+                <p class="font-medium">{{ game.team_1.name }}</p>
+                <p class="text-sm text-gray-500">{{ game.team_1.category }}</p>
+              </div>
+            </div>
+            <div class="text-center bg-gray-100 px-3 py-2 rounded">
+              <p class="text-lg font-bold" *ngIf="game.result">
+                {{ game.result.goals_team_1 ?? '-' }} - {{ game.result.goals_team_2 ?? '-' }}
+              </p>
+              <p class="text-lg font-bold" *ngIf="!game.result">VS</p>
+            </div>
+            <div class="flex items-center">
+              <div class="text-right mr-3">
+                <p class="font-medium">{{ game.team_2.name }}</p>
+                <p class="text-sm text-gray-500">{{ game.team_2.category }}</p>
+              </div>
+              <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded-full overflow-hidden">
+                <img *ngIf="game.team_2.logo_file" [src]="urlEnvironment + game.team_2.logo_file" alt="Team 2 Logo" class="w-full h-full object-cover">
+                <div *ngIf="!game.team_2.logo_file" class="w-full h-full flex items-center justify-center text-gray-400">🏆</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs text-gray-500 mt-2 border-t pt-2">
+            <div>
+              <p><strong>Torneo:</strong> {{ game.tournament || 'No asignado' }}</p>
+              <p><strong>Campo:</strong> {{ game.field || 'No asignado' }}</p>
+            </div>
+            <div>
+              <p><strong>Árbitro:</strong> {{ game.referee || 'No asignado' }}</p>
+              <p><strong>Observador:</strong> {{ game.observer || 'No asignado' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Modal Nueva Fecha -->
-  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-lg w-full max-w-md p-6">
       <h3 class="text-lg font-semibold mb-4">Crear Nueva Fecha</h3>
       <form class="space-y-4">
         <section class="header-selector mb-2">
-            <h2>Seleccionar Fechas</h2>
-            <div class="flex flex-col gap-2">
-              <label class="text-sm w-[30%]">Nueva fecha</label>
-                <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
-                    <div class="flex flex-row w-full items-center justify-between">
-                        <input 
-                            type="date" 
-                            class="form-control input w-full" 
-                            [formControl]="datesControl" 
-                            format="dd/MM/yyyy"
-                            required>
-                    </div>
-                </div>
-                
+          <h2>Seleccionar Fechas</h2>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm w-[30%]">Nueva fecha</label>
+            <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
+              <div class="flex flex-row w-full items-center justify-between">
+                <input type="date" class="form-control input w-full" [formControl]="datesControl" format="dd/MM/yyyy"
+                  required>
+              </div>
             </div>
-            
-            <section class="header-card mb-1 mt-2">
-                <h2>Torneo</h2>
-                <div class="flex flex-row gap-2">
-                    <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
-                        <select 
-                            class="form-control input w-full" 
-                            [(ngModel)]="selectedTournament" 
-                            name="tournament" 
-                            required>
-                            <option *ngFor="let tournament of tournaments" [value]="tournament.id">
-                                {{tournament.name}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </section>
 
-            <div class="flex flex-row gap-2 justify-end w-full mt-2">
-              <button class="bg-slate-900 text-white px-4 py-2 rounded-md"
-                 (click)="addDate()" [disabled]="!datesControl.valid">Agregar Fecha</button>
+          </div>
+
+          <section class="header-card mb-1 mt-2">
+            <h2>Torneo</h2>
+            <div class="flex flex-row gap-2">
+              <div class="flex flex-col gap-2 border-2 border-primary rounded-md p-2">
+                <select class="form-control input w-full" [(ngModel)]="selectedTournament" name="tournament" required>
+                  <option *ngFor="let tournament of tournaments" [value]="tournament.id">
+                    {{tournament.name}}
+                  </option>
+                </select>
+              </div>
             </div>
-            
+          </section>
+
+          <div class="flex flex-row gap-2 justify-end w-full mt-2">
+            <button class="bg-slate-900 text-white px-4 py-2 rounded-md" (click)="addDate()"
+              [disabled]="!datesControl.valid">Agregar Fecha</button>
+          </div>
+
         </section>
-    
+
         <section class="header-card mb-2">
-            <h2>Fechas Elegidas</h2>
-            <div class="flex flex-row flex-wrap gap-2">
-                <div *ngFor="let date of datesSelected" class="px-3 py-2 bg-gray-300 rounded-md flex items-center gap-2">
-                    <span class="text-sm">{{date.date | date: 'dd/MM/yyyy'}} - {{date.date | date: "fullDate"}}</span>
-                    <button class="text-red-500 hover:text-red-700 hover:text-bold" (click)="removeDate(date.index - 1)">
-                        <span class="material-icons z-10 text-sm align-middle">
-                            close
-                        </span>
-                    </button>
-                </div>
+          <h2>Fechas Elegidas</h2>
+          <div class="flex flex-row flex-wrap gap-2">
+            <div *ngFor="let date of datesSelected" class="px-3 py-2 bg-gray-300 rounded-md flex items-center gap-2">
+              <span class="text-sm">{{date.date | date: 'dd/MM/yyyy'}} - {{date.date | date: "fullDate"}}</span>
+              <button class="text-red-500 hover:text-red-700 hover:text-bold" (click)="removeDate(date.index - 1)">
+                <span class="material-icons z-10 text-sm align-middle">
+                  close
+                </span>
+              </button>
             </div>
+          </div>
         </section>
         <div class="flex flex-row gap-2 justify-between w-full mt-2">
           <button class="text-white bg-slate-500 px-4 py-2 rounded-md" (click)="closeModal()">
-            Cancelar  
+            Cancelar
           </button>
           <button class="bg-slate-900 text-white px-4 py-2 rounded-md" (click)="createDates()">
             Crear Fechas
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Game Modal -->
+  <div *ngIf="showGameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg w-full max-w-xl p-6">
+      <h3 class="text-lg font-semibold mb-4">{{ isEditingGame ? 'Editar' : 'Crear Nuevo' }} Partido</h3>
+      <form [formGroup]="gameForm" (ngSubmit)="saveGame()" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Hour -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Hora</label>
+            <input 
+              type="time" 
+              formControlName="hour"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            >
+            <div *ngIf="gameForm.get('hour')?.invalid && gameForm.get('hour')?.touched" class="text-red-500 text-sm mt-1">
+              Hora es requerida
+            </div>
+          </div>
+
+          <!-- Tournament -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Torneo</label>
+            <select 
+              formControlName="tournament"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option [ngValue]="null">Seleccionar torneo</option>
+              <option *ngFor="let tournament of tournaments" [ngValue]="tournament.id">
+                {{ tournament.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Team 1 -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Equipo Local</label>
+            <select 
+              formControlName="team_1"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            >
+              <option [ngValue]="null">Seleccionar equipo</option>
+              <option *ngFor="let team of allTeams" [ngValue]="team.id">
+                {{ team.name }}
+              </option>
+            </select>
+            <div *ngIf="gameForm.get('team_1')?.invalid && gameForm.get('team_1')?.touched" class="text-red-500 text-sm mt-1">
+              Equipo local es requerido
+            </div>
+          </div>
+
+          <!-- Team 2 -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Equipo Visitante</label>
+            <select 
+              formControlName="team_2"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            >
+              <option [ngValue]="null">Seleccionar equipo</option>
+              <option *ngFor="let team of allTeams" [ngValue]="team.id">
+                {{ team.name }}
+              </option>
+            </select>
+            <div *ngIf="gameForm.get('team_2')?.invalid && gameForm.get('team_2')?.touched" class="text-red-500 text-sm mt-1">
+              Equipo visitante es requerido
+            </div>
+          </div>
+
+          <!-- Field -->
+          <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Campo</label>
+            <input 
+              type="text" 
+              formControlName="field"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Campo (opcional)"
+            >
+          </div>
+
+          <!-- Referee -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Árbitro</label>
+            <input 
+              type="text" 
+              formControlName="referee"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Árbitro (opcional)"
+            >
+          </div>
+
+          <!-- Observer -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Observador</label>
+            <input 
+              type="text" 
+              formControlName="observer"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Observador (opcional)"
+            >
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-4">
+          <button 
+            type="button"
+            (click)="closeGameModal()" 
+            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="submit"
+            [disabled]="gameForm.invalid || gamesLoading"
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+          >
+            {{ isEditingGame ? 'Actualizar' : 'Crear' }} Partido
           </button>
         </div>
       </form>

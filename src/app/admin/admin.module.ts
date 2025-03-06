@@ -20,6 +20,9 @@ import { ResultsComponent } from './results/results.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { CategoriesComponent } from './categories/categories.component';
+import { SanctionsComponent } from './sanctions/sanctions.component';
+import { RemovePointsComponent } from './remove-points/remove-points.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -33,7 +36,10 @@ const routes: Routes = [
     loadChildren: () => import('../create-tournaments/tounament.module').then(m => m.TournamentModule) 
   },
   { path: 'gestionar-fechas', component: DateManagementComponent, canActivate: [AuthGuard] },
-  { path: 'cargar-resultados', component: ResultsComponent, canActivate: [AuthGuard] }
+  { path: 'cargar-resultados', component: ResultsComponent, canActivate: [AuthGuard] },
+  { path: 'categorias', component: CategoriesComponent, canActivate: [AuthGuard] },
+  { path: 'sanciones', component: SanctionsComponent, canActivate: [AuthGuard] },
+  { path: 'quitar-puntos', component: RemovePointsComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -46,7 +52,8 @@ const routes: Routes = [
     DelegadosComponent,
     ImprimirDocumentosComponent,
     DateManagementComponent,
-    ResultsComponent
+    ResultsComponent,
+    RemovePointsComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

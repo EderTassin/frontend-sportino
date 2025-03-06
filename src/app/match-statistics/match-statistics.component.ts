@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-match-statistics',
@@ -22,11 +23,13 @@ export class MatchStatisticsComponent {
   selectedDate: any;
   listPosicion: any;
   tournament: any;
+  environment: any;
 
   constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) { }
 
   ngOnInit(): void {
     this.tournamentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.environment = environment.apiEndpoint.replace('/api/', '');
     this.loadDataForm();
   }
   
@@ -43,7 +46,7 @@ export class MatchStatisticsComponent {
     this.goleadores = allData.goleadores.slice(0,16);
 
     this.listPosicion = await this.estadisticaPartidosService.getPosiciones(this.tournamentId);
-    
+  
     this.filterMatchesByDate();
   }
 

@@ -142,7 +142,7 @@
       </button>
     </div>
     
-    <form (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+    <form (ngSubmit)="onSubmit()" class="p-6 space-y-6" enctype="multipart/form-data">
       <div class="flex flex-col items-center mb-6">
         <img 
           [src]="previewImage || urlEnvironment + newPlayer.photo" 
@@ -205,7 +205,7 @@
             type="text" 
             id="dni" 
             name="dni" 
-            [(ngModel)]="newPlayer.dni" 
+            [(ngModel)]="newPlayer.id_card" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           >
@@ -359,8 +359,8 @@
           <input 
             type="text" 
             id="edit_dni" 
-            name="dni" 
-            [(ngModel)]="selectedPlayer.dni" 
+            name="id_card" 
+            [(ngModel)]="selectedPlayer.id_card" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           >

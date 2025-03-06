@@ -27,8 +27,8 @@ export class AdminService {
     );
   }
 
-  getTeams(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}teams`);
+  async getTeams(): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}players/teams/`));
   }
 
   async getDelegados() {
@@ -51,8 +51,14 @@ export class AdminService {
     return this.http.delete<any>(`${this.apiUrl}calendars/tournament/${id}/`);
   }
 
-  imprimirDocumentos(dateId: number): Observable<Blob> {
+  imprimirDocumentosDate(dateId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}calendars/date-report-pdf/?date_id=${dateId}`, {
+      responseType: 'blob'
+    });
+  }
+
+  imprimirDocumentosGame(gameId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}calendars/game-report-pdf/?date_id=${gameId}`, {
       responseType: 'blob'
     });
   }

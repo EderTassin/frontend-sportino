@@ -69,7 +69,7 @@
             <div class="card-menu" (click)="navigateTo('equipos')">
                 <h2>Gestión Equipos <span class="material-symbols-outlined">groups</span></h2>
             </div>
-            <div class="card-menu">
+            <div class="card-menu" (click)="navigateTo('sanciones')">
                 <h2>Revisar Sanciones <span class="material-symbols-outlined">warning</span></h2>
             </div>
             <div class="card-menu" (click)="navigateTo('imprimir-documentos')">
@@ -96,7 +96,7 @@
                     <li><a href="#">Zonas</a></li>
                     <li><a href="#">Calendario</a></li>
                     <li><a href="#">Act./Fechas</a></li>
-                    <li><a href="#">Categorías</a></li>
+                    <li><a (click)="navigateTo('categorias')">Categorías</a></li>
                     <li><a href="#">Fechas</a></li>
                 </ul>
             </div>
@@ -107,7 +107,7 @@
                     <li><a (click)="navigateTo('delegates')">Delegados</a></li>
                     <li><a (click)="navigateTo('equipos')">Equipos</a></li>
                     <li><a href="#">Jugadores</a></li>
-                    <li><a href="#">Sanciones</a></li>
+                    <li><a (click)="navigateTo('sanciones')">Sanciones</a></li>
                 </ul>
             </div>
             <div class="card">
@@ -117,7 +117,7 @@
                     <li><a href="#">Parámetros</a></li>
                     <li><a href="#">Backup</a></li>
                     <li><a href="#">Claves Delegados</a></li>
-                    <li><a href="#">Quita Puntos</a></li>
+                    <li><a (click)="navigateTo('quitar-puntos')">Quita Puntos</a></li>
                 </ul>
             </div>
             <div class="card">
@@ -134,7 +134,6 @@
                 <ul>
                     <li><a href="#">Listado de Partidos</a></li>
                     <li><a href="#">Listado de Equipos</a></li>
-                    <li><a href="#">Imprime todas las planillas</a></li>
                     <li><a href="#">Busca Jugadores</a></li>
                 </ul>
             </div>

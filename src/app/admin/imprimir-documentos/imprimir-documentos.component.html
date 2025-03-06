@@ -40,4 +40,39 @@
             </button>
         </div>
     </div>
+
+    <div class="container bg-white p-4 rounded-md">
+        <h1 class="text-2xl font-bold mb-6 mt-4 font-montserrat">Imprimir Documentos de Partidos</h1>
+
+        <div class="grid gap-4 md:grid-cols-2">
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Seleccionar Torneo:</label>
+                <select [(ngModel)]="tournamentSelectedDate" (change)="cargarPartidos()"
+                    class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled selected>Seleccione un torneo</option>
+                    <option *ngFor="let item of tournaments" [ngValue]="item.id">
+                        {{ item.id }} - {{ item.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Seleccionar Fecha:</label>
+                <select [(ngModel)]="gameSelected" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    [disabled]="!tournamentSelectedDate">
+                    <option value="" disabled selected>Seleccione una fecha</option>
+                    <option *ngFor="let date of dates" [ngValue]="date.id">
+                        {{ date.date | date: 'fullDate' }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-6 flex gap-4">
+            <button (click)="descargarPDFGame()" [disabled]="!gameSelected"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400">
+                Descargar PDF
+            </button>
+        </div>
+    </div>
 </div>

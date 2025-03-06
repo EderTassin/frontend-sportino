@@ -86,6 +86,8 @@ export class ManagerComponent implements OnInit {
 
   onSubmit() {
     this.newPlayer.birthDate = new Date(this.newPlayer.birthDate);
+
+    console.log(this.newPlayer);
     
     this.managerService.addPlayer(this.newPlayer, this.teamId, this.selectedFile).subscribe(
       (response) => {
@@ -190,6 +192,7 @@ export class ManagerComponent implements OnInit {
   updateTeamInfo() {
     const formData = new FormData();
 
+    
     formData.append('name', this.editTeamForm.name);
     if (this.editTeamForm.logo_file) {
       formData.append('logo_file', this.editTeamForm.logo_file);

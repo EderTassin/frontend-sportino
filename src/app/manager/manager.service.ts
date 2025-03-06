@@ -53,11 +53,11 @@ export class ManagerService {
     const formData = new FormData();
     formData.append('full_name', player.full_name);
     formData.append('birthday', this.formatDate(player.birthDate));
-    formData.append('id_card', player.dni);
+    formData.append('id_card', player.id_card);
     formData.append('year', player.year);
     formData.append('street', player.street);
-    formData.append('number', '');
-    formData.append('neighborhood', '');
+    formData.append('number', player.number);
+    formData.append('neighborhood', player.neighborhood);
     formData.append('phone', player.phone);
     formData.append('cell_phone', player.phone);
     formData.append('email', player.email);

@@ -13,6 +13,9 @@ export class ImprimirDocumentosComponent implements OnInit {
   tournamentSelected: number | null = null;
   dates: any[] = [];
   dateSelected: number | null = null;
+  games: any[] = [];
+  gameSelected: number | null = null;
+  tournamentSelectedDate: number | null = null;
 
   constructor(private adminService: AdminService, private tournamentService: TournamentService, private router: Router) { }
 
@@ -32,9 +35,16 @@ export class ImprimirDocumentosComponent implements OnInit {
     }
   }
 
+  async cargarPartidos(): Promise<void> {
+    if (this.tournamentSelectedDate) {
+      const dates = await this.tournamentService.getDatesByTournament(this.tournamentSelectedDate)
+      this.dates = dates;
+    }
+  }
+
   descargarPDF(){
     if (this.dateSelected) {
-      this.adminService.imprimirDocumentos(this.dateSelected).subscribe({
+      this.adminService.imprimirDocumentosDate(this.dateSelected).subscribe({
         next: (response: any) => {
           const blob = new Blob([response], { type: 'application/pdf' });
           const url = window.URL.createObjectURL(blob);
@@ -48,6 +58,25 @@ export class ImprimirDocumentosComponent implements OnInit {
       });
     } else {
       alert('Por favor, seleccione una fecha antes de descargar el PDF.');
+    }
+  }
+
+  descargarPDFGame(){
+    if (this.gameSelected) {
+      this.adminService.imprimirDocumentosGame(this.gameSelected).subscribe({
+        next: (response: any) => {
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `reporte-partido-${this.dates.find(date => date.id === this.gameSelected)?.date}.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error: any) => console.error('Error descargando PDF de partido', error)
+      });
+    } else {
+      alert('Por favor, seleccione una fecha de partido antes de descargar el PDF.');
     }
   }
 
