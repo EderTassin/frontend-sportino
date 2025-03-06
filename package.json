@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --aot --build-optimizer --output-hashing=all --source-map=false",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' ng build --aot --build-optimizer --output-hashing=all --source-map=false",
     "build:stats": "ng build --stats-json",
     "test": "ng test"
   },

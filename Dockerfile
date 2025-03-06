@@ -12,7 +12,7 @@ RUN rm ./proxy.conf.json
 COPY proxy.conf-prod.json ./proxy.conf.json
 
 # Ajustar la memoria máxima para Node.js (incrementar a 4096 MB)
-RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build && \
+RUN npm run build && \
     npm cache clean --force
 
 # Stage 2: Serve the app with Nginx
