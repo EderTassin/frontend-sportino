@@ -1,19 +1,23 @@
 # Stage 1: Build the Angular app
-FROM node:18 AS build
+FROM node:20.13-alpine AS build
 
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci 
+# Configurar registro npm (si es necesario)
+RUN npm set registry https://registry.npmjs.org/
 
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copiar el resto de los archivos
 COPY . ./
+
+# Ajustar configuraciones según entorno
 RUN rm ./proxy.conf.json
 COPY proxy.conf-prod.json ./proxy.conf.json
 
-# Ajustar la memoria máxima para Node.js (incrementar a 4096 MB)
-RUN npm run build && \
-    npm cache clean --force
+# Build con optimizaciones
+RUN npm run build -- --aot --output-hashing=all version:minor 
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine
