@@ -10,7 +10,7 @@ services:
       - LETSENCRYPT_HOST=sportino.com.ar
     networks:
       - main_network
-    mem_limit: 4096m
+    mem_limit: 4096m 
     mem_reservation: 2048m
     build:
       context: .
