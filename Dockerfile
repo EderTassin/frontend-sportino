@@ -17,7 +17,7 @@ RUN rm ./proxy.conf.json
 COPY proxy.conf-prod.json ./proxy.conf.json
 
 # Build con optimizaciones
-RUN npm run build -- --aot --output-hashing=all version:minor 
+RUN npm run build version:minor
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine

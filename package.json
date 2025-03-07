@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --aot --output-hashing=all",
     "build:stats": "ng build --stats-json",
     "test": "ng test",
     "version:patch": "npm version patch --no-git-tag-version",
