@@ -19,6 +19,7 @@ COPY proxy.conf-prod.json ./proxy.conf.json
 # Build con optimizaciones
 RUN npm run build && \
     npm cache clean --force
+    
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine
 

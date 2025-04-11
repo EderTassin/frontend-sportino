@@ -37,3 +37,9 @@ button{
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Montserrat, "Helvetica Neue", sans-serif; }
+
+::ng-deep {
+  .mdc-notched-outline__notch{
+    border-right: none;
+  }
+}

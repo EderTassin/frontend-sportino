@@ -5,6 +5,7 @@ import { DatesFormComponent } from './dates-form/dates-form.component';
 import { MatchesFormComponent } from './matches-form/matches-form.component';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
+import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
 
 @Component({
   selector: 'app-create-tournaments',
@@ -13,11 +14,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class CreateTournamentsComponent implements OnInit {
   currentStep: number = 0;
-  tournamentData: any[] = [];
+  tournamentData: any[] = [{}, [], []];
   steps: string[] = ['Información del Torneo', 'Fechas a Jugar', 'Programar Partidos', 'Resumen'];
   isCurrentFormValid = false;
-  idTournament: number = 0;
+  tournamentId: number | null = null;
   originalTournamentData: any;
+  isEditMode = false;
 
   @ViewChild(TournamentFormComponent) tournamentFormComponent!: TournamentFormComponent;
   @ViewChild(DatesFormComponent) datesFormComponent!: DatesFormComponent;
@@ -25,173 +27,209 @@ export class CreateTournamentsComponent implements OnInit {
 
   constructor(
     private tournamentService: TournamentService,
+    private estadisticaService: EstadisticaPartidosService,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    // this.route.params.subscribe(params => {
-    //   if (params['id']) {
-    //     this.loadExistingTournament(params['id']);
-    //     this.idTournament = params['id'];
-    //   }
-    // });
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.tournamentId = +id;
+        this.isEditMode = true;
+        this.loadExistingTournament(this.tournamentId);
+      } else {
+        this.isCurrentFormValid = false;
+      }
+    });
   }
 
   async loadExistingTournament(id: number) {
     try {
       const tournament = await this.tournamentService.getTournamentById(id);
-      this.tournamentData[0] = tournament;
-      this.originalTournamentData = { ...tournament };
-
       const dates = await this.tournamentService.getDatesByTournament(id);
-      this.tournamentData[1] = dates;
+      const matches: any[] = [];
 
-      if (this.tournamentData[0]) {
-        this.currentStep = dates.length > 0 ? 2 : 1;
-      }
+      this.tournamentData = [
+        tournament || {},
+        dates || [],
+        matches
+      ];
+      
+      this.originalTournamentData = JSON.parse(JSON.stringify(this.tournamentData));
+
+      this.currentStep = 3;
+      this.isCurrentFormValid = true;
+
     } catch (error: any) {
-      this.toastr.error('Error al cargar el torneo');
-      console.error(error);
+      const errorMessage = error?.error?.detail || 'Error al cargar el torneo existente';
+      this.toastr.error(errorMessage);
+      console.error("Load existing tournament error:", error);
     }
   }
 
   handleNext() {
     const currentFormData = this.getCurrentFormData();
-    if (currentFormData) {
-      this.tournamentData[this.currentStep] = currentFormData;
-  
-      if (this.currentStep === 0) {
-        if (this.idTournament) {
-          this.handleUpdateTournament();
-        } else {
-          this.createTournament();
-        }
-      }
-  
-      if (this.currentStep === 1) {
-        this.createDates();
-      }
+    if (this.isCurrentFormValid || this.isEditMode) {
+       if (currentFormData !== null && this.currentStep < 3) {
+          this.tournamentData[this.currentStep] = currentFormData;
+       }
 
-      if (this.currentStep === 2) {
-        this.createMatches();
-      }
-    }
-  }
-
-  async createMatches() {
-    try {
-      const listMatches = this.tournamentData[2].map((match: any) => {
-        return {
-          date: match.date,
-          team_1: match.teamA,
-          team_2: match.teamB,
-          tournament: this.tournamentData[0].id,
-          field: match.field,
-          hour: match.hour,
-          active: true
-        }
-      })
-
-      const response = await this.tournamentService.addMatches(listMatches);
-
-      this.tournamentData[2] = response;
-      this.changeStep();
-    } catch (error: any) {
-      console.error(error.error.detail);
-      this.toastr.error(error.error.detail);
-    }
-  }
-
-  handleUpdateTournament() {
-    const currentFormData = this.getCurrentFormData();
-    if (this.hasTournamentDataChanged(this.originalTournamentData, currentFormData)) {
-      this.updateTournament();
+        if (this.currentStep < this.steps.length - 1) {
+          this.currentStep++;
+          this.isCurrentFormValid = this.isEditMode; 
+       }
     } else {
-      this.changeStep();
+         this.toastr.error('Por favor complete el formulario correctamente antes de continuar.');
     }
   }
 
   hasTournamentDataChanged(existingData: any, newData: any): boolean {
-    return JSON.stringify(existingData) !== JSON.stringify(newData);
-  }
-
-  async updateTournament() {
-    try {
-      await this.tournamentService.updateTournament(this.idTournament,this.tournamentData[0]);
-      this.toastr.success('Torneo actualizado con éxito');
-      this.changeStep();
-    } catch (error: any) {
-      console.error(error.error.detail);
-      this.toastr.error(error.error.detail);
-    }
+     if (!existingData) return true;
+     return JSON.stringify(existingData) !== JSON.stringify(newData);
   }
 
   changeStep() {
     if (this.currentStep < this.steps.length - 1) {
       this.currentStep++;
+      this.isCurrentFormValid = this.isEditMode;
     }
   }
 
   handleBack(): void {
-    this.currentStep = Math.max(this.currentStep - 1, 0);
+    if (this.currentStep > 0) {
+        this.currentStep--;
+        this.isCurrentFormValid = true;
+    }
   }
 
   getCurrentFormData() {
-    switch (this.currentStep) {
-      case 0:
-        return this.tournamentFormComponent.getFormData();
-      case 1:
-        return this.datesFormComponent.getFormData();
-      case 2:
-        return this.matchesFormComponent.getFormData();
-      default:
-        return {};
+    try {
+      switch (this.currentStep) {
+        case 0:
+          if (!this.tournamentFormComponent) return null;
+          this.isCurrentFormValid = this.tournamentFormComponent.form.valid;
+          return this.tournamentFormComponent.getFormData();
+        case 1:
+           if (!this.datesFormComponent) return null;
+           this.isCurrentFormValid = this.datesFormComponent.form.valid || (this.datesFormComponent.dates && this.datesFormComponent.dates.length > 0);
+           return this.datesFormComponent.getFormData();
+        case 2:
+           if (!this.matchesFormComponent) return null;
+           this.isCurrentFormValid = true;
+           return this.matchesFormComponent.getFormData();
+        default:
+          this.isCurrentFormValid = true;
+          return null;
+      }
+    } catch (error) {
+        console.error("Error getting form data from child component", error);
+        this.toastr.error("Error al obtener datos del paso actual.");
+        this.isCurrentFormValid = false;
+        return null;
     }
   }
 
-  async createTournament() {
-    try {
-      const response = await this.tournamentService.createTournament(this.tournamentData[0]);
-      this.tournamentData[0].id = response.id;
-      this.changeStep();
-    } catch (error: any) {
-      console.error(error.error.detail);
-      this.toastr.error(error.error.detail);
+  navigateToStep(stepIndex: number): void {
+    if (this.isEditMode || stepIndex <= this.currentStep) {
+      this.currentStep = stepIndex;
+      this.isCurrentFormValid = true;
+    } else if (!this.isCurrentFormValid) {
+        this.toastr.info("Complete el paso actual correctamente para avanzar.");
+    } else {
+        this.currentStep = stepIndex;
+        this.isCurrentFormValid = this.isEditMode;
     }
   }
 
-  async createDates() {
-    if (this.tournamentData[1][0]?.id != undefined) {
-      this.changeStep();
-      return;
+  handleSkipToSummary(): void {
+    if (this.isEditMode) {
+      this.currentStep = 3;
+      this.isCurrentFormValid = true;
+    }
+  }
+
+  async saveTournament() {
+    const currentFormData = this.getCurrentFormData();
+    if (currentFormData !== null && this.currentStep < 3) {
+       this.tournamentData[this.currentStep] = currentFormData;
+    }
+
+    const tournamentInfo = this.tournamentData[0];
+    const dates = this.tournamentData[1];
+    const matches = this.tournamentData[2];
+
+    if (!tournamentInfo || !tournamentInfo.name || !tournamentInfo.date_from || !tournamentInfo.date_to) {
+        this.toastr.error("La información básica del torneo (Nombre, Fechas) es requerida.");
+        this.navigateToStep(0);
+        return;
     }
 
     try {
-      const listDate = this.tournamentData[1].map((date: any) => ({
-        date: date.date,
-        tournament: [this.tournamentData[0].id],
-        active: true
-      }));
+      if (this.isEditMode && this.tournamentId) {
+        console.log("Updating tournament:", this.tournamentId, this.tournamentData);
+        
+        await this.tournamentService.updateTournament(this.tournamentId, tournamentInfo);
 
-      const response = await this.tournamentService.addDates(listDate);
-      this.tournamentData[1] = response;
-      this.changeStep();
+        if (dates && dates.length > 0) {
+           const newDates = dates.filter((d: any) => !d.id);
+            if(newDates.length > 0) {
+               const datesToAdd = newDates.map((date: any) => ({ date: date.date, tournament: [this.tournamentId], active: true }));
+               await this.tournamentService.addDates(datesToAdd);
+            }
+        }
+         if (matches && matches.length > 0) {
+            const newMatches = matches.filter((m: any) => !m.id);
+            if(newMatches.length > 0) {
+               const matchesToAdd = newMatches.map((match: any) => ({ date: match.date, team_1: match.teamA, team_2: match.teamB, tournament: this.tournamentId, field: match.court, hour: match.hour, active: true }));
+                await this.tournamentService.addMatches(matchesToAdd);
+            }
+        }
+
+        this.toastr.success('Torneo actualizado con éxito');
+
+      } else {
+         console.log("Creating tournament:", this.tournamentData);
+         const createdTournament = await this.tournamentService.createTournament(tournamentInfo);
+         const newTournamentId = createdTournament.id;
+
+         if (dates && dates.length > 0) {
+             const datesToAdd = dates.map((date: any) => ({ date: date.date, tournament: [newTournamentId], active: true }));
+             await this.tournamentService.addDates(datesToAdd);
+         }
+         if (matches && matches.length > 0) {
+             const matchesToAdd = matches.map((match: any) => ({ date: match.date, team_1: match.teamA, team_2: match.teamB, tournament: newTournamentId, field: match.court, hour: match.hour, active: true }));
+             await this.tournamentService.addMatches(matchesToAdd);
+         }
+         this.toastr.success('Torneo creado con éxito');
+      }
+      this.router.navigate(['/admin/tournaments']);
+
     } catch (error: any) {
-      console.error(error.error.detail);
-      this.toastr.error(error.error.detail);
+       const errorMessage = error?.error?.detail || 'Error al guardar el torneo.';
+       this.toastr.error(errorMessage);
+       console.error("Save tournament error:", error);
     }
   }
 
   onFormValidityChange(isValid: boolean) {
-    this.isCurrentFormValid = isValid;
+     this.isCurrentFormValid = isValid;
   }
 
   onDatesChange(isValid: boolean) {
-    this.isCurrentFormValid = isValid;
+      this.isCurrentFormValid = isValid || (this.datesFormComponent?.dates?.length > 0);
   }
 
+   onMatchesValidityChange(isValid: boolean) {
+     this.isCurrentFormValid = true;
+   }
+
   handleVolver() {
-    window.history.back();
+    console.log("Volver");
+    
+    this.router.navigate(['/admin/torneos']);
   }
 }
+

@@ -28,6 +28,9 @@
     <div class="tabla-resultados">
       <!-- Fixture Section -->
       <div *ngIf="selectedTab === 'Fixture'" class="fixture-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Fixture'}">
+        <div *ngIf="!listFixture || listFixture.length === 0" class="no-data-message">
+          No hay partidos disponibles para este torneo.
+        </div>
         <div *ngFor="let match of listFixture" class="match">
           <div class="container-teams">
             <div class="team">
@@ -53,7 +56,10 @@
 
       <!-- Posiciones Section -->
       <div *ngIf="selectedTab === 'Posiciones'" class="posiciones-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Posiciones'}">
-        <div class="scrollable-table">
+        <div *ngIf="!listPosicion?.positions || listPosicion.positions.length === 0" class="no-data-message">
+          No hay partidos disponibles para este torneo.
+        </div>
+        <div class="scrollable-table" *ngIf="listPosicion?.positions && listPosicion.positions.length > 0">
           <table>
             <thead>
               <tr>
@@ -76,7 +82,10 @@
 
       <!-- Goals Section -->
       <div *ngIf="selectedTab === 'Goleadores'" class="posiciones-container tab-content" [ngClass]="{'fade-in': selectedTab === 'Goleadores'}">
-        <div class="scrollable-table">
+        <div *ngIf="!listGoleadores || listGoleadores.length === 0" class="no-data-message">
+          No hay partidos disponibles para este torneo.
+        </div>
+        <div class="scrollable-table" *ngIf="listGoleadores && listGoleadores.length > 0">
           <table>
             <thead>
               <tr>

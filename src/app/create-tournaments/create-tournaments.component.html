@@ -1,52 +1,72 @@
-<div class="card w-full max-w-4xl mx-auto">
-
-  <div class="card-header flex justify-between w-full">
-    <button (click)="handleVolver()" class="btn btn-secondary d-flex align-items-center bg-gray-800 text-white px-4 py-2 p-0 rounded-md">
-      <span class="material-symbols-outlined text-lg">arrow_back</span>
-      <span class="text-lg">Volver</span>
+<div class="card w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+  <div class="card-header flex justify-between w-full mb-4">
+    <button (click)="handleVolver()" class="flex items-center bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors duration-200 shadow-sm">
+      <span class="material-symbols-outlined mr-2">arrow_back</span>
+      <span class="font-medium">Volver</span>
     </button>
-  </div>
-
-  <div class="card-header">
-    <h2 class="card-title mb-0">Crear Torneo de Fútbol</h2>
+    
+    <h2 class="text-2xl font-bold text-gray-800">
+      {{ isEditMode ? 'Editar Torneo de Fútbol' : 'Crear Torneo de Fútbol' }}
+    </h2>
   </div>
 
   <div class="card-content">
-    <div class="tabs-container mb-2 overflow-x-auto">
+    <div class="tabs-container mb-6 overflow-x-auto">
       <div class="tabs-wrapper flex mb-4">
         <span *ngFor="let step of steps; let i = index"
-              [class.bg-primary]="i === currentStep"
-              [class.bg-secondary]="i !== currentStep"
-              class="inline-block px-3 py-1 mr-2 rounded-full text-sm whitespace-nowrap">
-          {{i + 1}}. {{step}}
+              (click)="navigateToStep(i)"
+              [class.bg-green-600]="i === currentStep"
+              [class.bg-gray-200]="i !== currentStep"
+              [class.text-white]="i === currentStep"
+              [class.text-gray-700]="i !== currentStep"
+              [class.cursor-pointer]="isEditMode || i < currentStep"
+              [class.cursor-not-allowed]="!isEditMode && i > currentStep"
+              class="inline-flex items-center justify-center px-4 py-2 mr-2 rounded-md text-sm whitespace-nowrap transition-colors duration-200">
+          <span class="flex items-center justify-center rounded-full bg-white bg-opacity-20 w-6 h-6 mr-2 text-xs">{{i + 1}}</span>
+          {{step}}
         </span>
       </div>
     </div>
 
     <ng-container [ngSwitch]="currentStep">
       <app-tournament-form *ngSwitchCase="0" (formValid)="onFormValidityChange($event)" 
-      [initialData]="tournamentData"></app-tournament-form>
+      [initialData]="tournamentData" [isEditMode]="isEditMode"></app-tournament-form>
 
-      <app-dates-form *ngSwitchCase="1" [initialData]="tournamentData" (datesChange)="onDatesChange($event)"></app-dates-form>
+      <app-dates-form *ngSwitchCase="1" [initialData]="tournamentData" (datesChange)="onDatesChange($event)" [isEditMode]="isEditMode"></app-dates-form>
 
-      <app-matches-form *ngSwitchCase="2" [initialData]="tournamentData"></app-matches-form>
+      <app-matches-form *ngSwitchCase="2" [initialData]="tournamentData" [isEditMode]="isEditMode" (formValid)="onMatchesValidityChange($event)"></app-matches-form>
 
-      <app-tournament-summary *ngSwitchCase="3" [tournament]="tournamentData"></app-tournament-summary>
+      <app-tournament-summary *ngSwitchCase="3" [tournament]="tournamentData" [isEditMode]="isEditMode" (sectionChange)="navigateToStep($event)"></app-tournament-summary>
     </ng-container>
   </div>
 
-  <div class="card-footer flex justify-between">
+  <div class="card-footer flex justify-between mt-6">
     <button (click)="handleBack()" 
             [disabled]="currentStep === 0"
-            class="bg-secondary text-white px-4 py-2 rounded-md">
+            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors duration-200 shadow-sm">
       Atrás
     </button>
-    <button *ngIf="currentStep < steps.length - 1"
-            (click)="handleNext()"
-            [disabled]="!isCurrentFormValid"
-            class="bg-primary text-white px-4 py-2 rounded-md"
-            [ngClass]="{'opacity-50 cursor-not-allowed': !isCurrentFormValid}">
-      Siguiente
-    </button>
+    
+    <div class="flex space-x-2">
+      <button *ngIf="isEditMode && currentStep < steps.length - 1"
+              (click)="handleSkipToSummary()"
+              class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors duration-200 shadow-sm">
+        Ir al Resumen
+      </button>
+      
+      <button *ngIf="currentStep < steps.length - 1"
+              (click)="handleNext()"
+              [disabled]="!isCurrentFormValid && !isEditMode"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors duration-200 shadow-sm"
+              [ngClass]="{'opacity-50 cursor-not-allowed': !isCurrentFormValid && !isEditMode}">
+        Siguiente
+      </button>
+      
+      <button *ngIf="currentStep === steps.length - 1"
+              (click)="saveTournament()"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-200 shadow-sm">
+        {{ isEditMode ? 'Guardar Cambios' : 'Confirmar Torneo' }}
+      </button>
+    </div>
   </div>
 </div>

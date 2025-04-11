@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+<div class="bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto">
         <!-- Encabezado -->
         <div class="text-center mb-8">
@@ -21,9 +21,10 @@
                         <!-- Categoría -->
                         <div class="space-y-1">
                             <label class="text-sm font-medium text-gray-500">Categoría</label>
-                            <ng-container *ngFor="let category of tournamentData.category">
-                                <p class="text-gray-900 bg-gray-100 rounded-md px-2 py-1 font-medium">{{ getCategoryName(category) }}</p>
-                            </ng-container>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-500">Categorías:</label>
+                                <p class="text-gray-900 bg-gray-100 rounded-md px-2 py-1 font-medium">{{ getCategoryNames() }}</p>
+                            </div>
                         </div>
                     </div>
 
@@ -82,8 +83,27 @@
             
         </div>
 
+        <!-- Remove the Confirmar button as the parent component handles the final save action -->
+        <!-- 
         <div class="p-6 border-b border-gray-200 flex justify-end">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-md" (click)="confirmTournament()">Confirmar</button>
+        </div>
+        -->
+
+        <!-- Keep the edit buttons for edit mode -->
+        <div *ngIf="isEditMode" class="mt-4 flex justify-end space-x-4">
+            <button (click)="editSection(0)" class="text-green-600 hover:text-green-800 flex items-center">
+                <!-- ... icon ... -->
+                Editar información
+            </button>
+            <button (click)="editSection(1)" class="text-green-600 hover:text-green-800 flex items-center">
+                <!-- ... icon ... -->
+                Editar fechas
+            </button>
+            <button (click)="editSection(2)" class="text-green-600 hover:text-green-800 flex items-center">
+                <!-- ... icon ... -->
+                Editar partidos
+            </button>
         </div>
     </div>
 </div>  
