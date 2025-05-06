@@ -11,9 +11,15 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../_services/auth.interceptor';
 import { DelegadosComponent } from './delegados/delegados.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
+import { SubTournamentDialogComponent } from './tournaments/sub-tournament-dialog/sub-tournament-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ImprimirDocumentosComponent } from './imprimir-documentos/imprimir-documentos.component';
 import { DateManagementComponent } from './date-management/date-management.component';
 import { ResultsComponent } from './results/results.component';
@@ -53,7 +59,8 @@ const routes: Routes = [
     ImprimirDocumentosComponent,
     DateManagementComponent,
     ResultsComponent,
-    RemovePointsComponent
+    RemovePointsComponent,
+    SubTournamentDialogComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -66,6 +73,11 @@ const routes: Routes = [
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule

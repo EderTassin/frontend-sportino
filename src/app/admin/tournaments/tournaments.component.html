@@ -46,39 +46,120 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Inicio</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Fin</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activo</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub-torneos</th>
             <th scope="col" class="relative px-6 py-3"><span class="sr-only">Acciones</span></th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let team of tournaments" class="hover:bg-gray-50 transition-colors duration-150">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ team.id }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600 cursor-pointer hover:underline" (click)="goToTournament(team.id)">{{ team.name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ team.date_from }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ team.date_to }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                    [ngClass]="{'bg-green-100 text-green-800': team.active, 'bg-gray-100 text-gray-800': !team.active}">
-                {{ team.active ? 'Sí' : 'No' }}
-              </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <button mat-icon-button [matMenuTriggerFor]="menu" class="text-gray-500 hover:text-gray-700">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu" class="bg-white">
-                <button mat-menu-item (click)="goToTournament(team.id)" class="text-blue-600 hover:bg-blue-50">
-                  <mat-icon>add</mat-icon>
-                  <span>Crear Subtorneo</span>
+          <!-- Parent Tournaments -->
+          <ng-container *ngFor="let tournament of tournaments">
+            <tr class="hover:bg-gray-50 transition-colors duration-150">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tournament.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600 cursor-pointer hover:underline" (click)="goToTournament(tournament.id)">
+                {{ tournament.name }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tournament.date_from | date:'dd/MM/yyyy' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tournament.date_to | date:'dd/MM/yyyy' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{'bg-green-100 text-green-800': tournament.active, 'bg-gray-100 text-gray-800': !tournament.active}">
+                  {{ tournament.active ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <span *ngIf="hasSubTournaments(tournament.id)" class="px-2 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  {{ getSubTournaments(tournament.id).length }}
+                  <button 
+                    (click)="$event.stopPropagation()" 
+                    class="ml-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                    [attr.aria-expanded]="tournament.showSubTournaments ? 'true' : 'false'"
+                    (click)="tournament.showSubTournaments = !tournament.showSubTournaments"
+                  >
+                    <mat-icon class="text-sm">{{ tournament.showSubTournaments ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  </button>
+                </span>
+                <span *ngIf="!hasSubTournaments(tournament.id)" class="text-gray-400">-</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="text-gray-500 hover:text-gray-700">
+                  <mat-icon>more_vert</mat-icon>
                 </button>
-                <button mat-menu-item (click)="editTournament(team.id)" class="text-green-600 hover:bg-green-50">
-                  <mat-icon>edit</mat-icon>
-                  <span>Editar</span>
+                <mat-menu #menu="matMenu" class="bg-white">
+                  <button mat-menu-item (click)="createSubTournament(tournament.id)" class="text-blue-600 hover:bg-blue-50">
+                    <mat-icon>add</mat-icon>
+                    <span>Crear Sub-torneo</span>
+                  </button>
+                  <button mat-menu-item (click)="editTournament(tournament.id)" class="text-green-600 hover:bg-green-50">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteTournament(tournament.id)" class="text-red-600 hover:bg-red-50">
+                    <mat-icon>delete</mat-icon>
+                    <span>Eliminar</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+            
+            <!-- Sub-tournaments (expandable) -->
+            <ng-container *ngIf="hasSubTournaments(tournament.id) && tournament.showSubTournaments">
+              <tr *ngFor="let subTournament of getSubTournaments(tournament.id)" class="bg-gray-50 hover:bg-gray-100 transition-colors duration-150">
+                <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500 pl-10">
+                  <div class="flex items-center">
+                    <mat-icon class="text-gray-400 mr-2 text-sm">subdirectory_arrow_right</mat-icon>
+                    {{ subTournament.id }}
+                  </div>
+                </td>
+                <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-indigo-600 cursor-pointer hover:underline" (click)="goToTournament(subTournament.id)">
+                  {{ subTournament.name }}
+                </td>
+                <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{{ subTournament.date_from | date:'dd/MM/yyyy' }}</td>
+                <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{{ subTournament.date_to | date:'dd/MM/yyyy' }}</td>
+                <td class="px-6 py-3 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                        [ngClass]="{'bg-green-100 text-green-800': subTournament.active, 'bg-gray-100 text-gray-800': !subTournament.active}">
+                    {{ subTournament.active ? 'Sí' : 'No' }}
+                  </span>
+                </td>
+                <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-400">-</td>
+                <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                  <button mat-icon-button [matMenuTriggerFor]="subMenu" class="text-gray-500 hover:text-gray-700">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #subMenu="matMenu" class="bg-white">
+                    <button mat-menu-item (click)="editTournament(subTournament.id)" class="text-green-600 hover:bg-green-50">
+                      <mat-icon>edit</mat-icon>
+                      <span>Editar</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteTournament(subTournament.id)" class="text-red-600 hover:bg-red-50">
+                      <mat-icon>delete</mat-icon>
+                      <span>Eliminar</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          
+          <!-- Empty state -->
+          <tr *ngIf="tournaments.length === 0">
+            <td colspan="7" class="px-6 py-10 text-center text-gray-500">
+              <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p class="text-lg font-medium">No hay torneos disponibles</p>
+                <p class="mt-1">Crea un nuevo torneo para comenzar</p>
+                <button 
+                  (click)="openModal()" 
+                  class="mt-4 inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 shadow-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Crear Torneo
                 </button>
-                <button mat-menu-item (click)="deleteTournament(team.id)" class="text-red-600 hover:bg-red-50">
-                  <mat-icon>delete</mat-icon>
-                  <span>Eliminar</span>
-                </button>
-              </mat-menu>
+              </div>
             </td>
           </tr>
         </tbody>

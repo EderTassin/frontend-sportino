@@ -55,12 +55,30 @@ export class AuthService {
 
   async getUser(): Promise<any> {
     const token = localStorage.getItem('token');
-    const jwtHelper = new JwtHelperService();
-    const decodedToken = jwtHelper.decodeToken(token as string);
-    if (decodedToken?.user_id) {
-      const resp = await firstValueFrom(this.http.get(`${this.apiUrl}users/users/${decodedToken?.user_id}/`)) as any;
-      return resp;
+    if (!token) {
+      console.log('No token found');
+      return null;
     }
+    
+    try {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      
+      if (decodedToken?.user_id) {
+        try {
+          const resp = await firstValueFrom(this.http.get(`${this.apiUrl}users/users/${decodedToken.user_id}/`)) as any;
+          return resp;
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          return null;
+        }
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      // Token is invalid, clear it
+      this.logout();
+    }
+    
     return null;
   }
 
@@ -83,23 +101,44 @@ export class AuthService {
 
   public isAdmin(): boolean {
     const token = localStorage.getItem('token');
-    const jwtHelper = new JwtHelperService();
-    const decodedToken = jwtHelper.decodeToken(token as string);
-    return decodedToken.admin;
+    if (!token) return false;
+    
+    try {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken?.admin || false;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
   }
 
   public decodeToken(): any {
     const token = localStorage.getItem('token');
-    const jwtHelper = new JwtHelperService();
-    return jwtHelper.decodeToken(token as string);
+    if (!token) return null;
+    
+    try {
+      const jwtHelper = new JwtHelperService();
+      return jwtHelper.decodeToken(token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 
   public isManager(): boolean {
     const token = localStorage.getItem('token');
-    const jwtHelper = new JwtHelperService();
-    const decodedToken = jwtHelper.decodeToken(token as string);
-    if (decodedToken.group.includes('MANAGER')) {
-      return true;
+    if (!token) return false;
+    
+    try {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      
+      if (decodedToken?.group && Array.isArray(decodedToken.group) && decodedToken.group.includes('MANAGER')) {
+        return true;
+      }
+    } catch (error) {
+      console.error('Error checking manager status:', error);
     }
 
     this.logout();

@@ -250,6 +250,12 @@ export class DateManagementComponent {
   }
   
   openGameModal(game?: Game) {
+    // Reset the form first to clear any previous validation state
+    this.gameForm.reset();
+    
+    // Ensure gamesLoading is set to false when opening the modal
+    this.gamesLoading = false;
+    
     if (game) {
       this.isEditingGame = true;
       this.currentGameId = game.id || null;
@@ -267,16 +273,20 @@ export class DateManagementComponent {
       this.isEditingGame = false;
       this.currentGameId = null;
       
-      this.gameForm.reset({
-        hour: '',
+      // Initialize with default values but don't mark as touched yet
+      this.gameForm.patchValue({
         tournament: this.selectedDate.tournamentIds[0] || null,
-        team_1: null,
-        team_2: null,
         field: null,
         observer: null,
         referee: null
       });
+      
+      // Don't set values for required fields to avoid immediate validation errors
     }
+    
+    // Reset the validation state
+    this.gameForm.markAsUntouched();
+    this.gameForm.markAsPristine();
     
     this.showGameModal = true;
   }
@@ -284,6 +294,7 @@ export class DateManagementComponent {
   closeGameModal() {
     this.showGameModal = false;
     this.gameForm.reset();
+    this.gamesLoading = false; // Ensure loading state is reset when closing the modal
   }
   
   saveGame() {

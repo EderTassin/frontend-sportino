@@ -4,11 +4,20 @@ import {inject, Injectable } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 
+export interface Tournament {
+  id?: number;
+  name: string;
+  description?: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
+  category: number[];
+  parent?: number | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
-
-
 export class AdminService {
   private apiUrl = environment.apiEndpoint;
   private isAuthenticated = inject(AuthService).checkAuth();
@@ -43,8 +52,24 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
 
-   async getTournaments(): Promise<any> {
+  async getTournaments(): Promise<any> {
     return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/`));
+  }
+
+  async getTournamentById(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/${id}/`));
+  }
+
+  async createSubTournament(parentId: number, tournamentData: Partial<Tournament>): Promise<any> {
+    // Ensure the parent ID is set in the tournament data
+    const subTournamentData = {
+      ...tournamentData,
+      parent: parentId
+    };
+    
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}calendars/tournament/`, subTournamentData)
+    );
   }
 
   deleteTournament(id: number): Observable<any> {

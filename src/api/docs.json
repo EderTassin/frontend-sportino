@@ -1,0 +1,3862 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Snippets API",
+        "description": "Test description",
+        "termsOfService": "https://www.google.com/policies/terms/",
+        "contact": {
+            "email": "contact@snippets.local"
+        },
+        "license": {
+            "name": "BSD License"
+        },
+        "version": "v1"
+    },
+    "host": "api.sportino.com.ar",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/api",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "JWT": []
+        }
+    ],
+    "paths": {
+        "/api-token-auth/": {
+            "post": {
+                "operationId": "api-token-auth_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomTokenObtainPair"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/CustomTokenObtainPair"
+                        }
+                    }
+                },
+                "tags": [
+                    "api-token-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/api-token-auth/refresh/": {
+            "post": {
+                "operationId": "api-token-auth_refresh_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TokenRefresh"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TokenRefresh"
+                        }
+                    }
+                },
+                "tags": [
+                    "api-token-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/board/": {
+            "get": {
+                "operationId": "calendars_board_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "tournament",
+                        "in": "query",
+                        "description": "Tournament to filter",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Category to filter",
+                        "type": "string"
+                    },
+                    {
+                        "name": "num_teams",
+                        "in": "query",
+                        "description": "Num Teams to return",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/date-report-pdf/": {
+            "get": {
+                "operationId": "calendars_date-report-pdf_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "date_id",
+                        "in": "query",
+                        "description": "Date",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/dates/": {
+            "get": {
+                "operationId": "calendars_dates_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Date"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_dates_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "description": "List of GameDate objects to create",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tournament": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "active": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "description": "List of GameDate objects to create",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tournament": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "active": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/dates/{id}/": {
+            "get": {
+                "operationId": "calendars_dates_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Date"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_dates_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Date"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_dates_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Date"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_dates_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this game date.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/full-game/{game_id}/": {
+            "get": {
+                "operationId": "calendars_full-game_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FullGame"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "game_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/calendars/game-report-pdf/": {
+            "get": {
+                "operationId": "calendars_game-report-pdf_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "date_id",
+                        "in": "query",
+                        "description": "Fecha de juego",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/games-by-date/{date_id}": {
+            "get": {
+                "operationId": "calendars_games-by-date_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Game"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "date_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/calendars/games/": {
+            "get": {
+                "operationId": "calendars_games_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Game"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_games_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/games/{id}/": {
+            "get": {
+                "operationId": "calendars_games_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_games_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_games_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_games_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this game.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/goals/": {
+            "get": {
+                "operationId": "calendars_goals_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Goal"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_goals_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/goals/{id}/": {
+            "get": {
+                "operationId": "calendars_goals_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_goals_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_goals_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Goal"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_goals_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this goal.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/results/": {
+            "get": {
+                "operationId": "calendars_results_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Result"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_results_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/results/{id}/": {
+            "get": {
+                "operationId": "calendars_results_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_results_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_results_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_results_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this result.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/sanctions-filter/": {
+            "get": {
+                "operationId": "calendars_sanctions-filter_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "tournament",
+                        "in": "query",
+                        "description": "Tournament to filter",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "team_id",
+                        "in": "query",
+                        "description": "Team ID to filter",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Category to filter",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/sanctions/": {
+            "get": {
+                "operationId": "calendars_sanctions_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Sanction"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_sanctions_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/sanctions/{id}/": {
+            "get": {
+                "operationId": "calendars_sanctions_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_sanctions_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_sanctions_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Sanction"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_sanctions_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this sanction.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/tournament-dates/{tournament_id}": {
+            "get": {
+                "operationId": "calendars_tournament-dates_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Date"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "tournament_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/calendars/tournament/": {
+            "get": {
+                "operationId": "calendars_tournament_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Tournament"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "post": {
+                "operationId": "calendars_tournament_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/calendars/tournament/{id}/": {
+            "get": {
+                "operationId": "calendars_tournament_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "put": {
+                "operationId": "calendars_tournament_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "patch": {
+                "operationId": "calendars_tournament_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Tournament"
+                        }
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "delete": {
+                "operationId": "calendars_tournament_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this tournament.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/calendars/widgets/": {
+            "get": {
+                "operationId": "calendars_widgets_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "tournament",
+                        "in": "query",
+                        "description": "Tournament to filter",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Category to filter",
+                        "type": "string"
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date ID to filter",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "calendars"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/categories/": {
+            "get": {
+                "operationId": "players_categories_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Category"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "post": {
+                "operationId": "players_categories_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/categories/{id}/": {
+            "get": {
+                "operationId": "players_categories_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "put": {
+                "operationId": "players_categories_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "patch": {
+                "operationId": "players_categories_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "delete": {
+                "operationId": "players_categories_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this category.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/players/getnewteams/": {
+            "get": {
+                "operationId": "players_getnewteams_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/managers/": {
+            "get": {
+                "operationId": "players_managers_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Manager"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "post": {
+                "operationId": "players_managers_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/managers/{id}/": {
+            "get": {
+                "operationId": "players_managers_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "put": {
+                "operationId": "players_managers_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "patch": {
+                "operationId": "players_managers_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Manager"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "delete": {
+                "operationId": "players_managers_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this Manager.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/players/newplayers/": {
+            "get": {
+                "operationId": "players_newplayers_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/NewPlayer"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "post": {
+                "operationId": "players_newplayers_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/newplayers/{id}/": {
+            "get": {
+                "operationId": "players_newplayers_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "put": {
+                "operationId": "players_newplayers_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "patch": {
+                "operationId": "players_newplayers_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/NewPlayer"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "delete": {
+                "operationId": "players_newplayers_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this new player.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/players/players/": {
+            "get": {
+                "operationId": "players_players_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Player"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "post": {
+                "operationId": "players_players_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/players/{id}/": {
+            "get": {
+                "operationId": "players_players_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "put": {
+                "operationId": "players_players_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "patch": {
+                "operationId": "players_players_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Player"
+                        }
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "delete": {
+                "operationId": "players_players_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this player.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/players/teams/": {
+            "get": {
+                "operationId": "players_teams_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Team"
+                            }
+                        }
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "post": {
+                "operationId": "players_teams_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "documents",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "phone",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "picture_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "logo_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "need_to_pay",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "active",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "category",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "company",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Team"
+                        }
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/players/teams/{id}/": {
+            "get": {
+                "operationId": "players_teams_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Team"
+                        }
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "put": {
+                "operationId": "players_teams_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "documents",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "phone",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "picture_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "logo_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "need_to_pay",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "active",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "category",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "company",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Team"
+                        }
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "patch": {
+                "operationId": "players_teams_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "documents",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "phone",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 150,
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "picture_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "logo_file",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "need_to_pay",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "active",
+                        "in": "formData",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "category",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    },
+                    {
+                        "name": "company",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "x-nullable": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Team"
+                        }
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "delete": {
+                "operationId": "players_teams_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this team.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/players/toggle-managers-active-status/": {
+            "post": {
+                "operationId": "players_toggle-managers-active-status_create",
+                "description": "Toggle all managers active status",
+                "parameters": [
+                    {
+                        "name": "active",
+                        "in": "query",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "players"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/companies/": {
+            "get": {
+                "operationId": "users_companies_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Company"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "post": {
+                "operationId": "users_companies_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/companies/{id}/": {
+            "get": {
+                "operationId": "users_companies_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "put": {
+                "operationId": "users_companies_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "patch": {
+                "operationId": "users_companies_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Company"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_companies_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this company.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/confirmation/": {
+            "post": {
+                "operationId": "users_confirmation_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "manager_id",
+                        "in": "query",
+                        "description": "manager id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/dbdump/dump/": {
+            "get": {
+                "operationId": "users_dbdump_dump",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/observers/": {
+            "get": {
+                "operationId": "users_observers_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Observer"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "post": {
+                "operationId": "users_observers_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/observers/{id}/": {
+            "get": {
+                "operationId": "users_observers_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "put": {
+                "operationId": "users_observers_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "patch": {
+                "operationId": "users_observers_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Observer"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_observers_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this observer.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/referees/": {
+            "get": {
+                "operationId": "users_referees_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Referee"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "post": {
+                "operationId": "users_referees_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/referees/{id}/": {
+            "get": {
+                "operationId": "users_referees_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "put": {
+                "operationId": "users_referees_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "patch": {
+                "operationId": "users_referees_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Referee"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_referees_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this referee.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/users/": {
+            "get": {
+                "operationId": "users_users_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SportinoUser"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "post": {
+                "operationId": "users_users_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/users/{id}/": {
+            "get": {
+                "operationId": "users_users_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "put": {
+                "operationId": "users_users_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "patch": {
+                "operationId": "users_users_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SportinoUser"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_users_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "CustomTokenObtainPair": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                },
+                "password": {
+                    "title": "Password",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "TokenRefresh": {
+            "required": [
+                "refresh"
+            ],
+            "type": "object",
+            "properties": {
+                "refresh": {
+                    "title": "Refresh",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "access": {
+                    "title": "Access",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                }
+            }
+        },
+        "Date": {
+            "required": [
+                "date"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "date": {
+                    "title": "Date",
+                    "type": "string",
+                    "format": "date"
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                },
+                "tournament": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "uniqueItems": true
+                }
+            }
+        },
+        "FullGame": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "date": {
+                    "title": "Date",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "hour": {
+                    "title": "Hour",
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "team_1": {
+                    "title": "Team 1",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "team_2": {
+                    "title": "Team 2",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "field": {
+                    "title": "Field",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Game": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "hour": {
+                    "title": "Hour",
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "date": {
+                    "title": "Date",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "tournament": {
+                    "title": "Tournament",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "team_1": {
+                    "title": "Team 1",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "team_2": {
+                    "title": "Team 2",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "field": {
+                    "title": "Field",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "observer": {
+                    "title": "Observer",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "referee": {
+                    "title": "Referee",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Goal": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "goal_number": {
+                    "title": "Goal number",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "game": {
+                    "title": "Game",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "player": {
+                    "title": "Player",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Result": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "goal_team_1": {
+                    "title": "Goal team 1",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "goal_team_2": {
+                    "title": "Goal team 2",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "add_points_team_1": {
+                    "title": "Add points team 1",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "add_points_team_2": {
+                    "title": "Add points team 2",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                }
+            }
+        },
+        "Sanction": {
+            "required": [
+                "sanction_for"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "sanction_for": {
+                    "title": "Sanction for",
+                    "type": "string",
+                    "enum": [
+                        "P",
+                        "T"
+                    ]
+                },
+                "reason": {
+                    "title": "Reason",
+                    "type": "string",
+                    "maxLength": 300,
+                    "x-nullable": true
+                },
+                "missed_dates": {
+                    "title": "Missed dates",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "yellow_cards": {
+                    "title": "Yellow cards",
+                    "type": "string",
+                    "maxLength": 45,
+                    "x-nullable": true
+                },
+                "red_card": {
+                    "title": "Red card",
+                    "type": "string",
+                    "maxLength": 45,
+                    "x-nullable": true
+                },
+                "missed_points": {
+                    "title": "Missed points",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648
+                },
+                "game": {
+                    "title": "Game",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "player": {
+                    "title": "Player",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Tournament": {
+            "required": [
+                "name",
+                "date_from",
+                "date_to"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "maxLength": 300,
+                    "minLength": 1
+                },
+                "date_from": {
+                    "title": "Date from",
+                    "type": "string",
+                    "format": "date"
+                },
+                "date_to": {
+                    "title": "Date to",
+                    "type": "string",
+                    "format": "date"
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                },
+                "parent": {
+                    "title": "Parent",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "category": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "uniqueItems": true
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "age_from": {
+                    "title": "Age from",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "age_to": {
+                    "title": "Age to",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "observations": {
+                    "title": "Observations",
+                    "type": "string",
+                    "maxLength": 300,
+                    "x-nullable": true
+                },
+                "period": {
+                    "title": "Period",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "period_s": {
+                    "title": "Period s",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "period_g": {
+                    "title": "Period g",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "period_tr": {
+                    "title": "Period tr",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                }
+            }
+        },
+        "Manager": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254,
+                    "minLength": 1
+                },
+                "password": {
+                    "title": "Password",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "username": {
+                    "title": "Username",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "first_name": {
+                    "title": "First name",
+                    "type": "string",
+                    "maxLength": 30,
+                    "x-nullable": true
+                },
+                "last_name": {
+                    "title": "Last name",
+                    "type": "string",
+                    "maxLength": 30,
+                    "x-nullable": true
+                },
+                "team": {
+                    "title": "Team",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "id_card": {
+                    "title": "Id card",
+                    "type": "string",
+                    "maxLength": 50,
+                    "x-nullable": true
+                },
+                "observation": {
+                    "title": "Observation",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "start": {
+                    "title": "Start",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "end": {
+                    "title": "End",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "modification": {
+                    "title": "Modification",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "incorporation": {
+                    "title": "Incorporation",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648,
+                    "x-nullable": true
+                },
+                "confirmed": {
+                    "title": "Confirmed",
+                    "type": "boolean"
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                }
+            }
+        },
+        "NewPlayer": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "id_card": {
+                    "title": "Id card",
+                    "type": "string",
+                    "maxLength": 50,
+                    "x-nullable": true
+                },
+                "birthday": {
+                    "title": "Birthday",
+                    "type": "string",
+                    "format": "date",
+                    "x-nullable": true
+                },
+                "picture_1_file": {
+                    "title": "Picture 1 file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "picture_2_file": {
+                    "title": "Picture 2 file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "face_photo_file": {
+                    "title": "Face photo file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "medical_certificate": {
+                    "title": "Medical certificate",
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-nullable": true
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                },
+                "team": {
+                    "title": "Team",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "category": {
+                    "title": "Category",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Player": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "birthday": {
+                    "title": "Birthday",
+                    "type": "string",
+                    "format": "date",
+                    "x-nullable": true
+                },
+                "id_card": {
+                    "title": "Id card",
+                    "type": "string",
+                    "maxLength": 50,
+                    "x-nullable": true
+                },
+                "year": {
+                    "title": "Year",
+                    "type": "string",
+                    "maxLength": 50,
+                    "x-nullable": true
+                },
+                "street": {
+                    "title": "Street",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "number": {
+                    "title": "Number",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "neighborhood": {
+                    "title": "Neighborhood",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "phone": {
+                    "title": "Phone",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "cell_phone": {
+                    "title": "Cell phone",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "picture_file": {
+                    "title": "Picture file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "medical_certificate": {
+                    "title": "Medical certificate",
+                    "type": "boolean"
+                },
+                "date_certificate": {
+                    "title": "Date certificate",
+                    "type": "string",
+                    "format": "date",
+                    "x-nullable": true
+                },
+                "date": {
+                    "title": "Date",
+                    "type": "string",
+                    "format": "date",
+                    "x-nullable": true
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                },
+                "team": {
+                    "title": "Team",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Team": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "documents": {
+                    "title": "Documents",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "phone": {
+                    "title": "Phone",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 150,
+                    "x-nullable": true
+                },
+                "picture_file": {
+                    "title": "Picture file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "logo_file": {
+                    "title": "Logo file",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "need_to_pay": {
+                    "title": "Need to pay",
+                    "type": "boolean"
+                },
+                "active": {
+                    "title": "Active",
+                    "type": "boolean"
+                },
+                "category": {
+                    "title": "Category",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "company": {
+                    "title": "Company",
+                    "type": "integer",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Company": {
+            "required": [
+                "name"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "maxLength": 45,
+                    "minLength": 1
+                }
+            }
+        },
+        "Observer": {
+            "required": [
+                "full_name"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "maxLength": 45,
+                    "minLength": 1
+                }
+            }
+        },
+        "Referee": {
+            "required": [
+                "full_name"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "maxLength": 45,
+                    "minLength": 1
+                }
+            }
+        },
+        "SportinoUser": {
+            "required": [
+                "email"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254,
+                    "minLength": 1
+                },
+                "username": {
+                    "title": "Username",
+                    "type": "string",
+                    "maxLength": 150,
+                    "x-nullable": true
+                }
+            }
+        }
+    }
+}
+{
+    "apiBase": "https://api.sportino.com.ar/api/",
+    "endpoints": {
+        "authentication": {
+            "login": {
+                "url": "api-token-auth/",
+                "method": "POST",
+                "parameters": {
+                    "email": "string (required)",
+                    "password": "string (required)"
+                },
+                "returns": {
+                    "access": "JWT token string"
+                }
+            },
+            "getUser": {
+                "url": "users/users/{user_id}/",
+                "method": "GET",
+                "parameters": {
+                    "user_id": "number (path parameter)"
+                },
+                "returns": "User details object"
+            }
+        },
+        "tournaments": {
+            "getAll": {
+                "url": "calendars/tournament/",
+                "method": "GET",
+                "parameters": {},
+                "returns": "Array of tournament objects with fields: id, name, date_from, date_to, active, image, category"
+            },
+            "getById": {
+                "url": "calendars/tournament/{id}/",
+                "method": "GET",
+                "parameters": {
+                    "id": "number (path parameter)"
+                },
+                "returns": "Tournament details object"
+            },
+            "create": {
+                "url": "calendars/tournament/",
+                "method": "POST",
+                "parameters": {
+                    "name": "string (required)",
+                    "description": "string (optional)",
+                    "date_from": "string (required, date format)",
+                    "date_to": "string (required, date format)",
+                    "category": "array of category IDs (required)",
+                    "active": "boolean"
+                },
+                "returns": "Created tournament object"
+            },
+            "update": {
+                "url": "calendars/tournament/{id}",
+                "method": "PUT",
+                "parameters": {
+                    "id": "number (path parameter)",
+                    "name": "string",
+                    "description": "string",
+                    "date_from": "string (date format)",
+                    "date_to": "string (date format)",
+                    "category": "array of category IDs",
+                    "active": "boolean"
+                },
+                "returns": "Updated tournament object"
+            },
+            "delete": {
+                "url": "calendars/tournament/{id}/",
+                "method": "DELETE",
+                "parameters": {
+                    "id": "number (path parameter)"
+                },
+                "returns": "Success status"
+            }
+        },
+        "dates": {
+            "getAll": {
+                "url": "calendars/dates/",
+                "method": "GET",
+                "parameters": {},
+                "returns": "Array of tournament date objects"
+            },
+            "create": {
+                "url": "calendars/dates/",
+                "method": "POST",
+                "parameters": {
+                    "date": "string (date format)",
+                    "tournament": "array of tournament IDs",
+                    "active": "boolean"
+                },
+                "returns": "Created date object"
+            },
+            "delete": {
+                "url": "calendars/dates/{id}/",
+                "method": "DELETE",
+                "parameters": {
+                    "id": "string (path parameter)"
+                },
+                "returns": "Success status"
+            },
+            "getByTournament": {
+                "url": "calendars/tournament-dates/{tournamentId}",
+                "method": "GET",
+                "parameters": {
+                    "tournamentId": "number (path parameter)"
+                },
+                "returns": "Array of date objects for the specified tournament"
+            }
+        },
+        "games": {
+            "create": {
+                "url": "calendars/games/",
+                "method": "POST",
+                "parameters": {
+                    "date": "number (date ID)",
+                    "team_1": "number (team ID)",
+                    "team_2": "number (team ID)",
+                    "tournament": "number (tournament ID)",
+                    "field": "string (court/field information)",
+                    "hour": "string (game time)",
+                    "active": "boolean"
+                },
+                "returns": "Created game object"
+            },
+            "getByDate": {
+                "url": "calendars/games-by-date/{dateId}",
+                "method": "GET",
+                "parameters": {
+                    "dateId": "number (path parameter)"
+                },
+                "returns": "Array of game objects for the specified date"
+            },
+            "getFullGame": {
+                "url": "calendars/full-game/{idMatch}/",
+                "method": "GET",
+                "parameters": {
+                    "idMatch": "number (path parameter)"
+                },
+                "returns": "Detailed match information object"
+            }
+        },
+        "goals": {
+            "create": {
+                "url": "calendars/goals/",
+                "method": "POST",
+                "parameters": "Goal details object (includes player and match information)",
+                "returns": "Created goal object"
+            },
+            "delete": {
+                "url": "calendars/goals/{goalId}/",
+                "method": "DELETE",
+                "parameters": {
+                    "goalId": "number (path parameter)"
+                },
+                "returns": "Success status"
+            }
+        },
+        "sanctions": {
+            "create": {
+                "url": "calendars/sanctions/",
+                "method": "POST",
+                "parameters": "Sanction details object",
+                "returns": "Created sanction object"
+            },
+            "delete": {
+                "url": "calendars/sanctions/{sanctionId}/",
+                "method": "DELETE",
+                "parameters": {
+                    "sanctionId": "number (path parameter)"
+                },
+                "returns": "Success status"
+            }
+        },
+        "teams": {
+            "getAll": {
+                "url": "players/teams/",
+                "method": "GET",
+                "parameters": {},
+                "returns": "Array of team objects"
+            },
+            "create": {
+                "url": "players/teams/",
+                "method": "POST",
+                "parameters": "Team details object",
+                "returns": "Created team object"
+            },
+            "update": {
+                "url": "players/teams/{id}/",
+                "method": "PUT",
+                "parameters": {
+                    "id": "number (path parameter)",
+                    "team details": "object"
+                },
+                "returns": "Updated team object"
+            }
+        },
+        "categories": {
+            "getAll": {
+                "url": "players/categories/",
+                "method": "GET",
+                "parameters": {},
+                "returns": "Array of category objects with fields: id, name, age_from, age_to, observations, period, period_s, period_g, period_tr, active"
+            },
+            "create": {
+                "url": "players/categories/",
+                "method": "POST",
+                "parameters": {
+                    "name": "string",
+                    "age_from": "number",
+                    "age_to": "number",
+                    "observations": "string",
+                    "period": "number",
+                    "period_s": "number",
+                    "period_g": "number",
+                    "period_tr": "number",
+                    "active": "boolean"
+                },
+                "returns": "Created category object"
+            },
+            "update": {
+                "url": "players/categories/{id}/",
+                "method": "PUT",
+                "parameters": {
+                    "id": "number (path parameter)",
+                    "category details": "object"
+                },
+                "returns": "Updated category object"
+            },
+            "delete": {
+                "url": "players/categories/{id}/",
+                "method": "DELETE",
+                "parameters": {
+                    "id": "number (path parameter)"
+                },
+                "returns": "Success status"
+            }
+        },
+        "statistics": {
+            "getBoard": {
+                "url": "calendars/board/",
+                "method": "GET",
+                "parameters": {
+                    "tournament": "number (query parameter)"
+                },
+                "returns": "Tournament standings/leaderboard object"
+            },
+            "getWidgets": {
+                "url": "calendars/widgets",
+                "method": "GET",
+                "parameters": {
+                    "tournament": "number (optional query parameter)",
+                    "date": "string (optional query parameter, date format)"
+                },
+                "returns": "Widget data for dashboard"
+            },
+            "getDateReport": {
+                "url": "calendars/date-report-pdf/",
+                "method": "GET",
+                "parameters": {
+                    "date_id": "number (query parameter)"
+                },
+                "returns": "PDF report for the specified date (blob)"
+            },
+            "getGameReport": {
+                "url": "calendars/game-report-pdf/",
+                "method": "GET",
+                "parameters": {
+                    "date_id": "number (query parameter, actually game ID)"
+                },
+                "returns": "PDF report for the specified game (blob)"
+            }
+        },
+        "managers": {
+            "getAll": {
+                "url": "players/managers/",
+                "method": "GET",
+                "parameters": {},
+                "returns": "Array of manager/delegate objects"
+            },
+            "delete": {
+                "url": "players/managers/{id}/",
+                "method": "DELETE",
+                "parameters": {
+                    "id": "number (path parameter)"
+                },
+                "returns": "Success status"
+            },
+            "confirm": {
+                "url": "users/confirmation/",
+                "method": "POST",
+                "parameters": {
+                    "manager_id": "number (query parameter)"
+                },
+                "returns": "Confirmation status"
+            },
+            "toggleActiveStatus": {
+                "url": "players/toggle-managers-active-status/",
+                "method": "POST",
+                "parameters": {
+                    "active": "boolean (query parameter)"
+                },
+                "returns": "Status update confirmation"
+            }
+        }
+    },
+    "authentication": {
+        "type": "JWT",
+        "header": "Authorization: Bearer {token}"
+    },
+    "errorHandling": {
+        "401": "Unauthorized - Token is invalid or expired",
+        "400": "Bad Request - Invalid parameters",
+        "404": "Not Found - Resource not found",
+        "500": "Internal Server Error"
+    }
+}
