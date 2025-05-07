@@ -4,6 +4,8 @@ import { AdminService, Tournament } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { SubTournamentDialogComponent } from './sub-tournament-dialog/sub-tournament-dialog.component';
+import { TournamentDialogComponent } from './tournament-dialog/tournament-dialog.component';
+import { TournamentPreviewComponent } from './tournament-preview/tournament-preview.component';
 
 @Component({
   selector: 'app-tournaments',
@@ -72,11 +74,37 @@ export class TournamentsComponent implements OnInit {
   }
 
   openModal() {
-    this.router.navigate(['/create-tournament']);
+    const dialogRef = this.dialog.open(TournamentDialogComponent, {
+      width: '800px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getTournaments();
+      }
+    });
   }
 
   editTournament(id: number) {
-    this.router.navigate(['/create-tournament', id]);
+    const tournament = this.tournamentMap.get(id);
+    
+    if (!tournament) {
+      this.toastr.error('No se encontró el torneo');
+      return;
+    }
+    
+    const dialogRef = this.dialog.open(TournamentDialogComponent, {
+      width: '800px',
+      disableClose: true,
+      data: { tournament }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getTournaments();
+      }
+    });
   }
 
   applyFilter() {
@@ -96,9 +124,26 @@ export class TournamentsComponent implements OnInit {
   }
 
   goToTournament(id: number) {
-    this.router.navigate(['/admin/tournament-summary/', id]);
+    this.openTournamentPreview(id);
   }
   
+  openTournamentPreview(id: number) {
+    const dialogRef = this.dialog.open(TournamentPreviewComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { tournamentId: id }
+    });
+  }
+  
+  openPreviewDialog(tournament: Tournament): void {
+    this.dialog.open(TournamentPreviewComponent, {
+      width: '900px',
+      height: '80vh',
+      maxWidth: '95vw',
+      data: { tournamentId: tournament.id }
+    });
+  }
+
   /**
    * Opens a dialog to create a sub-tournament for the specified parent tournament
    * @param parentId The ID of the parent tournament

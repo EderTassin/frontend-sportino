@@ -12,6 +12,8 @@ import { AuthInterceptor } from '../_services/auth.interceptor';
 import { DelegadosComponent } from './delegados/delegados.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
 import { SubTournamentDialogComponent } from './tournaments/sub-tournament-dialog/sub-tournament-dialog.component';
+import { TournamentDialogComponent } from './tournaments/tournament-dialog/tournament-dialog.component';
+import { TournamentPreviewComponent } from './tournaments/tournament-preview/tournament-preview.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +31,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { CategoriesComponent } from './categories/categories.component';
 import { SanctionsComponent } from './sanctions/sanctions.component';
 import { RemovePointsComponent } from './remove-points/remove-points.component';
+import { PlayersComponent } from './players/players.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -45,7 +48,9 @@ const routes: Routes = [
   { path: 'cargar-resultados', component: ResultsComponent, canActivate: [AuthGuard] },
   { path: 'categorias', component: CategoriesComponent, canActivate: [AuthGuard] },
   { path: 'sanciones', component: SanctionsComponent, canActivate: [AuthGuard] },
-  { path: 'quitar-puntos', component: RemovePointsComponent, canActivate: [AuthGuard] }
+  { path: 'quitar-puntos', component: RemovePointsComponent, canActivate: [AuthGuard] },
+  { path: 'players', component: PlayersComponent, canActivate: [AuthGuard] },
+  { path: 'administrar-jugadores', component: PlayersComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -60,7 +65,9 @@ const routes: Routes = [
     DateManagementComponent,
     ResultsComponent,
     RemovePointsComponent,
-    SubTournamentDialogComponent
+    SubTournamentDialogComponent,
+    TournamentDialogComponent,
+    TournamentPreviewComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

@@ -51,29 +51,37 @@
             <h2>Accesos directos</h2>
         </div>
         <section class="menu-section">
-            <div class="card-menu" style="background-color: #3b3b3b; color: #fafafa;" (click)="redirectToCreateTournament()">
-                <h2><span class="material-symbols-outlined">add</span>Crear Torneos</h2>
-            </div>
             <div class="card-menu" (click)="navigateTo('torneos')">
-                <h2>Ver todos los torneos <span class="material-symbols-outlined">sports_soccer</span></h2>
-            </div>
-            <div class="card-menu" (click)="navigateTo('participantes')">
-                <h2>Gestión Delegados<span class="material-symbols-outlined">groups</span></h2>
+                <span class="material-symbols-outlined">sports_soccer</span>
+                <h2>Ver todos los torneos</h2>
             </div>
             <div class="card-menu" (click)="navigateTo('gestionar-fechas')">
-                <h2>Gestión Fechas <span class="material-symbols-outlined">calendar_month</span></h2>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <h2>Gestión Fechas</h2>
             </div>
             <div class="card-menu" (click)="navigateTo('cargar-resultados')">
-                <h2>Cargar Resultados <span class="material-symbols-outlined">score</span></h2>
+                <span class="material-symbols-outlined">score</span>
+                <h2>Cargar Resultados</h2>
             </div>
             <div class="card-menu" (click)="navigateTo('equipos')">
-                <h2>Gestión Equipos <span class="material-symbols-outlined">groups</span></h2>
+                <span class="material-symbols-outlined">group_work</span>
+                <h2>Gestión Equipos</h2>
+            </div>
+            <div class="card-menu" (click)="navigateTo('participantes')">
+                <span class="material-symbols-outlined">groups</span>
+                <h2>Gestión Delegados</h2>
+            </div>
+            <div class="card-menu" (click)="navigateTo('administrar-jugadores')">
+                <span class="material-symbols-outlined">person</span>
+                <h2>Administrar Jugadores</h2>
             </div>
             <div class="card-menu" (click)="navigateTo('sanciones')">
-                <h2>Revisar Sanciones <span class="material-symbols-outlined">warning</span></h2>
+                <span class="material-symbols-outlined">warning</span>
+                <h2>Revisar Sanciones</h2>
             </div>
             <div class="card-menu" (click)="navigateTo('imprimir-documentos')">
-                <h2>Imprimir Documentos <span class="material-symbols-outlined">print</span></h2>
+                <span class="material-symbols-outlined">print</span>
+                <h2>Imprimir Documentos</h2>
             </div>
         </section>
 
@@ -106,7 +114,7 @@
                     <li><a href="#">Árbitros</a></li>
                     <li><a (click)="navigateTo('delegates')">Delegados</a></li>
                     <li><a (click)="navigateTo('equipos')">Equipos</a></li>
-                    <li><a href="#">Jugadores</a></li>
+                    <li><a (click)="navigateTo('players')">Jugadores</a></li>
                     <li><a (click)="navigateTo('sanciones')">Sanciones</a></li>
                 </ul>
             </div>

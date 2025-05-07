@@ -85,6 +85,10 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu" class="bg-white">
+                  <button mat-menu-item (click)="openPreviewDialog(tournament)" class="text-purple-600 hover:bg-purple-50">
+                    <mat-icon>visibility</mat-icon>
+                    <span>Ver Detalles</span>
+                  </button>
                   <button mat-menu-item (click)="createSubTournament(tournament.id)" class="text-blue-600 hover:bg-blue-50">
                     <mat-icon>add</mat-icon>
                     <span>Crear Sub-torneo</span>

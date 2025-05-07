@@ -1,0 +1,50 @@
+// Tournament Dialog Styles
+:host {
+  display: block;
+}
+
+.mat-dialog-container {
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Custom form styling
+input[type="text"],
+input[type="date"],
+textarea {
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  &:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+}
+
+// Checkbox styling
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+// Button hover effects
+button {
+  transition: all 0.2s;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// Loading spinner animation
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

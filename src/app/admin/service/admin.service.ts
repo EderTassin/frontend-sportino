@@ -60,8 +60,27 @@ export class AdminService {
     return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/${id}/`));
   }
 
+  async getDatesByTournament(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament-dates/${id}`));
+  }
+
+  async getGamesByTournamentId(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/games-by-tournament/${id}`));
+  }
+
+  async createTournament(tournamentData: Partial<Tournament>): Promise<any> {
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}calendars/tournament/`, tournamentData)
+    );
+  }
+
+  async updateTournament(id: number, tournamentData: Partial<Tournament>): Promise<any> {
+    return await lastValueFrom(
+      this.http.put<any>(`${this.apiUrl}calendars/tournament/${id}/`, tournamentData)
+    );
+  }
+
   async createSubTournament(parentId: number, tournamentData: Partial<Tournament>): Promise<any> {
-    // Ensure the parent ID is set in the tournament data
     const subTournamentData = {
       ...tournamentData,
       parent: parentId

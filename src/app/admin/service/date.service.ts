@@ -51,4 +51,8 @@ export class DateService {
   deleteGame(gameId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}games/${gameId}/`);
   }
+
+  getDateById(dateId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}dates/${dateId}/`);
+  }
 }
