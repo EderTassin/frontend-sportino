@@ -37,6 +37,7 @@ export class DateManagementComponent {
   currentGameId: number | null = null;
   categoryTags: Set<string> = new Set();
   allTeams: any[] = [];
+  referees: any[] = [];
 
   urlEnvironment = environment.apiEndpoint;
   
@@ -68,10 +69,17 @@ export class DateManagementComponent {
 
     await this.getTournaments();
     await this.getAllTeams();
+
+    this.getReferees();
     if (this.tournaments.length) {
       await this.getDates();
     }
     this.loading = false;
+  }
+
+  async getReferees() {
+    const response = await this.adminService.getReferees();
+    this.referees = response;
   }
 
   async getDates() {
@@ -250,16 +258,15 @@ export class DateManagementComponent {
   }
   
   openGameModal(game?: Game) {
-    // Reset the form first to clear any previous validation state
     this.gameForm.reset();
-    
-    // Ensure gamesLoading is set to false when opening the modal
     this.gamesLoading = false;
     
     if (game) {
       this.isEditingGame = true;
       this.currentGameId = game.id || null;
-      
+
+      console.log(game);
+
       this.gameForm.patchValue({
         hour: game.hour,
         tournament: game.tournament,
@@ -267,24 +274,20 @@ export class DateManagementComponent {
         team_2: game.team_2.id,
         field: game.field,
         observer: game.observer,
-        referee: game.referee
+        referee: game.referee || null
       });
     } else {
       this.isEditingGame = false;
       this.currentGameId = null;
       
-      // Initialize with default values but don't mark as touched yet
       this.gameForm.patchValue({
         tournament: this.selectedDate.tournamentIds[0] || null,
         field: null,
         observer: null,
         referee: null
       });
-      
-      // Don't set values for required fields to avoid immediate validation errors
     }
     
-    // Reset the validation state
     this.gameForm.markAsUntouched();
     this.gameForm.markAsPristine();
     

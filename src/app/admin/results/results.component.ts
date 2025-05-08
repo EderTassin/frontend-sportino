@@ -165,7 +165,10 @@ export class ResultsComponent {
         return;
       }
 
-      const player = this.playersTeam1.find(p => p.id === this.newGoalTeam1.player);
+      console.log(this.newGoalTeam1);
+      console.log(this.playersTeam1);
+
+      const player = this.playersTeam1.find(p => p.id == this.newGoalTeam1.player);
       const playerName = player ? player.full_name : 'Jugador desconocido';
       
       const newGoal = {

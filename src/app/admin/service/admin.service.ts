@@ -30,9 +30,15 @@ export class AdminService {
     );
   }
 
-  async updateTeam(team: any) {
+  async updateTeam(team: FormData) {
     return lastValueFrom(
-      this.http.put<any>(`${this.apiUrl}players/teams/${team.id}/`, team)
+      this.http.put<any>(`${this.apiUrl}players/teams/${team.get("id")}/`, team)
+    );
+  }
+
+  async getReferees() {
+    return lastValueFrom(
+      this.http.get<any>(`${this.apiUrl}users/referees/`)
     );
   }
 

@@ -328,12 +328,15 @@
           <!-- Referee -->
           <div class="col-span-1">
             <label class="block text-sm font-medium text-gray-700">Árbitro</label>
-            <input 
-              type="text" 
+            <select 
               formControlName="referee"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Árbitro (opcional)"
             >
+              <option [ngValue]="null">Seleccionar árbitro</option>
+              <option *ngFor="let referee of referees" [ngValue]="referee.id">
+                {{ referee.full_name }}
+              </option>
+            </select>
           </div>
 
           <!-- Observer -->

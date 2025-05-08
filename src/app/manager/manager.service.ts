@@ -20,15 +20,11 @@ export class ManagerService {
   }
 
   getTeam(teamId: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-
-    return this.http.get(`${this.apiUrl}players/teams/${teamId}/`, { headers }).pipe(
+    // Dejamos que el interceptor HTTP maneje los headers de autorización
+    return this.http.get(`${this.apiUrl}players/teams/${teamId}/`).pipe(
       catchError(error => {
         console.error('Error fetching team data:', error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -122,7 +118,15 @@ export class ManagerService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
 
-    return this.http.put(`${this.apiUrl}players/players/${player.id}/`, player, { headers });
+    const formData = new FormData();
+    formData.append('medical_certificate', player.medical_certificate ? 'true' : 'false');
+    
+    return this.http.patch(`${this.apiUrl}players/players/${player.id}/`, formData, { headers }).pipe(
+      catchError(error => {
+        console.error('Error updating medical certificate:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   private formatDate(date: Date): string {

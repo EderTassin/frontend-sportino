@@ -25,8 +25,8 @@ export class PlayersComponent implements OnInit {
   error = '';
   apiUrl = `${environment.apiEndpoint}`;
 
-  // Search property
-  searchTerm = '';
+  // Filtros
+  filterForm: FormGroup;
   isSearching = false;
   
   // Pagination properties
@@ -66,6 +66,12 @@ export class PlayersComponent implements OnInit {
       active_sanctions: [false]
     });
 
+    // Inicializar el formulario de filtros
+    this.filterForm = this.fb.group({
+      full_name: [''],
+      team_name: ['']
+    });
+
     this.apiUrl = environment.apiEndpoint.replace('/api/', '');
   }
 
@@ -76,12 +82,21 @@ export class PlayersComponent implements OnInit {
 
   async getTeams() {
     this.teams = await this.adminService.getTeams();
-    console.log(this.teams);
   }
 
   loadPlayers(page: number = 1): void {
     this.loading = true;
-    this.playersService.getAllPlayers(page).subscribe({
+    
+    // Obtener los valores del formulario de filtros
+    const filters = {
+      full_name: this.filterForm.get('full_name')?.value || '',
+      team_name: this.filterForm.get('team_name')?.value || ''
+    };
+    
+    // Si hay filtros activos, marcar como búsqueda
+    this.isSearching = !!(filters.full_name || filters.team_name);
+    
+    this.playersService.getAllPlayers(page, this.isSearching ? filters : undefined).subscribe({
       next: (data) => {
         this.players = data.results;
         this.filteredPlayers = [...this.players];
@@ -97,17 +112,12 @@ export class PlayersComponent implements OnInit {
         this.nextPageUrl = data.next;
         this.previousPageUrl = data.previous;
         this.currentPage = page;
-        this.totalPages = Math.ceil(this.totalItems / this.players.length);
+        this.totalPages = Math.ceil(this.totalItems / (this.players.length || 1));
         this.loading = false;
-        
-        // If we're in search mode, apply the filter
-        if (this.isSearching && this.searchTerm) {
-          this.applyFilter();
-        }
       },
       error: (err) => {
-        this.error = 'Error loading players';
-        console.error(err);
+        console.error('Error loading players:', err);
+        this.error = 'Error loading players. Please try again.';
         this.loading = false;
       }
     });
@@ -155,7 +165,7 @@ export class PlayersComponent implements OnInit {
       phone: player.phone,
       cell_phone: player.cell_phone,
       email: player.email,
-      team: player.team,
+      team: player.team?.id,
       position: player.position,
       jersey_number: player.jersey_number,
       medical_certificate: player.medical_certificate,
@@ -291,64 +301,26 @@ export class PlayersComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
   
-  // Search method
-  search(): void {
-    if (!this.searchTerm.trim()) {
-      this.clearSearch();
+  // Método para aplicar filtros
+  applyFilters(): void {
+    const fullName = this.filterForm.get('full_name')?.value?.trim();
+    const teamName = this.filterForm.get('team_name')?.value?.trim();
+    
+    if (!fullName && !teamName) {
+      this.clearFilters();
       return;
     }
     
-    this.isSearching = true;
-    this.applyFilter();
+    // Recargar los jugadores con los filtros aplicados
+    this.currentPage = 1; // Volver a la primera página
+    this.loadPlayers(1);
   }
   
-  // Apply filter to current data
-  applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    
-    // First try to filter the current page
-    this.filteredPlayers = this.players.filter(player => 
-      this.playerMatchesSearch(player, term)
-    );
-    
-    // If no results on current page but we have more pages and haven't searched all data yet
-    if (this.filteredPlayers.length === 0 && this.nextPageUrl && this.isSearching) {
-      // Try to find in already loaded players from other pages
-      const matchesFromLoaded = this.allLoadedPlayers.filter(player => 
-        this.playerMatchesSearch(player, term)
-      );
-      
-      if (matchesFromLoaded.length > 0) {
-        this.filteredPlayers = matchesFromLoaded;
-      } else {
-        // Load next page and search there
-        this.loadNextPageAndSearch();
-      }
-    }
-  }
-  
-  // Helper to check if a player matches the search term
-  playerMatchesSearch(player: Player, term: string): boolean {
-    return (
-      (player.full_name?.toLowerCase().includes(term) ?? false) ||
-      (player.id_card?.toLowerCase().includes(term) ?? false) ||
-      (player.team_name?.toLowerCase().includes(term) ?? false) ||
-      (player.position?.toLowerCase().includes(term) ?? false)
-    );
-  }
-  
-  // Load next page and continue searching
-  loadNextPageAndSearch(): void {
-    if (this.nextPageUrl && this.isSearching) {
-      this.loadPlayers(this.currentPage + 1);
-    }
-  }
-  
-  // Clear search
-  clearSearch(): void {
-    this.searchTerm = '';
+  // Limpiar filtros
+  clearFilters(): void {
+    this.filterForm.reset();
     this.isSearching = false;
-    this.filteredPlayers = [...this.players];
+    this.loadPlayers(1);
   }
   
   // Pagination methods

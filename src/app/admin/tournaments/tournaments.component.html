@@ -67,15 +67,15 @@
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <span *ngIf="hasSubTournaments(tournament.id)" class="px-2 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                <span *ngIf="hasSubTournaments(tournament.id)" class="px-2 py-1 text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 flex items-center justify-center">
                   {{ getSubTournaments(tournament.id).length }}
                   <button 
                     (click)="$event.stopPropagation()" 
-                    class="ml-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                    class="ml-1 text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
                     [attr.aria-expanded]="tournament.showSubTournaments ? 'true' : 'false'"
                     (click)="tournament.showSubTournaments = !tournament.showSubTournaments"
                   >
-                    <mat-icon class="text-sm">{{ tournament.showSubTournaments ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    <mat-icon class="text-lg">{{ tournament.showSubTournaments ? 'expand_less' : 'expand_more' }}</mat-icon>
                   </button>
                 </span>
                 <span *ngIf="!hasSubTournaments(tournament.id)" class="text-gray-400">-</span>

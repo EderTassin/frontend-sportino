@@ -37,17 +37,18 @@ export class TournamentsComponent implements OnInit {
     try {
       const tournaments = await this.tournamentsService.getTournaments();
       
+      const sortedTournaments = tournaments.sort((a: any, b: any) => b.id - a.id);
       // Reset maps
       this.tournamentMap.clear();
       this.subTournaments.clear();
       
       // Create a map of all tournaments by ID for quick lookup
-      tournaments.forEach((tournament: any) => {
+      sortedTournaments.forEach((tournament: any) => {
         this.tournamentMap.set(tournament.id, tournament);
       });
       
       // Organize tournaments into parent-child relationships
-      tournaments.forEach((tournament: any) => {
+      sortedTournaments.forEach((tournament: any) => {
         if (tournament.parent) {
           // This is a sub-tournament
           if (!this.subTournaments.has(tournament.parent)) {
@@ -58,8 +59,8 @@ export class TournamentsComponent implements OnInit {
       });
       
       // Filter out only parent tournaments (those without a parent)
-      this.tournaments = tournaments.filter((tournament: any) => !tournament.parent);
-      this.tournamentsOriginal = [...this.tournaments];
+      this.tournaments = sortedTournaments.filter((tournament: any) => !tournament.parent);
+      this.tournamentsOriginal = [...sortedTournaments];
       
       console.log('Parent tournaments:', this.tournaments);
       console.log('Sub-tournaments map:', this.subTournaments);

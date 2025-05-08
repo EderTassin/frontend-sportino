@@ -35,7 +35,7 @@
           <div class="container-teams">
             <div class="team">
               <img [src]="url + match.logo_file" alt="{{ match?.team_1?.name }} logo" class="team-logo" (error)="defaultImage($event)">
-              <span class="team-name">{{ match.team_1.name }}</span>
+              <span class="team-name">{{ match?.team_1?.name }}</span>
             </div>
               <div class="score">
                 <span>{{ match.result ? match.result.goals_team_1 : '-' }}</span>

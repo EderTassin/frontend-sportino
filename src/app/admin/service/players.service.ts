@@ -48,8 +48,19 @@ export class PlayersService {
 
   constructor(private http: HttpClient) { }
 
-  getAllPlayers(page: number = 1): Observable<PlayerResponse> {
-    const url = `${this.apiUrl}players/?page=${page}`;
+  getAllPlayers(page: number = 1, filters?: {full_name?: string, team_name?: string}): Observable<PlayerResponse> {
+    let url = `${this.apiUrl}players/?page=${page}`;
+    
+    // Añadir filtros si están presentes
+    if (filters) {
+      if (filters.full_name) {
+        url += `&full_name=${encodeURIComponent(filters.full_name)}`;
+      }
+      if (filters.team_name) {
+        url += `&team_name=${encodeURIComponent(filters.team_name)}`;
+      }
+    }
+    
     return this.http.get<PlayerResponse>(url);
   }
 

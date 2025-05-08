@@ -76,7 +76,7 @@ export class TeamComponent implements OnInit {
   sortedTeams: FootballTeam[] = [];
   selectedFile: File | null = null;
   currentTeamPlayers: any[] = [];
-  urlEnvironment = environment.apiEndpoint;
+  urlEnvironment: string = environment.apiEndpoint.replace('/api/', '');
 
   constructor(private fb: FormBuilder, 
       private serviceEstadistica: EstadisticaPartidosService,
@@ -232,11 +232,12 @@ export class TeamComponent implements OnInit {
     if (this.selectedFile) {
       formData.append("logo_file", this.selectedFile, this.selectedFile.name);
     }
-
+    
     try {
       const res = await this.adminService.updateTeam(formData);
-    } catch (error) {
-      console.error('Error updating team:', error);
+      console.log(res);
+    } catch (error: any) {
+      console.error('Error updating team:', error.message);
     } finally {
       this.getTeams();
       this.closeModal();
@@ -244,13 +245,15 @@ export class TeamComponent implements OnInit {
   }
 
   handleViewDetails(team: FootballTeam): void {
-    this.urlImage = team.logo_file ?? '';
+    this.urlImage = this.urlEnvironment + team.logo_file || '';
+    console.log(this.urlImage);
     this.openModal();
     this.teamForm.patchValue(team);
   }
 
   handleEdit(team: any): void {
-    this.urlImage = team.logo_file || '';
+    this.urlImage = this.urlEnvironment + team.logo_file || '';
+    console.log(this.urlImage);
     
     this.currentTeamPlayers = team.players || [];
     
@@ -336,6 +339,9 @@ export class TeamComponent implements OnInit {
   }
 
   async toggleMedicalCertificate(player: Player): Promise<void> {
+
+    console.log(player);
+    
     try {
       player.medical_certificate = !player.medical_certificate;
       

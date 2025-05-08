@@ -86,7 +86,7 @@ export class SanctionsComponent implements OnInit {
     this.loading = true;
     this.sanctionsService.getAllSanctions().subscribe({
       next: (data) => {
-        this.sanctions = data;
+        this.sanctions = data.sort((a, b) => b.id! - a.id!);
         this.loading = false;
       },
       error: (err) => {
