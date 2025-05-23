@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ScrollService } from '../shared/service/scroll.service';
+import { EstadisticaPartidosService } from './tabla-fixture/service/estadistica-partidos.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,15 +19,19 @@ export class HomeComponent implements OnInit {
   currentImage: string;
   private intervalId: any;
 
-  private images: string[] = [
+  // Default images as fallback
+  private defaultImages: string[] = [
     '../../assets/carousel/3.webp',
     '../../assets/carousel/4.webp',
     '../../assets/carousel/5.webp',
   ];
+  
+  // Images array that will be used for the carousel
+  private images: string[] = [...this.defaultImages];
 
 
 
-  constructor(private scrollService: ScrollService) {
+  constructor(private scrollService: ScrollService, private estadisticaPartidosService: EstadisticaPartidosService) {
     this.currentImage = this.images[0];
   }
 
@@ -41,6 +47,26 @@ export class HomeComponent implements OnInit {
     this.scrollSubscription = this.scrollService.scrollToLocation$.subscribe(() => {
       this.locationSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
     });
+
+    this.getImages();
+  }
+
+  async getImages() {
+    try {
+      const images = await this.estadisticaPartidosService.getFrontPageImages();
+      
+      if (images && images.length > 0) {
+        const activeImages = images.filter((img: any) => img.active);
+
+        if (activeImages.length > 0) {
+          this.images = activeImages.map((image: any) => image.image);
+          this.currentImage = this.images[0];
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error in getImages():', error);
+    }
   }
 
   ngOnDestroy(): void {
@@ -49,3 +75,5 @@ export class HomeComponent implements OnInit {
     }
   }
 }
+
+

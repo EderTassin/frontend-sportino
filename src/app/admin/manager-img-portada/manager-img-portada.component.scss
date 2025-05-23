@@ -1,0 +1,29 @@
+a {
+    cursor: pointer;
+}
+
+// Custom styles for the manager-img-portada component
+
+// Image container hover effect
+.border {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// Disabled button styles
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+// File input custom styling
+input[type="file"] {
+  &:focus {
+    outline: 2px solid rgba(59, 130, 246, 0.5);
+    outline-offset: 2px;
+  }
+}

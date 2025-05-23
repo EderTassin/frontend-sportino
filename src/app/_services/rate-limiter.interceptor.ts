@@ -5,7 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 const requests: Map<string, number[]> = new Map();
 
 export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
-  const RATE_LIMIT_INTERVAL = 60000; // 60 segundos
+  const RATE_LIMIT_INTERVAL = 60; // 60 segundos
   const REQUEST_LIMIT = 10;
 
   const currentTime = Date.now();

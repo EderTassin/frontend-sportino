@@ -121,28 +121,26 @@
             <div class="card">
                 <h2>Administración</h2>
                 <ul>
-                    <li><a href="#">Veedores</a></li>
-                    <li><a href="#">Parámetros</a></li>
-                    <li><a href="#">Backup</a></li>
-                    <li><a href="#">Claves Delegados</a></li>
+                    <li><a (click)="navigateTo('manager-img-portada')">Imagen de Portada</a></li>
                     <li><a (click)="navigateTo('quitar-puntos')">Quita Puntos</a></li>
+                    <li><a (click)="navigateTo('backup')">Backup</a></li>
                 </ul>
             </div>
             <div class="card">
                 <h2>Galería</h2>
                 <ul>
-                    <li><a href="#">Sube Fotos Campeones</a></li>
-                    <li><a href="#">Administración de Galerías</a></li>
-                    <li><a href="#">Sube Fotos</a></li>
-                    <li><a href="#">Imagen de Portada</a></li>
+                    <li><a (click)="navigateTo('galeria')">Galería</a></li>
+                    <li><a (click)="navigateTo('sube-fotos')">Sube Fotos</a></li>
+                    <li><a (click)="navigateTo('sube-fotos-campeones')">Sube Fotos Campeones</a></li>
                 </ul>
             </div>
             <div class="card">
                 <h2>Informes</h2>
                 <ul>
-                    <li><a href="#">Listado de Partidos</a></li>
-                    <li><a href="#">Listado de Equipos</a></li>
-                    <li><a href="#">Busca Jugadores</a></li>
+                    <li><a (click)="navigateTo('informes')">Informes</a></li>
+                    <li><a (click)="navigateTo('gestionar-fechas')">Gestionar Fechas</a></li>
+                    <li><a (click)="navigateTo('equipos')">Lista de equipos</a></li>
+                    <li><a (click)="navigateTo('jugadores')">Busca jugadores</a></li>
                 </ul>
             </div>
         </section>
