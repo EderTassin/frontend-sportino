@@ -16,14 +16,20 @@ export class AuthInterceptor implements HttpInterceptor {
     'api-token-auth',
     'calendars/',  // Todas las rutas que comienzan con calendars/
     'players/teams',
-    'match-statistics'
+    'match-statistics',
+    'players/players',
+    'players/getnewteams'
   ];
   
   // Lista de componentes que no requieren autenticación
   private publicComponents: string[] = [
     '/home',
     '/tournament',
-    '/match-statistics'
+    '/match-statistics',
+    '/calendars/tournament',
+    '/calendars/board',
+    '/players/teams',
+    '/players/players'
   ];
 
   // Verifica si una URL es pública (no requiere autenticación)
