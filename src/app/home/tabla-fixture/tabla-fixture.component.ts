@@ -71,7 +71,6 @@ export class TablaFixtureComponent implements OnInit {
 
   async loadData(){
     this.listTournament = await this.serviceEstadistica.getTournament();
-    console.log(this.listTournament);
     const firstValueId = this.listTournament[0].id
     this.selectedTournament = firstValueId;
     this.listPosicion = await this.serviceEstadistica.getPosiciones(firstValueId);

@@ -164,10 +164,6 @@ export class ResultsComponent {
         alert('Debe seleccionar un jugador y especificar una cantidad válida de goles');
         return;
       }
-
-      console.log(this.newGoalTeam1);
-      console.log(this.playersTeam1);
-
       const player = this.playersTeam1.find(p => p.id == this.newGoalTeam1.player);
       const playerName = player ? player.full_name : 'Jugador desconocido';
       

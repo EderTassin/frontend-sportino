@@ -168,24 +168,16 @@ export class ManagerImgPortadaComponent implements OnInit {
     this.isUploading = true;
     this.isCompressing = true;
     
-    console.log('Original file:', this.selectedFile);
-    
-    // Compress the image before uploading
     this.compressImage(this.selectedFile)
       .then(compressedFile => {
-        console.log('Compressed file:', compressedFile);
-        console.log('Compression ratio:', (this.selectedFile!.size / compressedFile.size).toFixed(2));
-        
         this.isCompressing = false;
         
-        // Upload the compressed file
         this.uploadCompressedImage(compressedFile);
       })
       .catch(error => {
         console.error('Image compression error:', error);
         this.isCompressing = false;
         
-        // If compression fails, try with original file
         this.uploadCompressedImage(this.selectedFile!);
       });
   }

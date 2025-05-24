@@ -52,7 +52,7 @@ export class TournamentsComponent implements OnInit {
           }
           this.subTournaments.get(tournament.parent)?.push(tournament);
         }
-      });
+      }); 
       this.tournaments = sortedTournaments.filter((tournament: any) => !tournament.parent);
       this.tournamentsOriginal = [...sortedTournaments];
       

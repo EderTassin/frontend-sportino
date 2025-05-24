@@ -11,7 +11,8 @@ export interface Sanction {
   yellow_cards: string;
   red_card: string;
   game: number;
-  player: number;
+  team?: number;
+  player?: number;
   missed_points: number;
 }
 

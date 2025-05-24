@@ -79,6 +79,7 @@ export class SanctionsComponent implements OnInit {
       yellow_cards: [''],
       red_card: [''],
       game: [0, [Validators.required]],
+      team: [0],
       player: [0, [Validators.required]],
       missed_points: [0, [Validators.min(0)]]
     });
@@ -225,6 +226,7 @@ export class SanctionsComponent implements OnInit {
       yellow_cards: sanction.yellow_cards,
       red_card: sanction.red_card,
       game: sanction.game,
+      team: sanction.team,
       player: sanction.player,
       missed_points: sanction.missed_points  
     });
@@ -234,6 +236,7 @@ export class SanctionsComponent implements OnInit {
   cancelForm(): void {
     this.showForm = false;
     this.error = '';
+    this.sanctionForm.reset();
   }
 
   saveSanction(): void {
@@ -258,6 +261,7 @@ export class SanctionsComponent implements OnInit {
         }
       });
     } else {
+
       this.sanctionsService.createSanction(sanction).subscribe({
         next: () => {
           this.loadSanctions();
