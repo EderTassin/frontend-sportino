@@ -65,7 +65,6 @@ export class TournamentSummaryComponent implements OnInit {
   }
 
   editSection(sectionIndex: number) {
-    console.log("Emitting section change:", sectionIndex);
     this.sectionChange.emit(sectionIndex);
   }
 }

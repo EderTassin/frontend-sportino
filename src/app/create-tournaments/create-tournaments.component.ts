@@ -169,8 +169,6 @@ export class CreateTournamentsComponent implements OnInit {
 
     try {
       if (this.isEditMode && this.tournamentId) {
-        console.log("Updating tournament:", this.tournamentId, this.tournamentData);
-        
         await this.tournamentService.updateTournament(this.tournamentId, tournamentInfo);
 
         if (dates && dates.length > 0) {
@@ -191,7 +189,6 @@ export class CreateTournamentsComponent implements OnInit {
         this.toastr.success('Torneo actualizado con éxito');
 
       } else {
-         console.log("Creating tournament:", this.tournamentData);
          const createdTournament = await this.tournamentService.createTournament(tournamentInfo);
          const newTournamentId = createdTournament.id;
 
@@ -227,8 +224,6 @@ export class CreateTournamentsComponent implements OnInit {
    }
 
   handleVolver() {
-    console.log("Volver");
-    
     this.router.navigate(['/admin/torneos']);
   }
 }

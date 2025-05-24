@@ -12,6 +12,7 @@ export interface Sanction {
   red_card: string;
   game: number;
   player: number;
+  missed_points: number;
 }
 
 export interface Tournament {

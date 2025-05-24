@@ -246,14 +246,12 @@ export class TeamComponent implements OnInit {
 
   handleViewDetails(team: FootballTeam): void {
     this.urlImage = this.urlEnvironment + team.logo_file || '';
-    console.log(this.urlImage);
     this.openModal();
     this.teamForm.patchValue(team);
   }
 
   handleEdit(team: any): void {
     this.urlImage = this.urlEnvironment + team.logo_file || '';
-    console.log(this.urlImage);
     
     this.currentTeamPlayers = team.players || [];
     
@@ -339,9 +337,6 @@ export class TeamComponent implements OnInit {
   }
 
   async toggleMedicalCertificate(player: Player): Promise<void> {
-
-    console.log(player);
-    
     try {
       player.medical_certificate = !player.medical_certificate;
       
@@ -351,11 +346,9 @@ export class TeamComponent implements OnInit {
       };
       
       this.playerService.updatePlayerMedicalCertificate(updateData).subscribe((data: any) => {
-        console.log('Updated medical certificate:', data);
       });
       
     } catch (error) {
-      console.error('Error updating medical certificate:', error);
       player.medical_certificate = !player.medical_certificate;
     }
   }

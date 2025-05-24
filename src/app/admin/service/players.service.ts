@@ -102,8 +102,6 @@ export class PlayersService {
   updatePlayer(id: number, player: Player, pictureFile?: File): Observable<Player> {
     const url = `${this.apiUrl}players/${id}/`;
     const formData = new FormData();
-  
-    console.log(player);
 
     if (player.full_name) formData.append('full_name', player.full_name);
     if (player.birthday) formData.append('birthday', player.birthday);
@@ -118,16 +116,12 @@ export class PlayersService {
     if (player.date_certificate) formData.append('date_certificate', player.date_certificate);
     if (player.date) formData.append('date', player.date);
     if (player.position) formData.append('position', player.position);
-    // Manejo del campo team que funciona con diferentes formatos
     if (player.team) {
       if (typeof player.team === 'object' && player.team.id) {
-        // Si es un objeto Team con id
         formData.append('team', player.team.id.toString());
       } else if (typeof player.team === 'string' || typeof player.team === 'number') {
-        // Si es directamente un ID (string o número)
         formData.append('team', String(player.team));
       }
-      console.log('Team appended:', player.team);
     }
     if (player.jersey_number) formData.append('jersey_number', player.jersey_number.toString());
     

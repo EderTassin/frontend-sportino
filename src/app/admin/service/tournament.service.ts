@@ -22,4 +22,10 @@ export class TournamentService {
       this.http.get<any>(`${this.apiUrl}calendars/games-by-tournament/${tournamentId}/`)
     );
   }
+
+  async getGames(): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(`${this.apiUrl}calendars/games/`)
+    );
+  }
 }

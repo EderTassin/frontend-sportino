@@ -33,7 +33,6 @@ export class DelegadosComponent {
   }
 
   handleEdit(delegado: any) {
-    console.log(delegado);
   }
 
   applyFilter() {

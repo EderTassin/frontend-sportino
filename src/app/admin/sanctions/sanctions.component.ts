@@ -16,6 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { TournamentService } from '../service/tournament.service';
+import { ManagerService } from 'src/app/manager/manager.service';
 
 @Component({
   selector: 'app-sanctions',
@@ -52,6 +54,8 @@ export class SanctionsComponent implements OnInit {
   showForm = false;
   loading = false;
   error = '';
+  games: any[] = [];
+  players: any[] = [];
   
   // Filter values
   selectedTournament: number | null = null;
@@ -64,7 +68,9 @@ export class SanctionsComponent implements OnInit {
     private sanctionsService: SanctionsService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private tournamentService: TournamentService,
+    private managerService: ManagerService
   ) {
     this.sanctionForm = this.fb.group({
       sanction_for: ['P', [Validators.required]],
@@ -73,7 +79,8 @@ export class SanctionsComponent implements OnInit {
       yellow_cards: [''],
       red_card: [''],
       game: [0, [Validators.required]],
-      player: [0, [Validators.required]]
+      player: [0, [Validators.required]],
+      missed_points: [0, [Validators.min(0)]]
     });
   }
 
@@ -171,7 +178,41 @@ export class SanctionsComponent implements OnInit {
       game: 0,
       player: 0
     });
+
+    this.loadGames();
     this.showForm = true;
+  }
+
+  loadGames(): void {
+    this.loading = true;
+    this.tournamentService.getGames().then((data) => {
+      this.games = data;
+      this.loading = false;
+    }).catch((err) => {
+      console.error('Error loading games:', err);
+      this.showSnackBar('Error loading games', 'error');
+      this.loading = false;
+    });
+  }
+
+  onTeamChange(event: any): void {
+    const teamId = event.value;
+    this.loadPlayers(teamId);
+  }
+
+  loadPlayers(teamId: number): void {
+    this.loading = true;
+    this.managerService.getTeam(teamId).subscribe({
+      next: (data) => {
+        this.players = data.players;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading players:', err);
+        this.showSnackBar('Error loading players', 'error');
+        this.loading = false;
+      }
+    });
   }
 
   openEditForm(sanction: Sanction): void {
@@ -184,7 +225,8 @@ export class SanctionsComponent implements OnInit {
       yellow_cards: sanction.yellow_cards,
       red_card: sanction.red_card,
       game: sanction.game,
-      player: sanction.player
+      player: sanction.player,
+      missed_points: sanction.missed_points  
     });
     this.showForm = true;
   }
@@ -201,7 +243,7 @@ export class SanctionsComponent implements OnInit {
     }
 
     const sanction: Sanction = this.sanctionForm.value;
-    
+
     if (this.isEditMode && this.currentSanctionId) {
       this.sanctionsService.updateSanction(this.currentSanctionId, sanction).subscribe({
         next: () => {

@@ -125,15 +125,42 @@
           <!-- Game -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Partido</mat-label>
-            <input matInput type="number" formControlName="game" min="0">
+            <mat-select formControlName="game">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let game of games" [value]="game.id">
+                {{ game.date }} - {{ game.team_1?.name }} vs {{ game.team_2?.name }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="sanctionForm.get('game')?.invalid">Campo requerido</mat-error>
           </mat-form-field>
 
-          <!-- Player -->
           <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Equipo</mat-label>
+            <mat-select formControlName="team" (selectionChange)="onTeamChange($event)">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let team of teams" [value]="team.id">
+                {{ team.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sanctionForm.get('team')?.invalid">Campo requerido</mat-error>
+          </mat-form-field>
+
+          <!-- Player -->
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value === 'P'">
             <mat-label>Jugador</mat-label>
-            <input matInput type="number" formControlName="player" min="0">
+            <mat-select formControlName="player">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let player of players" [value]="player.id">
+                {{ player.full_name }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="sanctionForm.get('player')?.invalid">Campo requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value === 'T'">
+            <mat-label>Puntos a restar</mat-label>
+            <input matInput formControlName="missed_points">
+            <mat-error *ngIf="sanctionForm.get('missed_points')?.invalid">Campo requerido</mat-error>
           </mat-form-field>
         </div>
 

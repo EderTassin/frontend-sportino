@@ -42,28 +42,20 @@ export class TournamentsComponent implements OnInit {
       this.tournamentMap.clear();
       this.subTournaments.clear();
       
-      // Create a map of all tournaments by ID for quick lookup
       sortedTournaments.forEach((tournament: any) => {
         this.tournamentMap.set(tournament.id, tournament);
       });
-      
-      // Organize tournaments into parent-child relationships
       sortedTournaments.forEach((tournament: any) => {
         if (tournament.parent) {
-          // This is a sub-tournament
           if (!this.subTournaments.has(tournament.parent)) {
             this.subTournaments.set(tournament.parent, []);
           }
           this.subTournaments.get(tournament.parent)?.push(tournament);
         }
       });
-      
-      // Filter out only parent tournaments (those without a parent)
       this.tournaments = sortedTournaments.filter((tournament: any) => !tournament.parent);
       this.tournamentsOriginal = [...sortedTournaments];
       
-      console.log('Parent tournaments:', this.tournaments);
-      console.log('Sub-tournaments map:', this.subTournaments);
     } catch (error) {
       console.error('Error fetching tournaments:', error);
       this.toastr.error('Error al cargar los torneos');

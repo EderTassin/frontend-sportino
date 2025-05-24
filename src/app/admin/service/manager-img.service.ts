@@ -45,13 +45,6 @@ export class ManagerImgService {
     formData.append('image', image, image.name);
     formData.append('active', active.toString());
     
-    // Log the form data entries
-    console.log('Form data entries:');
-    for (const pair of (formData as any).entries()) {
-      console.log(pair[0], ':', pair[1] instanceof File ? `File: ${pair[1].name}` : pair[1]);
-    }
-    
-    // Add error handling to log the specific error
     return this.http.post<FrontPageImage>(
       `${environment.apiEndpoint}gallerys/FrontPageImages/`, 
       formData, 
@@ -67,11 +60,8 @@ export class ManagerImgService {
       }),
       map(event => {
         if (event.type === HttpEventType.UploadProgress) {
-          const progress = Math.round(100 * event.loaded / (event.total || event.loaded));
-          console.log(`Upload progress: ${progress}%`);
           return null as any;
         } else if (event.type === HttpEventType.Response) {
-          console.log('Upload complete:', event.body);
           return event.body as FrontPageImage;
         }
         return null as any;
