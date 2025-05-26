@@ -18,7 +18,8 @@ export class AuthInterceptor implements HttpInterceptor {
     'players/teams',
     'match-statistics',
     'players/players',
-    'players/getnewteams'
+    'players/getnewteams',
+    'players/managers'
   ];
   
   // Lista de componentes que no requieren autenticación
@@ -29,6 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     '/calendars/tournament',
     '/calendars/board',
     '/players/teams',
+    '/players/managers',
     '/players/players'
   ];
 

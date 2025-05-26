@@ -24,10 +24,15 @@ export interface Player {
   medical_certificate: string;
   date_certificate: Date;
   date: Date;
-  team: number;
+  team: Team;
   id_card: string;
   picture_file: string;
   birthday: Date;
+}
+
+export interface Team {
+  id: number;
+  name: string;
 }
 
 @Component({

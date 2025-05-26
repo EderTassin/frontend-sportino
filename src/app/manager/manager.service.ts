@@ -95,7 +95,7 @@ export class ManagerService {
     formData.append('date_certificate', '');
     formData.append('date', this.formatDate(new Date()));
     formData.append('active', player.active ? 'true' : 'false');
-    formData.append('team', player.team.toString());
+    formData.append('team', player.team.id.toString());
 
     if (file) {
       formData.append('picture_file', file, file.name);
