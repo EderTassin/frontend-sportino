@@ -63,7 +63,9 @@ export class TeamComponent implements OnInit {
   isModalOpen = false;
   isPlayersModalOpen = false;
   isImageEnlarged = false;
+  isDeleteModalOpen = false;
   enlargedImageSrc = '';
+  teamToDelete: number | null = null;
   selectedTeam: FootballTeam | null = null;
   teamPlayers: Player[] = [];
   defaultLogo: string = 'https://static.vecteezy.com/system/resources/previews/000/356/368/non_2x/leader-of-group-vector-icon.jpg';
@@ -86,7 +88,6 @@ export class TeamComponent implements OnInit {
     this.teamForm = this.fb.group({
       id: [null],
       name: ['', Validators.required],
-      manager: ['', Validators.required],
       league: ['', Validators.required],
       phone: [''],
       email: ['', [Validators.email]],
@@ -271,7 +272,22 @@ export class TeamComponent implements OnInit {
   }
 
   handleDelete(id: number): void {
-    // Implementar la eliminación del equipo
+    this.teamToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete(): void {
+    if (this.teamToDelete) {
+      this.adminService.deleteTeam(this.teamToDelete).subscribe(() => {
+        this.getTeams();
+        this.closeDeleteModal();
+      });
+    }
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.teamToDelete = null;
   }
 
   async getCategories() {

@@ -116,4 +116,8 @@ export class AdminService {
   toggleDelegados(active: boolean): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}players/toggle-managers-active-status/?active=${active}`, null);
   }
+
+  deleteTeam(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}players/teams/${id}/`);
+  }
 }

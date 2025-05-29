@@ -156,20 +156,6 @@
                     Este campo es requerido.
                 </div>
             </div>
-            
-            <div>
-                <label for="manager" class="block text-sm font-medium text-gray-700 mb-1">Entrenador</label>
-                <input 
-                    id="manager" 
-                    formControlName="manager" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                    [class.border-red-500]="teamForm.get('manager')?.invalid && teamForm.get('manager')?.touched"
-                >
-                <div *ngIf="teamForm.get('manager')?.invalid && teamForm.get('manager')?.touched" class="mt-1 text-sm text-red-600">
-                    Este campo es requerido.
-                </div>
-            </div>
-            
             <div>
                 <label for="league" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                 <select 
@@ -373,6 +359,37 @@
             <div *ngIf="!teamPlayers || teamPlayers.length === 0" class="text-center py-8">
                 <span class="material-icons text-gray-400 text-5xl mb-2">group_off</span>
                 <p class="text-gray-500">Este equipo no tiene jugadores registrados</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para borrar equipo -->
+<div *ngIf="isDeleteModalOpen" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ease-in-out">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md transition-transform duration-300 ease-in-out" (click)="$event.stopPropagation()">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                <i class="material-icons text-red-500 mr-2">warning</i>
+                Confirmar eliminación
+            </h2>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-700 mb-6">¿Está seguro que desea eliminar este equipo? Esta acción no se puede deshacer.</p>
+            
+            <div class="flex justify-end space-x-3">
+                <button 
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+                    (click)="closeDeleteModal()"
+                >
+                    Cancelar
+                </button>
+                <button 
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition flex items-center"
+                    (click)="confirmDelete()"
+                >
+                    <i class="material-icons mr-1">delete</i>
+                    Eliminar
+                </button>
             </div>
         </div>
     </div>
