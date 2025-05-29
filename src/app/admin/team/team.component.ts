@@ -90,7 +90,7 @@ export class TeamComponent implements OnInit {
       name: ['', Validators.required],
       league: ['', Validators.required],
       phone: [''],
-      email: ['', [Validators.email]],
+      email: [''],
       teamPhoto: [''],
       logo: [''],
       isActive: [false],
