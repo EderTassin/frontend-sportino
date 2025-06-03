@@ -20,21 +20,21 @@ export class ManagerService {
   }
 
   getTeam(teamId: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-
-    return this.http.get(`${this.apiUrl}players/teams/${teamId}/`, { headers }).pipe(
+    // Dejamos que el interceptor HTTP maneje los headers de autorización
+    return this.http.get(`${this.apiUrl}players/teams/${teamId}/`).pipe(
       catchError(error => {
         console.error('Error fetching team data:', error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
 
-  updateTeamData(teamData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/team`, teamData);
+  updateTeamData(teamData: any, teamId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.put(`${this.apiUrl}players/teams/${teamId}/`, teamData, { headers });
   }
 
   getPlayers(): Observable<any[]> {
@@ -49,11 +49,11 @@ export class ManagerService {
     const formData = new FormData();
     formData.append('full_name', player.full_name);
     formData.append('birthday', this.formatDate(player.birthDate));
-    formData.append('id_card', player.dni);
+    formData.append('id_card', player.id_card);
     formData.append('year', player.year);
     formData.append('street', player.street);
-    formData.append('number', '');
-    formData.append('neighborhood', '');
+    formData.append('number', player.number);
+    formData.append('neighborhood', player.neighborhood);
     formData.append('phone', player.phone);
     formData.append('cell_phone', player.phone);
     formData.append('email', player.email);
@@ -95,7 +95,7 @@ export class ManagerService {
     formData.append('date_certificate', '');
     formData.append('date', this.formatDate(new Date()));
     formData.append('active', player.active ? 'true' : 'false');
-    formData.append('team', player.team.toString());
+    formData.append('team', player.team.id.toString());
 
     if (file) {
       formData.append('picture_file', file, file.name);
@@ -111,6 +111,22 @@ export class ManagerService {
 
   deletePlayer(playerId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/players/${playerId}`);
+  }
+
+  updatePlayerMedicalCertificate(player: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    const formData = new FormData();
+    formData.append('medical_certificate', player.medical_certificate ? 'true' : 'false');
+    
+    return this.http.patch(`${this.apiUrl}players/players/${player.id}/`, formData, { headers }).pipe(
+      catchError(error => {
+        console.error('Error updating medical certificate:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   private formatDate(date: Date): string {

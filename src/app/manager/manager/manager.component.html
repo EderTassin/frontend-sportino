@@ -1,168 +1,509 @@
-<div class="container mx-auto mt-10">
-  <div class="container-header">
-    <h1>Gestión de Jugadores</h1>
-    <div class="logo flex items-center gap-4">
-      <img [src]="team.logo_file" alt="Logo" class="rounded-full w-32 border-2 border-gray-300" (error)="defaultImage($event)">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+      <div class="flex flex-col sm:flex-row items-center gap-4">
+        <div class="relative">
+          <img [src]="urlEnvironment + team?.logo_file" alt="Logo del equipo" 
+               class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-gray-200" 
+               (error)="defaultImage($event)">
+        </div>
+        <div class="text-center sm:text-left">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 ">{{team?.name}}</h1>
+          <p class="text-lg text-gray-600">{{team?.category?.name}}</p>
+        </div>
+      </div>
       
-      <div class="flex flex-col">
-        <h1 class="text-2xl font-bold">{{team.name}}</h1>
-        <h3 class="text-gray-500">{{team.category.name}}</h3>
+      <div class="sm:text-right flex items-center gap-2">
+        <h2 class="text-xl sm:text-2xl font-semibold text-gray-700" style="margin-bottom: 0px;">Gestión de Jugadores</h2>
+        <button (click)="openEditTeamModal()"
+          class="text-gray-500 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-gray-100"
+          title="Editar información del equipo">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="flex justify-end items-center">
-    <button class="relative inline-flex items-center bg-white justify-center p-0.5 mb-2 me-2 border-solid border-2 border-gray-300 rounded-md" (click)="openModalPlayer()">
-      <span class="relative px-5 py-2.5 rounded-md text-gray-900 font-bold flex items-center gap-2">
-        <span class="material-symbols-outlined text-xl">
-          add
-        </span>
-        Agregar Jugador
-      </span>
-      </button>
+  <div class="flex justify-end mb-4">
+    <button 
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition flex items-center gap-2"
+      (click)="openModalPlayer()"
+      [disabled]="!team?.manager?.active"
+    >
+      <span class="material-symbols-outlined">add</span>
+      <span>Agregar Jugador</span>
+    </button>
   </div>
 
-  <div class="container-table relative overflow-x-auto shadow-md sm:rounded-lg h-full">
-    <table class="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-white">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th></th>
-          <th scope="col" class="px-6 py-3">Nombre</th>
-          <th scope="col" class="px-6 py-3">Email</th>
-          <th scope="col" class="px-6 py-3">DNI</th>
-          <th scope="col" class="px-6 py-3">Estado</th>
-          <th scope="col" class="px-2 py-3"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let player of players">
-          <td> <img [src]="player.picture_file" (error)="defaultImage($event)" alt="Player Photo" class="w-10 h-10 rounded-full"></td>
-          <td class="px-6 py-4">{{player.full_name}}</td>
-          <td class="px-6 py-4">{{player.email}}</td>
-          <td class="px-6 py-4">{{player.id_card}}</td>
-          <td class="px-6 py-4">
-            <span class="bg-green-500 text-white px-2 py-1 rounded-md" *ngIf="player.active">Activo</span>
-            <span class="bg-red-500 text-white px-2 py-1 rounded-md" *ngIf="!player.active">Inactivo</span>
-          </td>
-          <td class="px-2 py-4">
-            <button class="buttons" mat-button [matMenuTriggerFor]="menu">
-              <span class="material-symbols-outlined text-gray-500 font-bold text-xl">
-                more_vert
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 border-b border-gray-200">
+      <div class="relative w-full sm:w-64">
+        <input 
+          type="text" 
+          placeholder="Buscar jugador..." 
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-gray-400"
+        />
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <span class="material-symbols-outlined text-gray-400">search</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Acciones</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let player of players" class="hover:bg-gray-50 transition">
+            <td class="px-3 py-4 whitespace-nowrap">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img 
+                  [src]="urlEnvironment + player.picture_file" 
+                  (error)="defaultImage($event)" 
+                  alt="Foto del jugador" 
+                  class="h-10 w-10 rounded-full object-cover border border-gray-200"
+                >
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{player.full_name}}</div>
+              <div class="text-xs text-gray-500 md:hidden">{{player.email}}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">{{player.email}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{player.id_card}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span *ngIf="player.active" class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                Activo
               </span>
-            </button>
+              <span *ngIf="!player.active" class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                Inactivo
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button mat-icon-button [matMenuTriggerFor]="menu" class="focus:outline-none">
+                <span class="material-symbols-outlined text-gray-500 hover:text-gray-700">more_vert</span>
+              </button>
+              
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openModalEditPlayer(player)" class="flex items-center space-x-2">
+                  <span class="material-symbols-outlined text-blue-500">edit</span>
+                  <span>Editar</span>
+                </button>
+                <button mat-menu-item (click)="deletePlayer(player.id)" class="flex items-center space-x-2">
+                  <span class="material-symbols-outlined text-red-500">delete</span>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+          <tr *ngIf="players.length === 0">
+            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
+              <div class="flex flex-col items-center justify-center">
+                <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">person_off</span>
+                <p>No hay jugadores registrados</p>
+                <button 
+                  class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  (click)="openModalPlayer()"
+                >
+                  Agregar jugador
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ease-in-out">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Agregar Jugador</h2>
+      <button 
+        type="button" 
+        class="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full p-1"
+        (click)="closeModal()"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    
+    <form (ngSubmit)="onSubmit()" class="p-6 space-y-6" enctype="multipart/form-data">
+      <div class="flex flex-col items-center mb-6">
+        <img 
+          [src]="previewImage || urlEnvironment + newPlayer.photo" 
+          alt="Foto del jugador" 
+          class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 mb-2"
+          (error)="defaultImage($event)"
+        >
+        <label class="relative cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-md px-4 py-2 transition-colors">
+          <span>Cambiar foto</span>
+          <input 
+            id="image" 
+            type="file" 
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            (change)="onFileChange($event)" 
+            accept="image/*"
+          />
+        </label>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+          <input 
+            type="text" 
+            id="full_name" 
+            name="full_name" 
+            [(ngModel)]="newPlayer.full_name" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="newPlayer.email" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="street" class="block text-sm font-medium text-gray-700 mb-1">Domicilio</label>
+          <input 
+            type="text" 
+            id="street" 
+            name="street" 
+            [(ngModel)]="newPlayer.street" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="dni" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+          <input 
+            type="text" 
+            id="dni" 
+            name="dni" 
+            [(ngModel)]="newPlayer.id_card" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="birthDate" class="block text-sm font-medium text-gray-700 mb-1">Fecha de nacimiento</label>
+          <input 
+            type="date" 
+            id="birthDate" 
+            name="birthDate" 
+            [(ngModel)]="newPlayer.birthDate" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <input 
+            type="text" 
+            id="phone" 
+            name="phone" 
+            [(ngModel)]="newPlayer.phone" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="medicalCertificate" class="block text-sm font-medium text-gray-700 mb-1">Certificado médico</label>
+          <div class="flex items-center space-x-2">
+            <div class="w-full">
+              <label class="relative flex items-center justify-center w-full px-4 py-2 border border-gray-300 border-dashed rounded-md cursor-pointer hover:bg-gray-50">
+                <span class="text-sm text-gray-500">Seleccionar archivo</span>
+                <input 
+                  id="medicalCertificate" 
+                  type="file" 
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  (change)="onFileChange($event)" 
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center">
+          <input 
+            type="checkbox" 
+            id="active" 
+            name="active" 
+            [(ngModel)]="newPlayer.active"
+            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          >
+          <label for="active" class="ml-2 block text-sm text-gray-700">Jugador activo</label>
+        </div>
+      </div>
+      
+      <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+        <button 
+          type="button" 
+          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ease-in-out">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Editar Jugador</h2>
+      <button 
+        type="button" 
+        class="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full p-1"
+        (click)="closeEditModal()"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    
+    <form (ngSubmit)="onSubmitEdit()" class="p-6 space-y-6" enctype="multipart/form-data">
+      <div class="flex flex-col items-center mb-6">
+        <img 
+          [src]="urlEnvironment + selectedPlayer.picture_file" 
+          alt="Foto del jugador" 
+          class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 mb-2"
+          (error)="defaultImage($event)"
+        >
+        <label class="relative cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-md px-4 py-2 transition-colors">
+          <span>Cambiar foto</span>
+          <input 
+            id="image" 
+            type="file" 
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            (change)="onFileChange($event)" 
+            accept="image/*"
+          />
+        </label>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label for="edit_full_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+          <input 
+            type="text" 
+            id="edit_full_name" 
+            name="full_name" 
+            [(ngModel)]="selectedPlayer.full_name" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input 
+            type="email" 
+            id="edit_email" 
+            name="email" 
+            [(ngModel)]="selectedPlayer.email" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_street" class="block text-sm font-medium text-gray-700 mb-1">Domicilio</label>
+          <input 
+            type="text" 
+            id="edit_street" 
+            name="street" 
+            [(ngModel)]="selectedPlayer.street" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_dni" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+          <input 
+            type="text" 
+            id="edit_dni" 
+            name="id_card" 
+            [(ngModel)]="selectedPlayer.id_card" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_birthday" class="block text-sm font-medium text-gray-700 mb-1">Fecha de nacimiento</label>
+          <input 
+            type="date" 
+            id="edit_birthday" 
+            name="birthday" 
+            [(ngModel)]="selectedPlayer.birthday" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <input 
+            type="text" 
+            id="edit_phone" 
+            name="phone" 
+            [(ngModel)]="selectedPlayer.phone" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            required
+          >
+        </div>
+        
+        <div>
+          <label for="edit_medicalCertificate" class="block text-sm font-medium text-gray-700 mb-1">Certificado médico</label>
+          <div class="flex items-center space-x-2">
+            <div class="w-full">
+              <label class="relative flex items-center justify-center w-full px-4 py-2 border border-gray-300 border-dashed rounded-md cursor-pointer hover:bg-gray-50">
+                <span class="text-sm text-gray-500">Seleccionar archivo</span>
+                <input 
+                  id="edit_medicalCertificate" 
+                  type="file" 
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  (change)="onFileChange($event)" 
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center">
+          <input 
+            type="checkbox" 
+            id="edit_active" 
+            name="active" 
+            [(ngModel)]="selectedPlayer.active"
+            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          >
+          <label for="edit_active" class="ml-2 block text-sm text-gray-700">Jugador activo</label>
+        </div>
+      </div>
+      
+      <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+        <button 
+          type="button" 
+          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+          (click)="closeEditModal()"
+        >
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showEditTeamModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button (click)="showEditTeamModal = false" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    
+    <h3 class="text-xl font-bold mb-4">Actualizar equipo</h3>
+    
+    <form (ngSubmit)="updateTeamInfo()" class="space-y-4">
+      <div>
+        <label for="teamName" class="block text-sm font-medium text-gray-700 mb-1">Nombre del equipo</label>
+        <input 
+          type="text" 
+          id="teamName" 
+          [(ngModel)]="editTeamForm.name" 
+          name="name"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Logo del equipo</label>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <img 
+              *ngIf="previewImage || urlEnvironment + team?.logo_file" 
+              [src]="previewImage || urlEnvironment + team?.logo_file" 
+              alt="Logo del equipo" 
+              class="w-20 h-20 rounded-full object-cover border border-gray-200"
+              (error)="defaultImage($event)">
+            
+          </div>
           
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="openModalEditPlayer(player)">Editar</button>
-              <button mat-menu-item (click)="deletePlayer(player.id)">Eliminar</button>
-            </mat-menu>
-          </td>
-        </tr>
-        <tr *ngIf="players.length === 0" class="h-20">
-          <td colspan="6" class="text-center">No hay jugadores</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-<div class="modal" [ngClass]="{ 'open': showModal }">
-  <div class="modal-content">
-    <span class="close" (click)="closeModal()">&times;</span>
-    <div class="player-form">
-      <h2>Agregar Jugador</h2>
-      <form (ngSubmit)="onSubmit()">
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="name">Nombre:</label>
-          <input type="text" id="name" name="name" [(ngModel)]="newPlayer.full_name" required>
+          <div class="flex-1">
+            <label 
+              for="logoFile" 
+              class="block w-full cursor-pointer px-4 py-2 text-sm text-center border border-gray-300 rounded-md text-blue-600 hover:bg-blue-50 transition-colors">
+              Seleccionar imagen
+            </label>
+            <input 
+              type="file" 
+              id="logoFile" 
+              (change)="onFileSelected($event)"
+              accept="image/*" 
+              class="hidden">
+            <p class="text-xs text-gray-500 mt-1">JPG, PNG o GIF. Máximo 2MB</p>
+          </div>
         </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" [(ngModel)]="newPlayer.email" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="year">Domicilio:</label>
-          <input type="text" id="year" name="year" [(ngModel)]="newPlayer.street" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="dni">DNI:</label>
-          <input type="text" id="dni" name="dni" [(ngModel)]="newPlayer.dni" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="birthDate">Fecha de Nacimiento:</label>
-          <input type="date" id="birthDate" name="birthDate" [(ngModel)]="newPlayer.birthDate" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="dni">Telefono:</label>
-          <input type="text" id="dni" name="dni" [(ngModel)]="newPlayer.phone" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="photo">Foto:</label>
-          <img [src]="newPlayer.photo" alt="Player Photo" class="w-10 h-10 rounded-full"  (error)="defaultImage($event)">
-          <input id="image" type="file" (change)="onFileChange($event)" placeholder="Foto del jugador"/>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="medicalCertificate">Certificado Médico:</label>
-          <input id="medicalCertificate" type="file" (change)="onFileChange($event)" placeholder="Certificado Médico"/>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="active">Activo:</label>
-          <input type="checkbox" id="active" name="active" [(ngModel)]="newPlayer.active" required>
-        </div>
-
-        <button type="submit">Agregar</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal" [ngClass]="{ 'open': showEditModal }">
-  <div class="modal-content">
-    <span class="close" (click)="closeEditModal()">&times;</span>
-    <div class="player-form">
-      <h2>Editar Jugador</h2>
-      <form (ngSubmit)="onSubmitEdit()" enctype="multipart/form-data">
-        <!-- Campos del formulario de edición -->
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="name">Nombre:</label>
-          <input type="text" id="name" name="name" [(ngModel)]="selectedPlayer.full_name" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="email">Email:</label>
-            <input type="email" id="email" name="email" [(ngModel)]="selectedPlayer.email" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="year">Domicilio:</label>
-            <input type="text" id="year" name="year" [(ngModel)]="selectedPlayer.street" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="dni">DNI:</label>
-          <input type="text" id="dni" name="dni" [(ngModel)]="selectedPlayer.dni" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="birthDate">Fecha de Nacimiento:</label>
-          <input type="date" id="birthDate" name="birthDate" [(ngModel)]="selectedPlayer.birthday" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="dni">Telefono:</label>
-          <input type="text" id="dni" name="dni" [(ngModel)]="selectedPlayer.phone" required>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="photo">Foto:</label>
-          <img [src]="selectedPlayer.picture_file" alt="Player Photo" class="w-10 h-10 rounded-full"  (error)="defaultImage($event)">
-          <input id="image" type="file" (change)="onFileChange($event)" placeholder="Foto del jugador" />
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="medicalCertificate">Certificado Médico:</label>
-          <input id="medicalCertificate" type="file" (change)="onFileChange($event)" placeholder="Certificado Médico"/>
-        </div>
-        <div class="flex items-center gap-2 w-full justify-between">
-          <label for="active">Activo:</label>
-          <input type="checkbox" id="active" name="active" [(ngModel)]="selectedPlayer.active" required>
-        </div>
-
-        <button type="submit">Guardar</button>
-      </form>
-    </div>
+      </div>
+      
+      <div class="flex justify-end space-x-3 pt-4">
+        <button 
+          type="button" 
+          (click)="showEditTeamModal = false" 
+          class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Guardar cambios
+        </button>
+      </div>
+    </form>
   </div>
 </div>

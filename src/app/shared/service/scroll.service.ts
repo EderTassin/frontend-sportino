@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { FrontPageImage } from 'src/app/admin/service/manager-img.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -8,13 +10,12 @@ import { environment } from 'src/environments/environment';
 export class ScrollService {
 
   private apiUrl = environment.apiEndpoint;
-  constructor() { }
-  private scrollToLocationSource = new Subject<void>();
+  constructor(private http: HttpClient) { }
+    private scrollToLocationSource = new Subject<void>();
 
   scrollToLocation$ = this.scrollToLocationSource.asObservable();
 
   triggerScrollToLocation() {
     this.scrollToLocationSource.next();
   }
-
 }

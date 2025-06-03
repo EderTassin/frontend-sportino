@@ -35,6 +35,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RateLimitingInterceptor } from './_services/rate-limiter.interceptor';
+import { AuthInterceptor } from './_services/auth.interceptor';
 
 registerLocaleData(localeEs, 'es');
 
@@ -85,6 +86,7 @@ registerLocaleData(localeEs, 'es');
     AuthService,
     LoadingService,
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideHttpClient(
       withInterceptors([RateLimitingInterceptor])
     ),

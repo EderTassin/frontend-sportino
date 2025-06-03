@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { FrontPageImage } from 'src/app/admin/service/manager-img.service';
 
 interface Tournament {
   id: number;
@@ -161,5 +162,27 @@ export class EstadisticaPartidosService {
       )
     );
     return res;
+  }
+
+  async getFrontPageImages(){
+    try {
+      const url = `${environment.apiEndpoint}gallerys/FrontPageImages/`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching front page images:', error);
+      return [];
+    }
   }
 }

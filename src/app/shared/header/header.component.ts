@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   installPromptEvent: any;
   showInstallButton: boolean = true;
   isLoggin: boolean = false
-  private apiUrl = environment.apiEndpoint;
+  user: any;
 
   constructor(private scrollService: ScrollService,
               private router: Router,
@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
     this.authService.authStatus.subscribe((isAuthenticated: any) => {
       this.isLoggin = !isAuthenticated;
     });
+    this.getUser();
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
@@ -31,6 +32,10 @@ export class HeaderComponent implements OnInit {
     this.showInstallButton = true;
     this.installPromptEvent = event as any;
     event.preventDefault();
+  }
+
+  async getUser() {
+    this.user = await this.authService.getUser();
   }
 
   installPWA() {

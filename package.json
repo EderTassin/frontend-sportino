@@ -4,9 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --aot --build-optimizer --output-hashing=all",
+    "build": "ng build",
     "build:stats": "ng build --stats-json",
-    "test": "ng test"
+    "test": "ng test",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "prebuild": "npm run version:patch"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +28,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "ngx-toastr": "^16.1.0",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.21.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

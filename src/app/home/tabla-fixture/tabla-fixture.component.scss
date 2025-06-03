@@ -1,4 +1,3 @@
-
 .container {
   background-color: #161616;
   display: flex;
@@ -208,4 +207,14 @@
   .container-tab {
     width: 380px;
   }
+}
+
+.no-data-message {
+  padding: 20px;
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+  margin: 15px 0;
 }

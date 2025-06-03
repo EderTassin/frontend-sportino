@@ -4,11 +4,20 @@ import {inject, Injectable } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 
+export interface Tournament {
+  id?: number;
+  name: string;
+  description?: string;
+  date_from: string;
+  date_to: string;
+  active: boolean;
+  category: number[];
+  parent?: number | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
-
-
 export class AdminService {
   private apiUrl = environment.apiEndpoint;
   private isAuthenticated = inject(AuthService).checkAuth();
@@ -21,14 +30,20 @@ export class AdminService {
     );
   }
 
-  async updateTeam(team: any) {
+  async updateTeam(team: FormData) {
     return lastValueFrom(
-      this.http.put<any>(`${this.apiUrl}players/teams/${team.id}/`, team)
+      this.http.put<any>(`${this.apiUrl}players/teams/${team.get("id")}/`, team)
     );
   }
 
-  getTeams(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}teams`);
+  async getReferees() {
+    return lastValueFrom(
+      this.http.get<any>(`${this.apiUrl}users/referees/`)
+    );
+  }
+
+  async getTeams(): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}players/teams/`));
   }
 
   async getDelegados() {
@@ -43,15 +58,50 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
 
-   async getTournaments(): Promise<any> {
+  async getTournaments(): Promise<any> {
     return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/`));
+  }
+
+  async getTournamentById(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/${id}/`));
+  }
+
+  async getDatesByTournament(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament-dates/${id}`));
+  }
+
+  async getGamesByTournamentId(id: number): Promise<any> {
+    return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/games-by-tournament/${id}`));
+  }
+
+  async createTournament(tournamentData: Partial<Tournament>): Promise<any> {
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}calendars/tournament/`, tournamentData)
+    );
+  }
+
+  async updateTournament(id: number, tournamentData: Partial<Tournament>): Promise<any> {
+    return await lastValueFrom(
+      this.http.put<any>(`${this.apiUrl}calendars/tournament/${id}/`, tournamentData)
+    );
+  }
+
+  async createSubTournament(parentId: number, tournamentData: Partial<Tournament>): Promise<any> {
+    const subTournamentData = {
+      ...tournamentData,
+      parent: parentId
+    };
+    
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}calendars/tournament/`, subTournamentData)
+    );
   }
 
   deleteTournament(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}calendars/tournament/${id}/`);
   }
 
-  imprimirDocumentos(dateId: number): Observable<Blob> {
+  imprimirDocumentosDate(dateId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}calendars/date-report-pdf/?date_id=${dateId}`, {
       responseType: 'blob'
     });
@@ -70,7 +120,7 @@ export class AdminService {
   deleteTeam(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}players/teams/${id}/`);
   }
-
+  
   async getBackupData(): Promise<any> {
     return await lastValueFrom(this.http.get(`${this.apiUrl}users/dbdump/dump/`, {
       responseType: 'json'

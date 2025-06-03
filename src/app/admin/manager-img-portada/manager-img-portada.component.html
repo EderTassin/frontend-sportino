@@ -1,0 +1,123 @@
+<div class="container mx-auto px-4 py-6">
+  <h1 class="text-2xl font-bold mb-6">Administración de Imágenes de Portada</h1>
+
+  <!-- Upload section -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-semibold mb-4">Subir Nueva Imagen</h2>
+    
+    <div class="flex flex-col md:flex-row gap-6">
+      <!-- File input and preview -->
+      <div class="flex-1">
+        <div class="mb-4">
+          <label for="image-upload" class="block text-sm font-medium text-gray-700 mb-2">Seleccionar Imagen (Máx. {{maxFileSizeMB}}MB)</label>
+          <input 
+            type="file" 
+            id="image-upload" 
+            accept="image/*"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            (change)="onFileSelected($event)"
+            [disabled]="isUploading"
+          >
+        </div>
+
+        <div *ngIf="previewUrl" class="mt-4 relative">
+          <img [src]="previewUrl" alt="Vista previa" class="max-h-64 rounded-lg border border-gray-200">
+          <button 
+            (click)="cancelUpload()" 
+            class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+            title="Cancelar">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Upload button -->
+      <div class="flex items-end">
+        <button 
+          (click)="uploadImage()" 
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex items-center"
+          [disabled]="isUploading || !selectedFile">
+          <svg *ngIf="isUploading" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>{{ isUploading ? 'Subiendo...' : 'Subir Imagen' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Images gallery -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold mb-4">Imágenes de Portada</h2>
+    
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- No images message -->
+    <div *ngIf="!isLoading && images.length === 0" class="py-8 text-center text-gray-500">
+      <p>No hay imágenes de portada disponibles</p>
+    </div>
+
+    <!-- Images grid -->
+    <div *ngIf="!isLoading && images.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let image of images" class="border border-gray-200 rounded-lg overflow-hidden relative group">
+        <!-- Image -->
+        <div class="relative pt-[56.25%] bg-gray-100"> <!-- 16:9 aspect ratio -->
+          <p>{{ image.image }}</p>
+          <img [src]="image.image" alt="Imagen de portada" class="absolute inset-0 w-full h-full object-cover">
+        </div>
+        
+        <!-- Status badge -->
+        <div class="absolute top-2 right-2">
+          <span 
+            [ngClass]="image.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+            class="px-2 py-1 rounded-full text-xs font-medium">
+            {{ image.active ? 'Activa' : 'Inactiva' }}
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="p-4 bg-white">
+          <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+              {{ image.created_at | date:'dd/MM/yyyy' }}
+            </div>
+            <div class="flex space-x-2 justify-between">
+              <div class="flex items-center ">
+                <span class="mr-2 text-sm text-gray-700">{{ image.image.split('/').pop() }}</span>
+              </div>
+              <!-- Toggle switch for active status -->
+              <div class="flex items-center">
+                <span class="mr-2 text-sm text-gray-500">{{ image.active ? 'Activa' : 'Inactiva' }}</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    class="sr-only peer" 
+                    [checked]="image.active" 
+                    (change)="toggleImageStatus(image)"
+                  >
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              
+              <!-- Delete button -->
+              <button 
+                (click)="deleteImage(image)" 
+                title="Eliminar"
+                class="p-2 rounded-full hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

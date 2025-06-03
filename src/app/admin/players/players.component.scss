@@ -1,0 +1,40 @@
+/* Estilos específicos para el componente de jugadores */
+:host {
+  display: block;
+}
+
+.photo-upload-container {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Estilos para los estados de hover en los botones de acción */
+.action-button:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Animación para el spinner de carga */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Estilos responsivos para dispositivos móviles */
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}

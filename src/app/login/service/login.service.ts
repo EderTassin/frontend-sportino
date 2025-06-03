@@ -21,11 +21,31 @@ export class LoginService {
       );
   }
 
-  async register(delegateData: any){
-    const response = await firstValueFrom(
-      this.http.post<any>(`${this.apiUrl}players/managers/`, delegateData)
-    );
-    return response;
+  async register(delegateData: any) {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<any>(`${this.apiUrl}players/managers/`, delegateData, {
+          observe: 'response',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      );
+      
+      return response.body;
+    } catch (error: any) {
+      console.error('Error in register service:', error);
+      
+      if (error.status) {
+        console.error('Error status:', error.status);
+      }
+      
+      if (error.error) {
+        console.error('Error response body:', error.error);
+      }
+      
+      throw error;
+    }
   }
 
   logout(): void {

@@ -1,0 +1,364 @@
+<div class="container mx-auto px-4 py-8">
+
+    <div class="p-4 mt-4">
+        <button (click)="goBack()" class="flex items-center gap-2 px-4 py-2 text-white bg-gray-600 rounded-lg shadow transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <span class="material-icons">arrow_back</span>
+            <span>Volver</span>
+        </button>
+    </div>
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Gestionar Jugadores</h1>
+    <button 
+      (click)="openCreateForm()" 
+      class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition flex items-center"
+      *ngIf="!showForm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      Agregar Nuevo Jugador
+    </button>
+  </div>
+
+  <!-- Alert for errors -->
+  <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+    <p>{{ error }}</p>
+  </div>
+  <!-- Player Form -->
+  <div *ngIf="showForm" class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-semibold mb-4">{{ isEditMode ? 'Editar' : 'Crear' }} Jugador</h2>
+    
+    <form [formGroup]="playerForm" (ngSubmit)="savePlayer()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Photo Upload -->
+        <div class="col-span-2 md:col-span-1 flex flex-col items-center">
+          <div class="w-40 h-40 mb-3 bg-gray-100 rounded-full overflow-hidden flex items-center justify-center border border-gray-300">
+            <img *ngIf="photoPreview" [src]="photoPreview" alt="Player Photo" class="w-full h-full object-cover">
+            <svg *ngIf="!photoPreview" xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <label for="photo" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-sm transition cursor-pointer">
+            Subir Foto
+            <input type="file" id="photo" accept="image/*" (change)="onPhotoSelected($event)" class="hidden">
+          </label>
+        </div>
+
+        <div class="col-span-2 md:col-span-1">
+          <!-- Personal Information -->
+          <div class="grid grid-cols-1 gap-4">
+            <!-- Full Name -->
+            <div>
+              <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo *</label>
+              <input type="text" id="full_name" formControlName="full_name" 
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <div *ngIf="playerForm.get('full_name')?.invalid && playerForm.get('full_name')?.touched" class="text-red-500 text-sm mt-1">
+                Nombre completo es requerido
+              </div>
+            </div>
+
+            <!-- ID Card -->
+            <div>
+              <label for="id_card" class="block text-sm font-medium text-gray-700 mb-1">DNI *</label>
+              <input type="text" id="id_card" formControlName="id_card" 
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <div *ngIf="playerForm.get('id_card')?.invalid && playerForm.get('id_card')?.touched" class="text-red-500 text-sm mt-1">
+                DNI es requerido
+              </div>
+            </div>
+
+            <!-- Birthday -->
+            <div>
+              <label for="birthday" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento *</label>
+              <input type="date" id="birthday" formControlName="birthday" 
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <div *ngIf="playerForm.get('birthday')?.invalid && playerForm.get('birthday')?.touched" class="text-red-500 text-sm mt-1">
+                Fecha de nacimiento es requerida
+              </div>
+            </div>
+            
+            <!-- Medical Certificate -->
+            <div class="flex items-center">
+              <input type="checkbox" id="medical_certificate" formControlName="medical_certificate"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <label for="medical_certificate" class="ml-2 block text-sm text-gray-700">Certificado Médico Activo</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+            <input type="text" id="phone" formControlName="phone" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <div>
+            <label for="cell_phone" class="block text-sm font-medium text-gray-700 mb-1">Celular</label>
+            <input type="text" id="cell_phone" formControlName="cell_phone" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" formControlName="email" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+            <div *ngIf="playerForm.get('email')?.invalid && playerForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+              Email inválido
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="street" class="block text-sm font-medium text-gray-700 mb-1">Calle</label>
+            <input type="text" id="street" formControlName="street" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <div>
+            <label for="number" class="block text-sm font-medium text-gray-700 mb-1">Número</label>
+            <input type="text" id="number" formControlName="number" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <div>
+            <label for="neighborhood" class="block text-sm font-medium text-gray-700 mb-1">Barrio</label>
+            <input type="text" id="neighborhood" formControlName="neighborhood" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+        </div>
+
+        <!-- Team Information -->
+        <div class="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label for="team" class="block text-sm font-medium text-gray-700 mb-1">Equipo</label>
+            <select id="team" formControlName="team" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <option *ngFor="let team of teams" [value]="team.id">{{ team.name }}</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Certificate Information -->
+        <div class="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="date_certificate" class="block text-sm font-medium text-gray-700 mb-1">Fecha Certificado</label>
+            <input type="date" id="date_certificate" formControlName="date_certificate" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <div>
+            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+            <input type="date" id="date" formControlName="date" 
+                  class="w-full rounded-md border-gray-300 border-2 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+          </div>
+          
+          <!-- Status Checkboxes -->
+          <div class="flex flex-col justify-center space-y-2">
+            <div class="flex items-center">
+              <input type="checkbox" id="active" formControlName="active"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 border-2 rounded">
+              <label for="active" class="ml-2 block text-sm text-gray-700">Jugador Activo</label>
+            </div>
+            
+            <div class="flex items-center">
+              <input type="checkbox" id="active_sanctions" formControlName="active_sanctions"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 border-2 rounded">
+              <label for="active_sanctions" class="ml-2 block text-sm text-gray-700">Sanciones Aplicadas</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end space-x-3">
+        <button 
+          type="button" 
+          (click)="cancelForm()" 
+          class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          [disabled]="playerForm.invalid || loading"
+          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
+          {{ isEditMode ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Filtros de búsqueda -->
+  <div *ngIf="!loading && !showForm" class="bg-white shadow-md rounded-lg overflow-hidden mb-4 p-4">
+    <h3 class="text-lg font-medium text-gray-700 mb-3">Filtros de búsqueda</h3>
+    <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Filtro por nombre -->
+      <div class="relative">
+        <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre del jugador</label>
+        <input 
+          type="text" 
+          id="full_name"
+          formControlName="full_name"
+          placeholder="Buscar por nombre..."
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+      </div>
+      
+      <!-- Filtro por equipo -->
+      <div>
+        <label for="team_name" class="block text-sm font-medium text-gray-700 mb-1">Equipo</label>
+        <input 
+          type="text" 
+          id="team_name"
+          formControlName="team_name"
+          placeholder="Nombre del equipo..."
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+      </div>
+      
+      <!-- Botones -->
+      <div class="flex items-end space-x-2">
+        <button 
+          type="submit" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors">
+          Aplicar filtros
+        </button>
+        <button 
+          type="button"
+          (click)="clearFilters()" 
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition-colors">
+          Limpiar
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Players Table -->
+  <div *ngIf="!loading && !showForm" class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div *ngIf="filteredPlayers.length === 0" class="p-6 text-center text-gray-500">
+      {{isSearching ? 'No se encontraron jugadores con ese criterio de búsqueda.' : 'No se encontraron jugadores. ¡Crea tu primer jugador!'}}
+    </div>
+    
+    <div *ngIf="filteredPlayers.length > 0" class="overflow-hidden">
+      <div class="max-h-[calc(100vh-300px)] overflow-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50 sticky top-0 z-10">
+            <tr>
+              <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+              <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+              <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI</th>
+              <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edad</th>
+              <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
+              <th scope="col" class="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th scope="col" class="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Cert. Médico</th>
+              <th scope="col" class="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Sanciones</th>
+              <th scope="col" class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let player of filteredPlayers" class="hover:bg-gray-50">
+          <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ player.id }}</td>
+          <td class="px-3 py-2 whitespace-nowrap">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+              <img *ngIf="player.picture_file" [src]="apiUrl + player.picture_file" alt="Player Photo" class="w-full h-full object-cover">
+              <svg *ngIf="!player.picture_file" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">{{ player.full_name }}</div>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap">
+            <div class="text-sm text-gray-500">{{ player.id_card }}</div>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap">
+            <div class="text-sm text-gray-500">{{ calculateAge(player.birthday) }}</div>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap">
+            <div class="text-sm text-gray-500">{{ player.team?.name || 'No asignado' }}</div>
+            <div *ngIf="player.jersey_number" class="text-xs text-gray-400">#{{ player.jersey_number }} - {{ player.position }}</div>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap text-center">
+            <span 
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
+              [ngClass]="player.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ player.active ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap text-center">
+            <span 
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
+              [ngClass]="player.medical_certificate ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ player.medical_certificate ? 'Activo' : 'Inactivo' }}
+            </span> 
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap text-center">
+            <span 
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
+              [ngClass]="player.active_sanctions ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'">
+              {{ player.active_sanctions ? 'Sancionado' : 'No sancionado' }}
+            </span>
+          </td>
+          <td class="px-2 py-2 whitespace-nowrap text-right text-sm font-medium">
+            <div class="flex justify-end space-x-2">
+              <button 
+                (click)="openEditForm(player)" 
+                class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+              </button>
+              <button 
+                (click)="deletePlayer(player.id!)" 
+                class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Pagination Controls -->
+    <div *ngIf="filteredPlayers.length > 0 && !isSearching" class="px-6 py-4 bg-white border-t border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-700">
+          Mostrando <span class="font-medium">{{ (currentPage - 1) * players.length + 1 }}</span> a <span class="font-medium">{{ currentPage * players.length > totalItems ? totalItems : currentPage * players.length }}</span> de <span class="font-medium">{{ totalItems }}</span> jugadores
+        </div>
+        <div class="flex items-center space-x-2">
+          <button 
+            (click)="goToPreviousPage()" 
+            [disabled]="!previousPageUrl"
+            class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            Anterior
+          </button>
+          
+          <div class="flex space-x-1">
+            <button *ngFor="let page of getPageNumbers()" 
+              (click)="goToPage(page)"
+              [class]="page === currentPage ? 
+                'px-3 py-1 rounded-md bg-blue-600 text-white' : 
+                'px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300'">
+              {{ page }}
+            </button>
+          </div>
+          
+          <button 
+            (click)="goToNextPage()" 
+            [disabled]="!nextPageUrl"
+            class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            Siguiente
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

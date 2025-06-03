@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -6,11 +6,14 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './tournament-summary.component.html',
   styleUrls: ['./tournament-summary.component.scss']
 })
-export class TournamentSummaryComponent {
+export class TournamentSummaryComponent implements OnInit {
   @Input() tournament: any;
-  tournamentData: any;
-  dates: any;
-  matches: any;
+  @Input() isEditMode: boolean = false;
+  @Output() sectionChange = new EventEmitter<number>();
+
+  tournamentData: any = {};
+  dates: any[] = [];
+  matches: any[] = [];
   id: any;
 
   categories = [
@@ -29,25 +32,39 @@ export class TournamentSummaryComponent {
   }
 
   ngOnInit() {
-    this.tournamentData = this.tournament[0];
-    this.dates = this.tournament[1];
-    this.matches = this.tournament[2];
+    if (Array.isArray(this.tournament) && this.tournament.length > 0) {
+      this.tournamentData = this.tournament[0] || {};
+      this.dates = this.tournament[1] || [];
+      this.matches = this.tournament[2] || [];
+    } else {
+      this.tournamentData = this.tournament || {};
+      console.warn("TournamentSummaryComponent received unexpected data structure:", this.tournament);
+    }
   }
 
   get formattedStartDate() {
-    return new Date(this.tournament?.date_from).toLocaleDateString();
+    const date = this.tournamentData?.date_from;
+    return date ? new Date(date).toLocaleDateString() : 'N/A';
   }
 
   get formattedEndDate() {
-    return new Date(this.tournament?.date_to).toLocaleDateString();
+    const date = this.tournamentData?.date_to;
+    return date ? new Date(date).toLocaleDateString() : 'N/A';
   }
 
-  getCategoryName(categoryId: number): string {
-    const category = this.categories.find(cat => cat.id === categoryId);
-    return category ? category.name : "Unknown Category";
+  getCategoryNames(): string {
+    if (!this.tournamentData?.category || this.tournamentData.category.length === 0) {
+        return "N/A";
+    }
+    return this.tournamentData.category
+        .map((categoryId: number) => {
+            const category = this.categories.find(cat => cat.id === categoryId);
+            return category ? category.name : `ID: ${categoryId}`;
+        })
+        .join(', ');
   }
 
-  confirmTournament() {
-    this.router.navigate(['/admin']);
+  editSection(sectionIndex: number) {
+    this.sectionChange.emit(sectionIndex);
   }
 }

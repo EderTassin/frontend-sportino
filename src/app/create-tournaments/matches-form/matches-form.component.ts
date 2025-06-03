@@ -1,16 +1,18 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaPartidosService } from 'src/app/home/tabla-fixture/service/estadistica-partidos.service';
 import { TournamentService } from '../service/tournament.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-matches-form',
   templateUrl: './matches-form.component.html',
   styleUrls: ['./matches-form.component.scss']
 })
-export class  MatchesFormComponent {
+export class MatchesFormComponent implements OnInit {
   @Input() initialData: any;
-  @Output() formSubmit = new EventEmitter<any>();
+  @Input() isEditMode: boolean = false;
+  @Output() formValid = new EventEmitter<boolean>();
 
   form: FormGroup;
   teams: any[] = [];
@@ -18,94 +20,161 @@ export class  MatchesFormComponent {
   listMatches: any[] = [];
   listMatchesDescription: any[] = [];
 
-  constructor(private fb: FormBuilder, private tournamentService: TournamentService, private estadisticaPartidosService: EstadisticaPartidosService) {
+  constructor(
+    private fb: FormBuilder,
+    private tournamentService: TournamentService,
+    private estadisticaPartidosService: EstadisticaPartidosService,
+    private toastr: ToastrService
+  ) {
     this.form = this.fb.group({
-      dates: ['', Validators.required],
+      selectedDateId: ['', Validators.required],
       teamA: ['', Validators.required],
       teamB: ['', Validators.required],
-      date: ['', Validators.required],
-      hour: ['', Validators.required],
+      hour: ['', [Validators.required, Validators.pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)]],
       court: ['', Validators.required]
     });
   }
 
   ngOnInit() {
-    this.form.patchValue({
-      dates: this.initialData.dates
-    });
-
-    this.listDates = this.initialData[1];
     this.getTeams();
-    this.getDatesByTournament();
+    this.loadAvailableDates();
+
+    if (this.initialData && this.initialData[2]) {
+      this.listMatches = [...this.initialData[2]];
+      this.regenerateMatchDescriptions();
+    }
+    this.emitValidity();
   }
 
-  async getDatesByTournament() {
-    const response = await this.tournamentService.getDatesByTournament(this.initialData[0].id)
-    this.listDates = response;
+  async loadAvailableDates() {
+    if (this.initialData && this.initialData[1] && this.initialData[1].length > 0) {
+      this.listDates = [...this.initialData[1]];
+    } else if (this.initialData && this.initialData[0]?.id) {
+      try {
+        const tournamentId = this.initialData[0].id;
+        this.listDates = await this.tournamentService.getDatesByTournament(tournamentId);
+      } catch (error) {
+        console.error("Error fetching dates for tournament", error);
+        this.toastr.error("Error al cargar las fechas del torneo.");
+        this.listDates = [];
+      }
+    } else {
+      console.warn("Cannot load dates: No dates in initialData[1] and no tournament ID in initialData[0].");
+      this.listDates = [];
+    }
   }
-
 
   async getTeams() {
-    const teams = await this.estadisticaPartidosService.getAllTeams();
-    const sortedTeams = teams.sort((a: any, b: any) => a.name.localeCompare(b.name));
-    this.teams = sortedTeams;
+    try {
+      const teamsData = await this.estadisticaPartidosService.getAllTeams();
+      this.teams = teamsData.sort((a: any, b: any) => a.name.localeCompare(b.name));
+    } catch(error) {
+      console.error("Error fetching teams", error);
+      this.toastr.error("Error al cargar los equipos.");
+      this.teams = [];
+    }
   }
 
   getFormData() {
     return this.listMatches;
   }
 
+  regenerateMatchDescriptions() {
+    this.listMatchesDescription = this.listMatches.map(match => {
+      const teamA = this.teams.find(t => t.id.toString() === match.teamA?.toString());
+      const teamB = this.teams.find(t => t.id.toString() === match.teamB?.toString());
+      const dateObj = this.listDates.find(d => d.id?.toString() === match.date?.toString());
+
+      return {
+        teamA: teamA ? teamA.name : `ID: ${match.teamA}`,
+        teamB: teamB ? teamB.name : `ID: ${match.teamB}`,
+        date: dateObj ? dateObj.date : `ID: ${match.date}`,
+        hour: match.hour,
+        court: match.court
+      };
+    });
+  }
+
   addMatch() {
-    // Optional safeguard: check teams is loaded 
-    if (!this.teams || !this.teams.length) {
-      console.error('Teams not loaded yet or empty');
-      return;
-    }
+    if (this.form.valid) {
+      if (this.form.value.teamA === this.form.value.teamB) {
+        this.toastr.error("El equipo A no puede ser el mismo que el equipo B.");
+        return;
+      }
 
-    if (this.form.value.teamA && this.form.value.teamB && this.form.value.date 
-        && this.form.value.hour && this.form.value.court) {
-      
-      this.listMatches.push(this.form.value);
-
-      const teamA = this.teams.find(t => t.id.toString() == this.form.value.teamA.toString());
-      const teamB = this.teams.find(t => t.id.toString() == this.form.value.teamB.toString());
-      const dateObj = this.listDates.find(d => d.id.toString() == this.form.value.date.toString());
-
-      const newMatchDescription = {
-        teamA: teamA ? teamA.name : 'Equipo desconocido',
-        teamB: teamB ? teamB.name : 'Equipo desconocido',
-        date: dateObj ? dateObj : { date: 'Fecha desconocida' },
+      const newMatch = {
+        date: this.form.value.selectedDateId,
+        teamA: this.form.value.teamA,
+        teamB: this.form.value.teamB,
         hour: this.form.value.hour,
         court: this.form.value.court
+      };
+      
+      this.listMatches.push(newMatch);
+
+      const teamA = this.teams.find(t => t.id.toString() === newMatch.teamA.toString());
+      const teamB = this.teams.find(t => t.id.toString() === newMatch.teamB.toString());
+      const dateObj = this.listDates.find(d => d.id.toString() === newMatch.date.toString());
+
+      const newMatchDescription = {
+        teamA: teamA ? teamA.name : 'Equipo desc.',
+        teamB: teamB ? teamB.name : 'Equipo desc.',
+        date: dateObj ? dateObj.date : 'Fecha desc.',
+        hour: newMatch.hour,
+        court: newMatch.court
       };
 
       this.listMatchesDescription.push(newMatchDescription);
       this.form.reset();
+      this.emitValidity();
+
+    } else {
+      this.toastr.error("Por favor complete todos los campos del partido.");
+      this.form.markAllAsTouched();
     }
   }
 
-  deleteMatch(match: any) {
-    this.listMatches = this.listMatches.filter(m => m !== match);
+  deleteMatch(index: number) {
+    const matchToRemove = this.listMatches[index];
+    this.listMatches.splice(index, 1);
+    this.listMatchesDescription.splice(index, 1);
+    this.emitValidity();
   }
 
   formatHour(event: any) {
     let input = event.target;
-    let value = input.value.replace(/\D/g, '');
-    if (value.length >= 2) {
-      value = value.substring(0, 2) + ':' + value.substring(2);
+    let value = input.value.replace(/[^\d:]/g, '');
+    let parts = value.split(':');
+    
+    if (parts[0] && parts[0].length > 2) {
+      parts[0] = parts[0].substring(0, 2);
     }
-    if (value.length > 4) {
+    if (parts[1] && parts[1].length > 2) {
+      parts[1] = parts[1].substring(0, 2);
+    }
+    
+    value = parts.join(':');
+
+    if (parts[0] && parseInt(parts[0]) > 23) parts[0] = '23';
+    if (parts[1] && parseInt(parts[1]) > 59) parts[1] = '59';
+    
+    value = parts.join(':');
+    
+    if (value.length === 2 && !value.includes(':')) {
+      value += ':';
+    } else if (value.length > 5) {
       value = value.substring(0, 5);
     }
-    let parts = value.split(':');
-    if (parts[0] && parseInt(parts[0]) > 23) {
-      parts[0] = '23';
-      value = parts.join(':');
-    }
-    if (parts[1] && parseInt(parts[1]) > 59) {
-      parts[1] = '59';
-      value = parts.join(':');
-    }
-    this.form.patchValue({ hour: value });
+
+    this.form.controls['hour'].setValue(value, { emitEvent: false });
+  }
+  
+  isFormValid(): boolean {
+    return true;
+  }
+
+  emitValidity() {
+    this.formValid.emit(this.isFormValid());
   }
 }
+

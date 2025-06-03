@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
+import { environment } from 'src/environments/environment.prod';
 
 interface RackingVallaMenosVencida {
   name: string;
@@ -37,6 +38,7 @@ export class MatchStatisticsComponent {
 
   ngOnInit(): void {
     this.tournamentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.environment = environment.apiEndpoint.replace('/api/', '');
     this.loadDataForm();
   }
   

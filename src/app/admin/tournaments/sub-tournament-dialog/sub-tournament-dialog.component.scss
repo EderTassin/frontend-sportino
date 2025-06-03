@@ -1,0 +1,41 @@
+// Add custom styles for the sub-tournament dialog
+:host {
+  display: block;
+}
+
+.mat-dialog-container {
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Custom styling for form elements
+input[type="text"],
+input[type="date"],
+textarea {
+  &:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+}
+
+// Checkbox styling
+input[type="checkbox"] {
+  &:checked {
+    background-color: #10b981;
+    border-color: #10b981;
+  }
+}
+
+// Button hover effects
+button {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}

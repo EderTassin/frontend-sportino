@@ -1,4 +1,4 @@
-version: '3'
+# version: '3'
 
 services:
   sportino-front:
@@ -10,6 +10,11 @@ services:
       - LETSENCRYPT_HOST=sportino.com.ar
     networks:
       - main_network
+    mem_limit: 4096m 
+    mem_reservation: 2048m
+    build:
+      context: .
+      dockerfile: Dockerfile
 
 networks:
   main_network:

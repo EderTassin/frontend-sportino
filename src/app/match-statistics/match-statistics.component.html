@@ -1,7 +1,7 @@
 <div class="match-statistics-container">
   <header>
     <h1>Detalles Torneo</h1>
-    <h3>{{tournament.name}}</h3>
+    <h3>{{tournament?.name}}</h3>
   </header>
 
   <section class="matches">
@@ -11,7 +11,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Fecha seleccionada</mat-label>
           <mat-select [(value)]="selectedDate" (selectionChange)="filterMatchesByDate()">
-            <mat-option *ngFor="let item of datesSelects" [value]="item.date">{{item.date}}</mat-option>
+            <mat-option *ngFor="let item of datesSelects" [value]="item.date">{{item?.date}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -21,7 +21,7 @@
         <li *ngFor="let match of fixtureFilter" class="match" (click)="openModal(match)">
           <div class="container-teams">
             <div class="team">
-              <img [src]="match.homeLogo" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="environment + match.team_1.logo_file" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
               <span class="team-name">{{ match.team_1?.name }}</span>
             </div>
             <div class="score">
@@ -36,7 +36,7 @@
             </div>
             <div class="team">
               <span class="team-name">{{ match.team_2?.name }}</span>
-              <img [src]="match.awayLogo" alt="{{ match.awayTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="environment + match.team_2.logo_file" alt="{{ match.team_2?.name }} logo" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
           
@@ -53,8 +53,8 @@
   <section class="standings">
     <h2>Posiciones</h2>
     <div class="table-container">
-      <table>
-        <thead>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
           <tr>
             <th width="70px"></th>
             <th title="Nombre del equipo" matTooltip="Nombre del equipo">Equipos</th>
@@ -67,9 +67,6 @@
             <th title="Partidos ganados" matTooltip="Partidos ganados">PG</th>
             <th title="Partidos empatados" matTooltip="Partidos empatados">PE</th>
             <th title="Partidos perdidos" matTooltip="Partidos perdidos">PP</th>
-            <th title="Goles a favor" matTooltip="Goles a favor">GF</th>
-            <th title="Goles en contra" matTooltip="Goles en contra">GC</th>
-            <th title="Diferencia de goles" matTooltip="Diferencia de goles">DG</th>
           </tr>
         </thead>
         <tbody>
@@ -87,9 +84,6 @@
             <td>{{ team.games.ganados }}</td>
             <td>{{ team.games.empatados }}</td>
             <td>{{ team.games.perdidos }}</td>
-            <td>{{ team.goals_in_favor }}</td> 
-            <td>{{ team.goals_against }}</td> 
-            <td>{{ team.goals_in_favor - team.goals_against }}</td> 
           </tr>
         </tbody>
       </table>

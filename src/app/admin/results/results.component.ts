@@ -136,15 +136,12 @@ export class ResultsComponent {
     this.sanctionsTeam2 = [];
     
     this.managerService.getTeam(match.team_1.id).subscribe((res: any) => {
-      console.log('Jugadores equipo local:', res.players);
       this.playersTeam1 = res.players;
       this.newGoalTeam1.teamId = match.team_1.id;
       this.newSanctionTeam1.teamId = match.team_1.id;
     });
     
-    // Cargar jugadores del equipo visitante
     this.managerService.getTeam(match.team_2.id).subscribe((res: any) => {
-      console.log('Jugadores equipo visitante:', res.players);
       this.playersTeam2 = res.players;
       this.newGoalTeam2.teamId = match.team_2.id;
       this.newSanctionTeam2.teamId = match.team_2.id;
@@ -167,8 +164,7 @@ export class ResultsComponent {
         alert('Debe seleccionar un jugador y especificar una cantidad válida de goles');
         return;
       }
-
-      const player = this.playersTeam1.find(p => p.id === this.newGoalTeam1.player);
+      const player = this.playersTeam1.find(p => p.id == this.newGoalTeam1.player);
       const playerName = player ? player.full_name : 'Jugador desconocido';
       
       const newGoal = {

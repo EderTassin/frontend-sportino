@@ -36,6 +36,7 @@ interface TournamentMatch {
 })
 export class TournamentFormComponent implements OnInit {
   @Input() initialData: any;
+  @Input() isEditMode: boolean = false;
   @Output() formSubmit = new EventEmitter<any>();
   @Output() formValid = new EventEmitter<boolean>();
 
@@ -61,34 +62,55 @@ export class TournamentFormComponent implements OnInit {
   ngOnInit() {
     this.getCategories();
   
-    if (this.initialData[0]) {
-      this.form.patchValue({
-        ...this.initialData[0],
+    if (this.initialData && this.initialData[0]) {
+      const dataToPatch = {
+        name: this.initialData[0].name || '',
+        description: this.initialData[0].description || '',
+        date_from: this.initialData[0].date_from || '',
+        date_to: this.initialData[0].date_to || '',
         category: this.initialData[0].category || []
-      });
-      this.selectedCategories = this.initialData[0].category || [];
+      };
+      this.form.patchValue(dataToPatch);
+      this.selectedCategories = dataToPatch.category;
+      
+      this.formValid.emit(this.form.valid);
+    } else {
+      this.formValid.emit(this.form.valid);
     }
   }
 
   async getCategories() {
-    this.categories = await this.tournamentService.getCategories();
+    try {
+      this.categories = await this.tournamentService.getCategories();
+    } catch (error) {
+      console.error("Error fetching categories", error);
+      this.toastr.error("Error al cargar las categorías.");
+      this.categories = [];
+    }
   }
   
   onCategoryChange(event: any, categoryId: number) {
     if (event.target.checked) {
-      this.selectedCategories.push(categoryId);
+      if (!this.selectedCategories.includes(categoryId)) {
+         this.selectedCategories.push(categoryId);
+      }
     } else {
       this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
     }
     this.form.patchValue({ category: this.selectedCategories });
+    this.form.get('category')?.markAsDirty();
   }
 
   getFormData() {
     if (this.form.valid) {
-      return this.form.value;
+      return { ...this.form.value };
     }
     this.form.markAllAsTouched();
+    console.warn("Tournament form is invalid", this.form.errors);
     return null;
   }
 
+  isCategorySelected(categoryId: number): boolean {
+      return this.selectedCategories.includes(categoryId);
+  }
 }
