@@ -113,11 +113,9 @@
             <div class="card">
                 <h2>Administración</h2>
                 <ul>
-                    <li><a href="#">Veedores</a></li>
-                    <li><a href="#">Parámetros</a></li>
-                    <li><a href="#">Backup</a></li>
-                    <li><a href="#">Claves Delegados</a></li>
-                    <li><a href="#">Quita Puntos</a></li>
+                    <li><a (click)="navigateTo('manager-img-portada')">Imagen de Portada</a></li>
+                    <li><a (click)="navigateTo('sanciones')">Quita Puntos</a></li>
+                    <li><a (click)="downloadBackup()">Backup</a></li>
                 </ul>
             </div>
             <div class="card">

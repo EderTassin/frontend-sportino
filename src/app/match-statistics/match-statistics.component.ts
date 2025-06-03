@@ -2,11 +2,19 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EstadisticaPartidosService } from '../home/tabla-fixture/service/estadistica-partidos.service';
 
+interface RackingVallaMenosVencida {
+  name: string;
+  logo_file: string;
+  golesAFavor: number;
+  golesEnContra: number;
+}
 @Component({
   selector: 'app-match-statistics',
   templateUrl: './match-statistics.component.html',
   styleUrls: ['./match-statistics.component.scss']
 })
+
+
 
 export class MatchStatisticsComponent {
   tournamentId: number = 0;
@@ -22,6 +30,8 @@ export class MatchStatisticsComponent {
   selectedDate: any;
   listPosicion: any;
   tournament: any;
+  environment: any;
+  rackingVallaMenosVencida: RackingVallaMenosVencida[] = [];
 
   constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) { }
 
@@ -43,7 +53,16 @@ export class MatchStatisticsComponent {
     this.goleadores = allData.goleadores.slice(0,16);
 
     this.listPosicion = await this.estadisticaPartidosService.getPosiciones(this.tournamentId);
-    
+
+    this.rackingVallaMenosVencida = this.listPosicion.positions.map((item:any) => {
+      return {
+        name: item.team,
+        logo_file: item.logo_file,
+        golesAFavor: item.goals_in_favor,
+        golesEnContra: item.goals_against,
+      }
+    }).sort((a:any, b:any) => a.golesEnContra - b.golesEnContra);
+
     this.filterMatchesByDate();
   }
 
@@ -71,5 +90,14 @@ export class MatchStatisticsComponent {
   
   filterMatchesByDate() {
     this.fixtureFilter = this.fixture.filter( (item:any) => item.date === this.selectedDate);
+  }
+  
+  calculateBarWidth(golesEnContra: number): string {
+    // Encontrar el máximo de goles en contra para normalizar
+    const maxGoles = Math.max(...this.rackingVallaMenosVencida.map(team => team.golesEnContra));
+    // Invertir la escala: menos goles = barra más larga
+    const porcentaje = maxGoles > 0 ? 100 - ((golesEnContra / maxGoles) * 100) + 20 : 100;
+    // Asegurar que la barra tenga al menos un 20% de ancho para visibilidad
+    return `${Math.max(20, Math.min(100, porcentaje))}%`;
   }
 }
