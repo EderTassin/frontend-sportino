@@ -149,6 +149,7 @@ section {
   }
 }
 
+// Estilos para elementos top-scorers existentes
 .top-scorers__item {
   margin-bottom: 8px;
   padding-bottom: 5px;
@@ -175,6 +176,196 @@ section {
   .top-scorers__goals {
     font-style: italic;
     color: #888;
+  }
+}
+
+// Nuevos estilos modernos para las secciones de estadísticas
+.valla-menos-vencida,
+.goleadores-section {
+  margin-bottom: 3rem;
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #161616;
+    padding: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, $color-orange, $color-green);
+      border-radius: 2px;
+    }
+  }
+  
+  .teams-grid,
+  .scorers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .team-card,
+  .scorer-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    &.podium {
+      border: 1px solid rgba(255, 115, 0, 0.1);
+    }
+    
+    &__position {
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #fff;
+      background: linear-gradient(180deg, #e0e0e0, #c0c0c0);
+      
+      &.gold {
+        background: linear-gradient(180deg, #ffd700, #f9a602);
+      }
+      
+      &.silver {
+        background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
+      }
+      
+      &.bronze {
+        background: linear-gradient(180deg, #cd7f32, #a05a2c);
+      }
+    }
+    
+    &__content {
+      flex: 1;
+      padding: 1rem;
+    }
+    
+    &__header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    &__logo,
+    &__avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 2px solid #f0f0f0;
+    }
+    
+    &__avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, $color-orange, darken($color-orange, 15%));
+      color: white;
+      
+      .material-symbols-outlined {
+        font-size: 24px;
+      }
+    }
+    
+    &__name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+    
+    &__stats {
+      padding: 0.5rem 0;
+    }
+    
+    &__additional {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+    &__label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    &__value {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    &__container {
+      height: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    &__progress {
+      height: 100%;
+      background: linear-gradient(90deg, $color-green, $color-orange);
+      border-radius: 4px;
+      transition: width 1s ease-in-out;
+    }
+  }
+  
+  .additional-stat {
+    display: flex;
+    flex-direction: column;
+    
+    &__label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.2rem;
+    }
+    
+    &__value {
+      font-weight: 600;
+      font-size: 1rem;
+      
+      &.positive {
+        color: $color-green;
+      }
+      
+      &.negative {
+        color: #ff4d4d;
+      }
+    }
   }
 }
 

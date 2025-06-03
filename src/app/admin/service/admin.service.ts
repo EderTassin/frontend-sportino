@@ -120,4 +120,10 @@ export class AdminService {
   deleteTeam(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}players/teams/${id}/`);
   }
+  
+  async getBackupData(): Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.apiUrl}users/dbdump/dump/`, {
+      responseType: 'json'
+    }));
+  }
 }
