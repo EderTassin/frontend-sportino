@@ -5,7 +5,7 @@
   </header>
 
   <section class="matches">
-    <div class="d-flex justify-content-between w-fit">
+    <div class="d-flex justify-content-between">
       <h2>Resultados</h2>
       <div class="select">
         <mat-form-field appearance="fill">
@@ -69,7 +69,7 @@
             <th title="Partidos perdidos" matTooltip="Partidos perdidos">PP</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="listPosicion?.positions.length != 0">
           <tr *ngFor="let team of listPosicion?.positions">
             <td>
               <img [src]="environment + team.logo_file" alt="{{ team.team }} logo" class="team-logo" (error)="defaultImage($event)">
@@ -86,9 +86,63 @@
             <td>{{ team.games.perdidos }}</td>
           </tr>
         </tbody>
+
+        <tbody *ngIf="listPosicion?.positions.length == 0">
+          <tr>
+            <td colspan="12" class="text-center">
+              <h2>No existen registros</h2>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </section>
+
+  <section>
+    <div class="d-flex justify-content-between">
+      <h2>Sanciones</h2>
+      <div class="select">
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha seleccionada</mat-label>
+          <mat-select [(value)]="sanctionDate" (selectionChange)="getSanctions()">
+            <mat-option *ngFor="let item of datesSelects" [value]="item.id">{{item?.date}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Partido</th>
+            <th>Equípo</th>
+            <th>Tipo</th>
+            <th>Jugador</th>
+            <th>Motivo</th>
+            <th>Sanción</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="sanctions?.length != 0">
+          <tr *ngFor="let sanction of sanctions">
+            <td>{{ sanction.game?.team_1 }} vs {{sanction.game?.team_2}}</td>
+            <td>{{ sanction.team?.name }}</td>
+            <td>{{ sanction.sanction_for == "P" ? "Jugador" : "Partido" }}</td>
+            <td>{{ sanction.player?.full_name }}</td>
+            <td>{{ sanction.reason }}</td>
+            <td>{{ sanction.missed_dates }} fechas</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="sanctions?.length == 0">
+          <tr class="d-flex justify-center">
+            <td colspan="6" class="text-center">
+              <h2>No existen registros</h2>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
 
   <section class="valla-menos-vencida">
     <h2 class="section-title">Racking Valla Menos Vencida</h2>

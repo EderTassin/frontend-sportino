@@ -164,6 +164,22 @@ export class EstadisticaPartidosService {
     return res;
   }
 
+  async getSanctions(query?: string) {
+    const url = `${this.url}calendars/sanctions-filter/` + query;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await firstValueFrom(
+      this.http.get(url, headers).pipe(
+        catchError(this.handleError)
+      )
+    );
+    return res;
+  }
+
   async getFrontPageImages(){
     try {
       const url = `${environment.apiEndpoint}gallerys/FrontPageImages/`;

@@ -27,6 +27,8 @@ export class MatchStatisticsComponent {
   fixture: any;
   fixtureFilter: any;
   datesSelects: any;
+  sanctions: any;
+  sanctionDate: any;
   goleadores: any;
   selectedDate: any;
   listPosicion: any;
@@ -48,14 +50,15 @@ export class MatchStatisticsComponent {
     const dates = await this.estadisticaPartidosService.getDatesTournaments();
     this.datesSelects = dates.filter((item:any) => item.tournament.includes(this.tournamentId))
     this.selectedDate = this.datesSelects[0].date;
+    this.sanctionDate = this.datesSelects[0].id;
 
     const allData = await this.estadisticaPartidosService.getCalendarsWidgets(this.tournamentId);
     
     this.fixture = allData.fixture;
     this.goleadores = allData.goleadores.slice(0,16);
-
+    
     this.listPosicion = await this.estadisticaPartidosService.getPosiciones(this.tournamentId);
-
+    
     this.rackingVallaMenosVencida = this.listPosicion.positions.map((item:any) => {
       return {
         name: item.team,
@@ -64,8 +67,17 @@ export class MatchStatisticsComponent {
         golesEnContra: item.goals_against,
       }
     }).sort((a:any, b:any) => a.golesEnContra - b.golesEnContra);
-
+    
+    this.getSanctions();
     this.filterMatchesByDate();
+  }
+
+  async getSanctions(){
+    let query = "?tournament=" + this.tournamentId;
+    if(this.sanctionDate){
+      query += "&gamedate_id=" + this.sanctionDate;
+    }
+    this.sanctions = await this.estadisticaPartidosService.getSanctions(query);
   }
 
   defaultImage(event: any): void {
