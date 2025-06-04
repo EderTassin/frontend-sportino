@@ -1,109 +1,113 @@
 <div class="match-statistics-container">
   <header>
-    <h1>Detalles Torneo</h1>
+    <h1>Detalles del Torneo</h1>
     <h3>{{tournament?.name}}</h3>
   </header>
 
-  <section class="matches">
-    <div class="d-flex justify-content-between">
-      <h2>Resultados</h2>
-      <div class="select">
-        <mat-form-field appearance="fill">
-          <mat-label>Fecha seleccionada</mat-label>
+  <section class="results-section">
+    <div class="section-header">
+      <h2 class="section-title">Resultados</h2>
+      <div class="select" *ngIf="datesSelects && datesSelects.length > 0">
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar por fecha</mat-label>
           <mat-select [(value)]="selectedDate" (selectionChange)="filterMatchesByDate()">
             <mat-option *ngFor="let item of datesSelects" [value]="item.date">{{item?.date}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
-    <ul>
-      <div *ngIf="fixture && fixtureFilter?.length != 0">
+    <div class="matches">
+      <ul *ngIf="fixtureFilter && fixtureFilter.length > 0; else noMatches">
         <li *ngFor="let match of fixtureFilter" class="match" (click)="openModal(match)">
           <div class="container-teams">
             <div class="team">
-              <img [src]="environment + match.team_1.logo_file" alt="{{ match.homeTeam }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="environment + match.team_1.logo_file" [alt]="match.team_1?.name + ' logo'" class="team-logo" (error)="defaultImage($event)">
               <span class="team-name">{{ match.team_1?.name }}</span>
             </div>
             <div class="score">
-              <div *ngIf="match.result">
+              <div *ngIf="match.result; else noResult">
                 <span>{{ match.result?.goals_team_1 }}</span>
                 <span>-</span>
                 <span>{{ match.result?.goals_team_2 }}</span>
               </div>
+              <ng-template #noResult>
+                <span>vs</span>
+              </ng-template>
               <div class="match-detail">
-                <span>{{match.date}}</span>
+                <span>{{match.date | date:'dd/MM/yy'}}</span>
+                <span>{{match.time}}</span>
               </div>
             </div>
             <div class="team">
               <span class="team-name">{{ match.team_2?.name }}</span>
-              <img [src]="environment + match.team_2.logo_file" alt="{{ match.team_2?.name }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="environment + match.team_2.logo_file" [alt]="match.team_2?.name + ' logo'" class="team-logo" (error)="defaultImage($event)">
             </div>
           </div>
-          
         </li>
-      </div>
-      <div *ngIf="!fixture && fixtureFilter?.length == 0">
-        <h2>No existen registros</h2>
-      </div>
-    </ul>
+      </ul>
+      <ng-template #noMatches>
+        <div class="no-records">
+          <p>No hay partidos para la fecha seleccionada o no existen registros.</p>
+        </div>
+      </ng-template>
+    </div>
   </section>
 
- 
-
-  <section class="standings">
-    <h2>Posiciones</h2>
+  <section class="standings-section">
+    <div class="section-header">
+      <h2 class="section-title">Posiciones</h2>
+    </div>
     <div class="table-container">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+      <table>
+        <thead>
           <tr>
-            <th width="70px"></th>
-            <th title="Nombre del equipo" matTooltip="Nombre del equipo">Equipos</th>
-            <th title="Puntos acumulados" matTooltip="Puntos acumulados">Pts</th>
-            <th title="Tarjetas rojas" matTooltip="Tarjetas rojas">TR</th>
-            <th title="Diferencia de goles" matTooltip="Diferencia de goles">DG</th>
-            <th title="Goles a favor" matTooltip="Goles a favor">GF</th>
-            <th title="Goles en contra" matTooltip="Goles en contra">GC</th>
-            <th title="Partidos jugados" matTooltip="Partidos jugados">PJ</th>
-            <th title="Partidos ganados" matTooltip="Partidos ganados">PG</th>
-            <th title="Partidos empatados" matTooltip="Partidos empatados">PE</th>
-            <th title="Partidos perdidos" matTooltip="Partidos perdidos">PP</th>
+            <th scope="col" class="team-logo-col"></th>
+            <th scope="col" matTooltip="Nombre del equipo">Equipos</th>
+            <th scope="col" matTooltip="Puntos acumulados">Pts</th>
+            <th scope="col" matTooltip="Tarjetas rojas">TR</th>
+            <th scope="col" matTooltip="Partidos jugados">PJ</th>
+            <th scope="col" matTooltip="Partidos ganados">PG</th>
+            <th scope="col" matTooltip="Partidos empatados">PE</th>
+            <th scope="col" matTooltip="Partidos perdidos">PP</th>
+            <th scope="col" matTooltip="Goles a favor">GF</th>
+            <th scope="col" matTooltip="Goles en contra">GC</th>
+            <th scope="col" matTooltip="Diferencia de goles">DG</th>
           </tr>
         </thead>
-        <tbody *ngIf="listPosicion?.positions.length != 0">
+        <tbody *ngIf="listPosicion?.positions && listPosicion.positions.length > 0; else noStandings">
           <tr *ngFor="let team of listPosicion?.positions">
             <td>
-              <img [src]="environment + team.logo_file" alt="{{ team.team }} logo" class="team-logo" (error)="defaultImage($event)">
+              <img [src]="environment + team.logo_file" [alt]="team.team + ' logo'" class="team-logo" (error)="defaultImage($event)">
             </td>
             <td><b>{{ team.team }}</b></td>
             <td>{{ team.points }}</td>
             <td>{{ team.red_cards }}</td>
-            <td>{{ team.goals_in_favor - team.goals_against }}</td> 
-            <td>{{ team.goals_in_favor }}</td> 
-            <td>{{ team.goals_against }}</td> 
             <td>{{ team.games.total }}</td>
             <td>{{ team.games.ganados }}</td>
             <td>{{ team.games.empatados }}</td>
             <td>{{ team.games.perdidos }}</td>
+            <td>{{ team.goals_in_favor }}</td>
+            <td>{{ team.goals_against }}</td>
+            <td>{{ team.goals_in_favor - team.goals_against }}</td>
           </tr>
         </tbody>
-
-        <tbody *ngIf="listPosicion?.positions.length == 0">
-          <tr>
-            <td colspan="12" class="text-center">
-              <h2>No existen registros</h2>
-            </td>
-          </tr>
-        </tbody>
+        <ng-template #noStandings>
+          <tbody>
+            <tr class="no-records-row">
+              <td colspan="11">No existen registros de posiciones.</td>
+            </tr>
+          </tbody>
+        </ng-template>
       </table>
     </div>
   </section>
 
-  <section>
-    <div class="d-flex justify-content-between">
-      <h2>Sanciones</h2>
-      <div class="select">
-        <mat-form-field appearance="fill">
-          <mat-label>Fecha seleccionada</mat-label>
+  <section class="sanctions-section">
+    <div class="section-header">
+      <h2 class="section-title">Sanciones</h2>
+      <div class="select" *ngIf="datesSelects && datesSelects.length > 0">
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar por fecha</mat-label>
           <mat-select [(value)]="sanctionDate" (selectionChange)="getSanctions()">
             <mat-option *ngFor="let item of datesSelects" [value]="item.id">{{item?.date}}</mat-option>
           </mat-select>
@@ -114,64 +118,80 @@
       <table>
         <thead>
           <tr>
-            <th>Partido</th>
-            <th>Equípo</th>
-            <th>Tipo</th>
-            <th>Jugador</th>
-            <th>Motivo</th>
-            <th>Sanción</th>
+            <th scope="col">Partido</th>
+            <th scope="col">Equipo</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Jugador</th>
+            <th scope="col">Motivo</th>
+            <th scope="col">Sanción</th>
           </tr>
         </thead>
-        <tbody *ngIf="sanctions?.length != 0">
+        <tbody *ngIf="sanctions && sanctions.length > 0; else noSanctions">
           <tr *ngFor="let sanction of sanctions">
-            <td>{{ sanction.game?.team_1 }} vs {{sanction.game?.team_2}}</td>
+            <td>
+              <div class="match-info-cell">
+                <span>{{ sanction.game?.team_1 }}</span>
+                <br>
+                <span class="vs-separator">vs</span>
+                <br>
+                <span>{{ sanction.game?.team_2 }}</span>
+              </div>
+            </td>
             <td>{{ sanction.team?.name }}</td>
-            <td>{{ sanction.sanction_for == "P" ? "Jugador" : "Partido" }}</td>
-            <td>{{ sanction.player?.full_name }}</td>
+            <td>
+              <span class="sanction-type">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ sanction.sanction_for == 'P' ? 'person' : 'shield' }}</span>
+                {{ sanction.sanction_for == "P" ? "Jugador" : "Equipo" }}
+              </span>
+            </td>
+            <td>{{ sanction.player?.full_name | titlecase }}</td>
             <td>{{ sanction.reason }}</td>
-            <td>{{ sanction.missed_dates }} fechas</td>
-          </tr>
-        </tbody>
-        <tbody *ngIf="sanctions?.length == 0">
-          <tr class="d-flex justify-center">
-            <td colspan="6" class="text-center">
-              <h2>No existen registros</h2>
+            <td>
+              <span class="badge badge-danger">{{ sanction.missed_dates }}</span> fecha(s)
             </td>
           </tr>
         </tbody>
+        <ng-template #noSanctions>
+          <tbody>
+            <tr class="no-records-row">
+              <td colspan="6">No existen registros de sanciones para la fecha seleccionada.</td>
+            </tr>
+          </tbody>
+        </ng-template>
       </table>
     </div>
   </section>
 
-
   <section class="valla-menos-vencida">
-    <h2 class="section-title">Racking Valla Menos Vencida</h2>
-    <div class="teams-grid">
-      <div *ngFor="let team of rackingVallaMenosVencida; let i = index" class="team-card" [ngClass]="{'podium': i < 3}">
-        <div class="team-card__position" [ngClass]="{'gold': i === 0, 'silver': i === 1, 'bronze': i === 2}">
+    <div class="section-header">
+      <h2 class="section-title">Valla Menos Vencida</h2>
+    </div>
+    <div class="teams-grid" *ngIf="rackingVallaMenosVencida && rackingVallaMenosVencida.length > 0; else noVallaMenosVencida">
+      <div *ngFor="let team of rackingVallaMenosVencida; let i = index" class="team-card" [class.podium]="i < 3">
+        <div class="team-card__position" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
           <span>{{ i + 1 }}</span>
         </div>
         <div class="team-card__content">
           <div class="team-card__header">
-            <img [src]="environment + team.logo_file" alt="{{ team.name }} logo" class="team-card__logo" (error)="defaultImage($event)">
+            <img [src]="environment + team.logo_file" [alt]="team.name + ' logo'" class="team-card__logo" (error)="defaultImage($event)">
             <h3 class="team-card__name">{{ team.name }}</h3>
           </div>
           <div class="team-card__stats">
             <div class="stats-bar">
               <div class="stats-bar__label">Goles recibidos:</div>
-              <div class="stats-bar__value text-lg">{{ team.golesEnContra }}</div>
+              <div class="stats-bar__value">{{ team.golesEnContra }}</div>
             </div>
             <div class="stats-bar__container">
-              <div class="stats-bar__progress" [style.width]="calculateBarWidth(team.golesEnContra)"></div>
+              <div class="stats-bar__progress" [style.width.%]="calculateBarWidth(team.golesEnContra, true)"></div>
             </div>
             <div class="team-card__additional">
               <div class="additional-stat">
-                <span class="additional-stat__label">Goles a favor:</span>
+                <span class="additional-stat__label">Goles a favor</span>
                 <span class="additional-stat__value">{{ team.golesAFavor }}</span>
               </div>
               <div class="additional-stat">
-                <span class="additional-stat__label">Diferencia:</span>
-                <span class="additional-stat__value" [ngClass]="{'positive': team.golesAFavor > team.golesEnContra, 'negative': team.golesAFavor < team.golesEnContra}">
+                <span class="additional-stat__label">Diferencia</span>
+                <span class="additional-stat__value" [ngClass]="{'positive': team.golesAFavor - team.golesEnContra > 0, 'negative': team.golesAFavor - team.golesEnContra < 0}">
                   {{ team.golesAFavor - team.golesEnContra }}
                 </span>
               </div>
@@ -180,103 +200,130 @@
         </div>
       </div>
     </div>
+    <ng-template #noVallaMenosVencida>
+      <div class="no-records">
+        <p>No hay datos disponibles para el ranking de valla menos vencida.</p>
+      </div>
+    </ng-template>
   </section>
 
   <section class="goleadores-section">
-    <h2 class="section-title">Goleadores</h2>
-    <div class="scorers-grid">
+    <div class="section-header">
+      <h2 class="section-title">Goleadores</h2>
+    </div>
+    <div class="scorers-grid" *ngIf="goleadores && goleadores.length > 0; else noGoleadores">
       <ng-container *ngFor="let scorer of goleadores; let i = index">
-        <div *ngIf="scorer.player_full_name" class="scorer-card" [ngClass]="{'podium': i < 3}">
-          <div class="scorer-card__position" [ngClass]="{'gold': i === 0, 'silver': i === 1, 'bronze': i === 2}">
+        <div *ngIf="scorer.player_full_name" class="scorer-card" [class.podium]="i < 3">
+          <div class="scorer-card__position" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
             <span>{{ i + 1 }}</span>
           </div>
           <div class="scorer-card__content">
             <div class="scorer-card__header">
               <div class="scorer-card__avatar">
-                <span class="material-symbols-outlined">sports_soccer</span>
+                <span class="material-symbols-outlined">person</span>
               </div>
-              <h3 class="scorer-card__name">{{ scorer.player_full_name }}</h3>
+              <h3 class="scorer-card__name">{{ scorer.player_full_name | titlecase }}</h3>
             </div>
             <div class="scorer-card__stats">
               <div class="stats-bar">
                 <div class="stats-bar__label">Goles anotados:</div>
-                <div class="stats-bar__value text-lg">{{ scorer.goals }}</div>
+                <div class="stats-bar__value">{{ scorer.goals }}</div>
               </div>
               <div class="stats-bar__container">
-                <div class="stats-bar__progress" [style.width]="calculateBarWidth(scorer.goals)"></div>
+                <div class="stats-bar__progress" [style.width.%]="calculateBarWidth(scorer.goals, false)"></div>
+              </div>
+              <div class="scorer-card__team-info" *ngIf="scorer.team_name">
+                <img [src]="environment + scorer.team_logo_file" [alt]="scorer.team_name + ' logo'" class="scorer-card__team-logo" (error)="defaultImage($event)">
+                <span>{{ scorer.team_name }}</span>
               </div>
             </div>
           </div>
         </div>
       </ng-container>
     </div>
+    <ng-template #noGoleadores>
+      <div class="no-records">
+        <p>No hay datos disponibles de goleadores.</p>
+      </div>
+    </ng-template>
   </section>
 </div>
 
-<div class="modal" [ngClass]="{ 'open': showModal }">
-  <div class="modal-content">
-    <span class="close" (click)="closeModal()">&times;</span>
+<div class="modal" [class.open]="showModal">
+  <div class="modal-content" *ngIf="selectedMatch">
+    <button class="close" (click)="closeModal()" aria-label="Cerrar modal">&times;</button>
     <div class="match-details">
       <div class="team-details">
         <div class="team-detail">
-          <img [src]="environment + selectedMatch?.team_1.logo_file" alt="{{ selectedMatch?.team_1.name }} logo" class="team-logo" (error)="defaultImage($event)">
-          <span>{{ selectedMatch?.team_1.name }}</span>
+          <img [src]="environment + selectedMatch.team_1.logo_file" [alt]="selectedMatch.team_1.name + ' logo'" class="team-logo" (error)="defaultImage($event)">
+          <span class="team-name">{{ selectedMatch.team_1.name }}</span>
         </div>
         <div class="team-result">
-          <span>{{ selectedMatch?.result?.goals_team_1 }}</span>
-          <span>-</span>
-          <span>{{ selectedMatch?.result?.goals_team_2 }}</span>
+          <span *ngIf="selectedMatch.result">{{ selectedMatch.result.goals_team_1 }}</span>
+          <span *ngIf="!selectedMatch.result">-</span>
+          <span class="separator">-</span>
+          <span *ngIf="selectedMatch.result">{{ selectedMatch.result.goals_team_2 }}</span>
+          <span *ngIf="!selectedMatch.result">-</span>
         </div>
         <div class="team-detail">
-          <span>{{ selectedMatch?.team_2.name }}</span>
-          <img [src]="environment + selectedMatch?.team_2.logo_file" alt="{{ selectedMatch?.team_2.name }} logo" class="team-logo" (error)="defaultImage($event)">
+          <img [src]="environment + selectedMatch.team_2.logo_file" [alt]="selectedMatch.team_2.name + ' logo'" class="team-logo" (error)="defaultImage($event)">
+          <span class="team-name">{{ selectedMatch.team_2.name }}</span>
         </div>
       </div>
+
+      <div class="match-meta-info">
+        <span>{{ selectedMatch.date | date:'fullDate' }}</span>
+        <span *ngIf="selectedMatch.time">{{ selectedMatch.time }}</span>
+        <span *ngIf="selectedMatch.stadium">{{ selectedMatch.stadium }}</span>
+      </div>
+
       <div class="modal-tabs">
-        <div class="modal-tab" (click)="selectTab('team1')" [ngClass]="{ 'active': activeTab === 'team1' }">
-          {{ selectedMatch?.team_1.name }}
-        </div>
-        <div class="modal-tab" (click)="selectTab('team2')" [ngClass]="{ 'active': activeTab === 'team2' }">
-          {{ selectedMatch?.team_2.name}}
-        </div>
+        <button class="modal-tab" (click)="selectTab('team1')" [class.active]="activeTab === 'team1'">
+          {{ selectedMatch.team_1.name }}
+        </button>
+        <button class="modal-tab" (click)="selectTab('team2')" [class.active]="activeTab === 'team2'">
+          {{ selectedMatch.team_2.name}}
+        </button>
       </div>
+
       <div class="modal-body">
-        <div *ngIf="activeTab === 'team1'">
-          <h3>{{ selectedMatch?.team_1.name  }}</h3>
-          <div>
-            <div *ngFor="let player of selectedMatch?.team_1.players" class="item-player">
-              <span>{{ player.full_name | camelcase}}</span>
-              <div *ngIf="player.goals" class="action">
-                <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">
-                  sports_soccer
-                </span>
-              </div>
-              <div *ngIf="player.cards > 0" class="action" [style.color]="player.cardColor">
-                <span *ngFor="let _ of createArray(player.cards)" class="material-symbols-outlined">
-                  square
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="activeTab === 'team2'">
-          <h3>{{ selectedMatch?.team_2.name  }}</h3>
-          <div>
-            <div *ngFor="let player of selectedMatch?.team_2.players" class="item-player">
-              <span>{{ player.full_name | camelcase}}</span>
-              <div *ngIf="player.goals" class="action">
-                <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">
-                  sports_soccer
-                </span>
-              </div>
-              <div *ngIf="player.cards > 0" class="action" [style.color]="player.cardColor">
-                <span *ngFor="let _ of createArray(player.cards)" class="material-symbols-outlined">
-                  square
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ng-container [ngSwitch]="activeTab">
+          <ng-container *ngSwitchCase="'team1'">
+            <h3>Alineación {{ selectedMatch.team_1.name }}</h3>
+            <ul class="player-list" *ngIf="selectedMatch.team_1.players && selectedMatch.team_1.players.length > 0; else noPlayersTeam1">
+              <li *ngFor="let player of selectedMatch.team_1.players" class="item-player">
+                <span class="player-name">{{ player.full_name | titlecase }}</span>
+                <div class="player-actions">
+                  <div *ngIf="player.goals && player.goals[0]?.goal_number > 0" class="action goals">
+                    <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">sports_soccer</span>
+                  </div>
+                  <div *ngIf="player.cards > 0" class="action cards" [style.color]="player.cardColor">
+                    <span *ngFor="let _ of createArray(player.cards)" class="material-symbols-outlined">square</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ng-template #noPlayersTeam1><p class="no-records-small">No hay información de jugadores para este equipo.</p></ng-template>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'team2'">
+            <h3>Alineación {{ selectedMatch.team_2.name }}</h3>
+            <ul class="player-list" *ngIf="selectedMatch.team_2.players && selectedMatch.team_2.players.length > 0; else noPlayersTeam2">
+              <li *ngFor="let player of selectedMatch.team_2.players" class="item-player">
+                <span class="player-name">{{ player.full_name | titlecase }}</span>
+                <div class="player-actions">
+                  <div *ngIf="player.goals && player.goals[0]?.goal_number > 0" class="action goals">
+                    <span *ngFor="let _ of createArray(player.goals[0].goal_number)" class="material-symbols-outlined">sports_soccer</span>
+                  </div>
+                  <div *ngIf="player.cards > 0" class="action cards" [style.color]="player.cardColor">
+                    <span *ngFor="let _ of createArray(player.cards)" class="material-symbols-outlined">square</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ng-template #noPlayersTeam2><p class="no-records-small">No hay información de jugadores para este equipo.</p></ng-template>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>

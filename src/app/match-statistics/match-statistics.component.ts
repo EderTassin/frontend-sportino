@@ -9,6 +9,14 @@ interface RackingVallaMenosVencida {
   golesAFavor: number;
   golesEnContra: number;
 }
+
+interface Goleador {
+  player_full_name: string;
+  goals: number;
+  team_name?: string; // Optional as it's used with *ngIf in template
+  team_logo_file?: string; // Optional
+}
+
 @Component({
   selector: 'app-match-statistics',
   templateUrl: './match-statistics.component.html',
@@ -29,7 +37,7 @@ export class MatchStatisticsComponent {
   datesSelects: any;
   sanctions: any;
   sanctionDate: any;
-  goleadores: any;
+  goleadores: Goleador[] = [];
   selectedDate: any;
   listPosicion: any;
   tournament: any;
@@ -106,12 +114,62 @@ export class MatchStatisticsComponent {
     this.fixtureFilter = this.fixture.filter( (item:any) => item.date === this.selectedDate);
   }
   
-  calculateBarWidth(golesEnContra: number): string {
-    // Encontrar el máximo de goles en contra para normalizar
-    const maxGoles = Math.max(...this.rackingVallaMenosVencida.map(team => team.golesEnContra));
-    // Invertir la escala: menos goles = barra más larga
-    const porcentaje = maxGoles > 0 ? 100 - ((golesEnContra / maxGoles) * 100) + 20 : 100;
-    // Asegurar que la barra tenga al menos un 20% de ancho para visibilidad
-    return `${Math.max(20, Math.min(100, porcentaje))}%`;
+  calculateBarWidth(value: number, isInverseScale: boolean): string {
+    let maxValue: number;
+    let percentage: number;
+    const defaultMinWidth = 10;
+
+    if (isInverseScale) {   
+      const vallaMinWidth = 20;
+      if (!this.rackingVallaMenosVencida || this.rackingVallaMenosVencida.length === 0) {
+        return `${value === 0 ? 100 : vallaMinWidth}%`;
+      }
+      
+      const relevantValues = this.rackingVallaMenosVencida
+        .map(team => team.golesEnContra)
+        .filter(v => typeof v === 'number' && isFinite(v) && v >= 0);
+
+      if (relevantValues.length === 0) {
+          return `${value === 0 ? 100 : vallaMinWidth}%`;
+      }
+
+      maxValue = Math.max(...relevantValues);
+
+      if (maxValue === 0) { 
+          percentage = (value === 0) ? 100 : vallaMinWidth; 
+      } else {
+        percentage = vallaMinWidth + (1 - (value / maxValue)) * (100 - vallaMinWidth);
+      }
+      percentage = Math.max(vallaMinWidth, Math.min(100, percentage));
+
+    } else { // For "Goleadores" - more is better
+      const goleadoresMinWidth = defaultMinWidth;
+      if (!this.goleadores || this.goleadores.length === 0) {
+        return `${goleadoresMinWidth}%`;
+      }
+
+      const relevantValues = this.goleadores
+        .map((scorer: Goleador) => scorer.goals)
+        .filter((v: number | undefined): v is number => typeof v === 'number' && isFinite(v) && v >= 0);
+
+      if (relevantValues.length === 0) {
+          return `${goleadoresMinWidth}%`;
+      }
+      
+      maxValue = Math.max(...relevantValues);
+
+      if (maxValue === 0) { 
+        percentage = goleadoresMinWidth; 
+      } else {
+        percentage = ((value / maxValue) * (100 - goleadoresMinWidth)) + goleadoresMinWidth;
+      }
+      percentage = Math.max(goleadoresMinWidth, Math.min(100, percentage));
+    }
+    
+    if (isNaN(percentage) || !isFinite(percentage)) {
+      percentage = isInverseScale ? (value === 0 ? 100 : 20) : defaultMinWidth;
+    }
+
+    return `${parseFloat(percentage.toFixed(2))}%`; 
   }
 }
