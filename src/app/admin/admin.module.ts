@@ -33,6 +33,8 @@ import { SanctionsComponent } from './sanctions/sanctions.component';
 import { RemovePointsComponent } from './remove-points/remove-points.component';
 import { PlayersComponent } from './players/players.component';
 import { ManagerImgPortadaComponent } from './manager-img-portada/manager-img-portada.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -90,7 +92,10 @@ const routes: Routes = [
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   exports: [RouterModule]
 })

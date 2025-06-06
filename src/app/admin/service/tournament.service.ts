@@ -19,7 +19,7 @@ export class TournamentService {
 
   async getGamesByTournament(tournamentId: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.apiUrl}calendars/games-by-tournament/${tournamentId}/`)
+      this.http.get<any>(`${this.apiUrl}calendars/games-by-tournament/${tournamentId}`)
     );
   }
 

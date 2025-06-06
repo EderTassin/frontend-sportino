@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TournamentService } from '../service/tournament.service';
 import { ManagerService } from 'src/app/manager/manager.service';
@@ -39,7 +40,8 @@ import { ManagerService } from 'src/app/manager/manager.service';
     MatProgressSpinnerModule,
     MatIconModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule
   ]
 })
 export class SanctionsComponent implements OnInit {
@@ -47,6 +49,9 @@ export class SanctionsComponent implements OnInit {
   tournaments: Tournament[] = [];
   categories: Category[] = [];
   teams: Team[] = [];
+  filteredTeams: Team[] = [];
+  teamSearchText: string = '';
+  filterTeamSearchText: string = '';
   
   sanctionForm: FormGroup;
   isEditMode = false;
@@ -62,8 +67,8 @@ export class SanctionsComponent implements OnInit {
   selectedTeam: number | null = null;
   selectedCategory: number | null = null;
   
-  displayedColumns: string[] = ['id', 'sanction_for', 'reason', 'missed_dates', 'yellow_cards', 'red_card', 'game', 'player', 'actions'];
-
+  displayedColumns: string[] = ['id', 'sanction_for', 'reason', 'missed_dates', 'yellow_cards', 'red_card', 'game', 'player', 'actions']
+  
   constructor(
     private sanctionsService: SanctionsService,
     private fb: FormBuilder,
@@ -74,19 +79,19 @@ export class SanctionsComponent implements OnInit {
   ) {
     this.sanctionForm = this.fb.group({
       sanction_for: ['P', [Validators.required]],
-      reason: ['', [Validators.required]],
-      missed_dates: [0, [Validators.required, Validators.min(0)]],
+      reason: ['', ],
+      missed_dates: [0],
       yellow_cards: [''],
       red_card: [''],
-      game: [0, [Validators.required]],
+      game: [0],
       team: [0],
-      player: [0, [Validators.required]],
-      missed_points: [0, [Validators.min(0)]]
+      player: [0],
+      missed_points: [0]
     });
   }
 
   ngOnInit(): void {
-    this.loadSanctions();
+    // Solo cargamos las opciones de filtrado, no las sanciones
     this.loadFilterOptions();
   }
 
@@ -95,6 +100,7 @@ export class SanctionsComponent implements OnInit {
     this.sanctionsService.getAllSanctions().subscribe({
       next: (data) => {
         this.sanctions = data.sort((a, b) => b.id! - a.id!);
+        console.log(this.sanctions);
         this.loading = false;
       },
       error: (err) => {
@@ -135,6 +141,7 @@ export class SanctionsComponent implements OnInit {
     this.sanctionsService.getTeams().subscribe({
       next: (data) => {
         this.teams = data;
+        this.filteredTeams = [...this.teams];
       },
       error: (err) => {
         console.error('Error loading teams:', err);
@@ -144,18 +151,30 @@ export class SanctionsComponent implements OnInit {
   }
 
   applyFilters(): void {
+    if (!this.selectedTournament) {
+      this.error = 'Debe seleccionar un torneo para ver las sanciones';
+      this.showSnackBar('Debe seleccionar un torneo para ver las sanciones', 'error');
+      this.sanctions = [];
+      return;
+    }
+    
+    this.loading = true;
+    this.error = '';
+    
     this.sanctionsService.filterSanctions(
-      this.selectedTournament || undefined,
+      this.selectedTournament,
       this.selectedTeam || undefined,
       this.selectedCategory || undefined
     ).subscribe({
       next: (data) => {
         this.sanctions = data;
+        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error filtering sanctions';
+        this.error = 'Error al filtrar sanciones';
         console.error(err);
-        this.showSnackBar('Error filtering sanctions', 'error');
+        this.showSnackBar('Error al filtrar sanciones', 'error');
+        this.loading = false;
       }
     });
   }
@@ -164,7 +183,8 @@ export class SanctionsComponent implements OnInit {
     this.selectedTournament = null;
     this.selectedTeam = null;
     this.selectedCategory = null;
-    this.loadSanctions();
+    this.sanctions = [];
+    this.error = '';
   }
 
   openCreateForm(): void {
@@ -177,16 +197,19 @@ export class SanctionsComponent implements OnInit {
       yellow_cards: '',
       red_card: '',
       game: 0,
-      player: 0
+      player: 0,
+      team: 0,
+      missed_points: 0,
+      tournament: 0
     });
 
-    this.loadGames();
     this.showForm = true;
   }
 
-  loadGames(): void {
+  loadGames(tournamentId: number): void {
     this.loading = true;
-    this.tournamentService.getGames().then((data) => {
+    this.games = [];
+    this.tournamentService.getGamesByTournament(tournamentId).then((data) => {
       this.games = data;
       this.loading = false;
     }).catch((err) => {
@@ -194,6 +217,30 @@ export class SanctionsComponent implements OnInit {
       this.showSnackBar('Error loading games', 'error');
       this.loading = false;
     });
+  }
+
+  filterTeams(): void {
+    if (!this.teamSearchText) {
+      this.filteredTeams = [...this.teams];
+      return;
+    }
+    
+    const searchText = this.teamSearchText.toLowerCase();
+    this.filteredTeams = this.teams.filter(team => 
+      team.name.toLowerCase().includes(searchText)
+    );
+  }
+
+  filterTeamsInFilters(): void {
+    if (!this.filterTeamSearchText) {
+      this.filteredTeams = [...this.teams];
+      return;
+    }
+    
+    const searchText = this.filterTeamSearchText.toLowerCase();
+    this.filteredTeams = this.teams.filter(team => 
+      team.name.toLowerCase().includes(searchText)
+    );
   }
 
   onTeamChange(event: any): void {
