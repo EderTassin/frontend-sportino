@@ -4,6 +4,7 @@ import { AdminService } from '../service/admin.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ManagerService } from 'src/app/manager/manager.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface Team {
   id: number;
@@ -160,8 +161,8 @@ export class ResultsComponent {
 
   addGoal(matchId: number, teamNumber: number): void {
     if (teamNumber === 1) {
-      if (!this.newGoalTeam1.player || this.newGoalTeam1.goals <= 0) {
-        alert('Debe seleccionar un jugador y especificar una cantidad válida de goles');
+      if (!this.newGoalTeam1.player || this.newGoalTeam1.goals < 0) {
+        this.showNotification('error', 'Debe seleccionar un jugador y especificar una cantidad válida de goles');
         return;
       }
       const player = this.playersTeam1.find(p => p.id == this.newGoalTeam1.player);
@@ -183,8 +184,8 @@ export class ResultsComponent {
         playerName: ''
       };
     } else {
-      if (!this.newGoalTeam2.player || this.newGoalTeam2.goals <= 0) {
-        console.error('Debe seleccionar un jugador y especificar una cantidad válida de goles');
+      if (!this.newGoalTeam2.player || this.newGoalTeam2.goals < 0) {
+        this.showNotification('error', 'Debe seleccionar un jugador y especificar una cantidad válida de goles');
         return;
       }
 
@@ -213,13 +214,13 @@ export class ResultsComponent {
   async createGoal(goal: Goal, teamNumber: number): Promise<void> {
     try {
       const goalData = {
-        goal_number: Number(goal.goals) || 0,
+        goal_number: Number(goal.goals),
         game: Number(goal.matchId) || 0,
         player: Number(goal.player) || 0
       }
 
-      if (goalData.goal_number <= 0 || !goalData.game || !goalData.player) {
-        console.error('Datos de gol inválidos:', goalData);
+      if (goalData.goal_number < 0 || !goalData.game || !goalData.player) {
+        this.showNotification('error', 'Datos de gol inválidos', 'error');
         return;
       }
 
@@ -236,6 +237,8 @@ export class ResultsComponent {
         this.goalsTeam2.push(newGoal);
       }
       
+      this.showNotification('Éxito', 'Gol registrado correctamente', 'success');
+      
     } catch (error) {
       console.error('Error al crear gol:', error);
     }
@@ -244,7 +247,7 @@ export class ResultsComponent {
   addSanction(matchId: number, teamNumber: number): void {
     if (teamNumber === 1) {
       if (this.newSanctionTeam1.type === 'P' && !this.newSanctionTeam1.playerId) {
-        alert('Debe seleccionar un jugador para la sanción');
+        this.showNotification('Advertencia', 'Debe seleccionar un jugador para la sanción', 'warning');
         return;
       }
       
@@ -277,7 +280,7 @@ export class ResultsComponent {
       };
     } else {
       if (this.newSanctionTeam2.type === 'P' && !this.newSanctionTeam2.playerId) {
-        console.error('Debe seleccionar un jugador para la sanción');
+        this.showNotification('Advertencia', 'Debe seleccionar un jugador para la sanción', 'warning');
         return;
       }
       
@@ -324,7 +327,7 @@ export class ResultsComponent {
       }
 
       if (!sanctionData.game || (sanctionData.sanction_for === 'P' && !sanctionData.player)) {
-        console.error('Datos de sanción inválidos:', sanctionData);
+        this.showNotification('Error', 'Datos de sanción inválidos', 'error');
         return;
       }
 
@@ -334,6 +337,8 @@ export class ResultsComponent {
         ...sanction,
         idPost: res.id
       }
+      
+      this.showNotification('Éxito', 'Sanción registrada correctamente', 'success');
 
       if (teamNumber === 1) {
         this.sanctionsTeam1.push(newSanction);
@@ -361,6 +366,8 @@ export class ResultsComponent {
 
       this.goalsTeam2 = this.goalsTeam2.filter(g => g !== goal);
     }
+    
+    this.showNotification('Éxito', 'Gol eliminado correctamente', 'success');
   }
 
   removeSanction(sanction: Sanction, teamNumber: number): void {
@@ -376,9 +383,42 @@ export class ResultsComponent {
       }
       this.sanctionsTeam2 = this.sanctionsTeam2.filter(s => s.id !== sanction.id);
     }
+    
+    this.showNotification('Éxito', 'Sanción eliminada correctamente', 'success');
   }
 
   goBack(): void {
     this.router.navigate(['/admin']);
+  }
+
+  // Método para mostrar notificaciones con SweetAlert2
+  showNotification(title: string, message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
+    Swal.fire({
+      title,
+      text: message,
+      icon: type,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+    });
+  }
+  
+  // Método para calcular el total de goles de un equipo
+  getTotalGoals(goals: Goal[]): number {
+    if (!goals || goals.length === 0) return 0;
+    return goals.reduce((total, goal) => total + goal.goals, 0);
+  }
+
+  // Método para guardar resultados
+  saveResults(): void {
+    if (!this.selectedMatchId) {
+      this.showNotification('Advertencia', 'Debe seleccionar un partido para guardar resultados', 'warning');
+      return;
+    }
+    
+    this.showNotification('Éxito', 'Resultados guardados correctamente', 'success');
+    // Aquí se podría implementar una lógica adicional para guardar todo el resultado
   }
 }

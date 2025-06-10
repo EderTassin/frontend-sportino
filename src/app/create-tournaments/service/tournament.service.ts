@@ -75,4 +75,8 @@ export class TournamentService {
   async deleteSanction(sanctionId: number): Promise<any> {
     return await firstValueFrom(this.http.delete(`${this.apiUrl}calendars/sanctions/${sanctionId}/`));
   }
+
+  async getFields(): Promise<any> {
+    return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/fields/`));
+  }
 }

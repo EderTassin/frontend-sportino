@@ -317,12 +317,15 @@
           <!-- Field -->
           <div class="col-span-2">
             <label class="block text-sm font-medium text-gray-700">Campo</label>
-            <input 
-              type="text" 
+            <select 
               formControlName="field"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Campo (opcional)"
             >
+              <option [ngValue]="null">Seleccionar campo</option>
+              <option *ngFor="let field of fields" [ngValue]="field.id">
+                {{ field.name }}
+              </option>
+            </select>
           </div>
 
           <!-- Referee -->

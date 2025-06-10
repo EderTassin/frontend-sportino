@@ -27,6 +27,7 @@ export class DateManagementComponent {
   sortDirection: string = 'asc';
   sortDirectionDate: string = 'asc';
   sortDirectionId: string = 'asc';
+  fields: any[] = [];
   loading: boolean = false;
   
   selectedDate: any = null;
@@ -69,6 +70,7 @@ export class DateManagementComponent {
 
     await this.getTournaments();
     await this.getAllTeams();
+    await this.getFields();
 
     this.getReferees();
     if (this.tournaments.length) {
@@ -80,6 +82,11 @@ export class DateManagementComponent {
   async getReferees() {
     const response = await this.adminService.getReferees();
     this.referees = response;
+  }
+
+  async getFields() {
+    const response = await this.tournamentsService.getFields();
+    this.fields = response;
   }
 
   async getDates() {
@@ -174,6 +181,7 @@ export class DateManagementComponent {
       date: date.date,
       tournament: [date.tournament],
       active: true
+
     }));
 
     try {

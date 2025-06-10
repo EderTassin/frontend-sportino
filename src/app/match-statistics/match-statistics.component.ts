@@ -57,6 +57,7 @@ export class MatchStatisticsComponent {
     
     const dates = await this.estadisticaPartidosService.getDatesTournaments();
     this.datesSelects = dates.filter((item:any) => item.tournament.includes(this.tournamentId))
+    this.datesSelects.sort((a:any, b:any) => new Date(b.date).getTime() - new Date(a.date).getTime());
     this.selectedDate = this.datesSelects[0].date;
     this.sanctionDate = this.datesSelects[0].id;
 
