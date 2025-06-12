@@ -6,7 +6,7 @@
 
   <section class="results-section">
     <div class="section-header">
-      <h2 class="section-title">Fixture</h2>
+      <h1 class="section-title">Fixture</h1>
       <div class="select" *ngIf="datesSelects && datesSelects.length > 0">
         <mat-form-field appearance="outline">
           <mat-label>Filtrar por fecha</mat-label>
@@ -33,16 +33,16 @@
               <ng-template #noResult>
                 <span>VS</span>
               </ng-template>
-              <div class="match-detail">
-                <span>{{match.date | date:'dd/MM/yy'}}</span>
-                <span>{{match.hour}}</span>
-                <span>Cancha: {{match.field}}</span>
-              </div>
             </div>
             <div class="team">
               <span class="team-name">{{ match.team_2?.name }}</span>
               <img [src]="environment + match.team_2.logo_file" [alt]="match.team_2?.name + ' logo'" class="team-logo" (error)="defaultImage($event)">
             </div>
+          </div>
+          <div class="match-detail d-flex justify-center">
+            <span class="pr-2">{{match.date | date:'dd/MM/yy'}}</span>
+            <span class="pr-2">{{formatHour(match.hour)}}</span>
+            <span class="pr-2">Cancha: {{match.field}}</span>
           </div>
         </li>
       </ul>
@@ -56,7 +56,7 @@
 
   <section class="standings-section">
     <div class="section-header">
-      <h2 class="section-title">Posiciones</h2>
+      <h1 class="section-title">Posiciones</h1>
     </div>
     <div class="table-container">
       <table>
@@ -105,7 +105,7 @@
 
   <section class="sanctions-section">
     <div class="section-header">
-      <h2 class="section-title">Sanciones</h2>
+      <h1 class="section-title">Sanciones</h1>
       <div class="select" *ngIf="datesSelects && datesSelects.length > 0">
         <mat-form-field appearance="outline">
           <mat-label>Filtrar por fecha</mat-label>
@@ -165,7 +165,7 @@
 
   <section class="valla-menos-vencida">
     <div class="section-header">
-      <h2 class="section-title">Valla Menos Vencida</h2>
+      <h1 class="section-title">Valla Menos Vencida</h1>
     </div>
     <div class="teams-grid" *ngIf="rackingVallaMenosVencida && rackingVallaMenosVencida.length > 0; else noVallaMenosVencida">
       <div *ngFor="let team of rackingVallaMenosVencida; let i = index" class="team-card" [class.podium]="i < 3">
@@ -210,7 +210,7 @@
 
   <section class="goleadores-section">
     <div class="section-header">
-      <h2 class="section-title">Goleadores</h2>
+      <h1 class="section-title">Goleadores</h1>
     </div>
     <div class="scorers-grid" *ngIf="goleadores && goleadores.length > 0; else noGoleadores">
       <ng-container *ngFor="let scorer of goleadores; let i = index">

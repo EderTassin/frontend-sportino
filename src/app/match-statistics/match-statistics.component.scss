@@ -108,8 +108,8 @@ section {
     align-items: center;
     margin-bottom: 1.5rem;
 
-    h2 {
-      font-size: 1.5rem;
+    h1 {
+      font-size: 2rem;
       font-weight: 600;
       margin-bottom: 0;
       position: relative;
@@ -154,7 +154,7 @@ section {
 
   .match {
     display: flex;
-    flex-direction: column; // Stack elements vertically on mobile
+    flex-direction: column !important;
     align-items: stretch;
     padding: 1rem 0;
     border-bottom: 1px solid $color-border;

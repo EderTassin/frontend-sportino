@@ -179,4 +179,8 @@ export class MatchStatisticsComponent {
     const now = new Date();
     return matchDate < now;
   }
+
+  formatHour(hour: string): string {
+    return hour ? hour.substring(0, 5) : '';
+  }
 }
