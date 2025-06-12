@@ -25,17 +25,17 @@
               <span class="team-name">{{ match.team_1?.name }}</span>
             </div>
             <div class="score">
-              <div *ngIf="match.result; else noResult">
-                <span>{{ match.result?.goals_team_1 }}</span>
+              <div *ngIf="match.result && dateIsBeforeNow(match.date); else noResult">
+                <span>{{ match.result?.goals_team_1}}</span>
                 <span>-</span>
-                <span>{{ match.result?.goals_team_2 }}</span>
+                <span>{{ match.result?.goals_team_2}}</span>
               </div>
               <ng-template #noResult>
-                <span>vs</span>
+                <span>VS</span>
               </ng-template>
               <div class="match-detail">
                 <span>{{match.date | date:'dd/MM/yy'}}</span>
-                <span>{{match.time}}</span>
+                <span>{{match.hour}}</span>
                 <span>Cancha: {{match.field}}</span>
               </div>
             </div>

@@ -44,7 +44,7 @@ export class MatchStatisticsComponent {
   environment: any;
   rackingVallaMenosVencida: RackingVallaMenosVencida[] = [];
 
-  constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) { }
+  constructor(private route: ActivatedRoute, private estadisticaPartidosService: EstadisticaPartidosService) {}
 
   ngOnInit(): void {
     this.tournamentId = Number(this.route.snapshot.paramMap.get('id'));
@@ -172,5 +172,11 @@ export class MatchStatisticsComponent {
     }
 
     return `${parseFloat(percentage.toFixed(2))}%`; 
+  }
+
+  dateIsBeforeNow(date: string): boolean {
+    const matchDate = new Date(date);
+    const now = new Date();
+    return matchDate < now;
   }
 }
