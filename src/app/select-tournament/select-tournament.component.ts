@@ -10,6 +10,7 @@ interface Tournament {
   active: boolean;
   image: string;
   category: number[];
+  bgColor?: string;
 }
 
 @Component({
@@ -34,7 +35,29 @@ export class SelectTournamentComponent implements OnInit {
 
   async getTournaments(): Promise<void> {
     this.tournaments = await this.estadisticaPartidosService.getTournament();
+    this.assignBackgroundColors();
     this.populateYears();
+  }
+
+  assignBackgroundColors(): void {
+    const elegantColors = [
+      '#0D3B66', // Azul marino
+      '#1A5E63', // Verde azulado
+      '#2E6E65', // Verde bosque
+      '#3D5A80', // Azul acero
+      '#5D4A66', // Púrpura oscuro
+      '#6A3937', // Borgoña
+      '#2C5530', // Verde oliva
+      '#4A5859', // Gris pizarra
+      '#264653', // Azul petróleo
+      '#1B3A4B', // Azul noche
+      '#3F4E4F', // Gris verdoso
+      '#553939', // Marrón oscuro
+    ];
+    
+    this.tournaments.forEach((tournament, index) => {
+      tournament.bgColor = elegantColors[index % elegantColors.length];
+    });
   }
 
   populateYears(): void {

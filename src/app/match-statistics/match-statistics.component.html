@@ -36,6 +36,7 @@
               <div class="match-detail">
                 <span>{{match.date | date:'dd/MM/yy'}}</span>
                 <span>{{match.time}}</span>
+                <span>Cancha: {{match.field}}</span>
               </div>
             </div>
             <div class="team">
@@ -271,7 +272,7 @@
         </div>
       </div>
 
-      <div class="match-meta-info">
+      <div class="match-meta-info text-lg pb-2">
         <span>{{ selectedMatch.date | date:'fullDate' }}</span>
         <span *ngIf="selectedMatch.time">{{ selectedMatch.time }}</span>
         <span *ngIf="selectedMatch.stadium">{{ selectedMatch.stadium }}</span>

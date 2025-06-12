@@ -13,7 +13,9 @@
   </header>
   <div class="tournaments-grid">
     <div class="tournament-card" *ngFor="let tournament of filteredTournaments" (click)="selectTournament(tournament)">
-      <div class="tournament-image" [ngStyle]="{'background-image': 'url(' + tournament.image + ')'}"></div>
+      <div class="tournament-image" [style.background-color]="tournament.bgColor">
+        <img src="../../assets/pagina_wb.png" alt="" class="tournament-logo">
+      </div>
       <div class="tournament-info">
         <h2>{{ tournament.name }}</h2>
         <p>Desde: {{ tournament.date_from }} - Hasta: {{tournament.date_to}}</p>

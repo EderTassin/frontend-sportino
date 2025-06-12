@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { TournamentService } from 'src/app/create-tournaments/service/tournament.service';
 import { AdminService } from '../service/admin.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -12,7 +14,8 @@ import { environment } from 'src/environments/environment';
   templateUrl: './date-management.component.html',
   styleUrls: ['./date-management.component.scss']
 })
-export class DateManagementComponent {
+export class DateManagementComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
   dates: any;
   filteredDates: any;
@@ -65,14 +68,13 @@ export class DateManagementComponent {
 
   async ngOnInit() {
     this.loading = true;
-
     this.urlEnvironment = environment.apiEndpoint.replace('/api/', '');
 
     await this.getTournaments();
-    await this.getAllTeams();
+    this.getAllTeams();
     await this.getFields();
+    await this.getReferees();
 
-    this.getReferees();
     if (this.tournaments.length) {
       await this.getDates();
     }
@@ -124,7 +126,7 @@ export class DateManagementComponent {
   async getAllTeams() {
     try {
       const teams = await this.adminService.getTeams();
-      this.allTeams = teams;
+      this.allTeams = teams.sort((a: any, b: any) => a.name.localeCompare(b.name));
     } catch (error) {
       console.error('Error loading teams:', error);
       this.toastr.error('Error loading teams');
@@ -181,7 +183,6 @@ export class DateManagementComponent {
       date: date.date,
       tournament: [date.tournament],
       active: true
-
     }));
 
     try {
@@ -192,10 +193,10 @@ export class DateManagementComponent {
       this.toastr.success('Fechas creadas correctamente');
       this.showModal = false;
       await this.getDates();
-      this.loading = false;
     } catch (error) {
-      this.loading = false;
       console.log(error);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -205,10 +206,10 @@ export class DateManagementComponent {
       await this.tournamentsService.deleteDate(id.toString());
       this.dates.splice(index, 1);
       this.filteredDates = [...this.dates];
-      this.loading = false;
     } catch (error) {
-      this.loading = false;
       console.log(error);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -216,53 +217,48 @@ export class DateManagementComponent {
     if (this.sortColumn === column) {
       this.sortDirectionDate = this.sortDirectionDate === 'asc' ? 'desc' : 'asc';
       this.filteredDates.sort((a: any, b: any) => {
-        if (this.sortDirectionDate === 'asc') {
-          return a.id - b.id;
-        } else {
-          return b.id - a.id;
-        }
+        const multiplier = this.sortDirectionDate === 'asc' ? 1 : -1;
+        return multiplier * (new Date(a.date).getTime() - new Date(b.date).getTime());
       });
-    } else {
-      this.sortColumn = column;
     }
+    this.sortColumn = column;
   }
 
   sortDatesId(column: string) {
     if (this.sortColumn === column) {
       this.sortDirectionId = this.sortDirectionId === 'asc' ? 'desc' : 'asc';
       this.filteredDates.sort((a: any, b: any) => {
-        if (this.sortDirectionId === 'asc') {
-          return a[column] - b[column];
-        } else {
-          return b[column] - a[column];
-        }
+        const multiplier = this.sortDirectionId === 'asc' ? 1 : -1;
+        return multiplier * (a[column] - b[column]);
       });
-    } else {
-      this.sortColumn = column;
     }
+    this.sortColumn = column;
   }
 
-  async viewGames(date: any) {
+  viewGames(date: any) {
     this.selectedDate = date;
     this.gamesLoading = true;
     
-    try {
-      this.dateService.getGamesByDate(date.id).subscribe(games => {
-        this.games = games;
-        this.categoryTags = new Set();
-        
-        games.forEach(game => {
-          if (game.team_1?.category) this.categoryTags.add(game.team_1.category);
-          if (game.team_2?.category) this.categoryTags.add(game.team_2.category);
-        });
-        
-        this.gamesLoading = false;
+    this.dateService.getGamesByDate(date.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => { this.gamesLoading = false; })
+      )
+      .subscribe({
+        next: (games) => {
+          this.games = games;
+          this.categoryTags = new Set();
+          
+          games.forEach(game => {
+            if (game.team_1?.category) this.categoryTags.add(game.team_1.category);
+            if (game.team_2?.category) this.categoryTags.add(game.team_2.category);
+          });
+        },
+        error: (error) => {
+          console.error('Error loading games:', error);
+          this.toastr.error('Error cargando los juegos');
+        }
       });
-    } catch (error) {
-      console.error('Error loading games:', error);
-      this.toastr.error('Error loading games');
-      this.gamesLoading = false;
-    }
   }
   
   openGameModal(game?: Game) {
@@ -272,9 +268,7 @@ export class DateManagementComponent {
     if (game) {
       this.isEditingGame = true;
       this.currentGameId = game.id || null;
-
-      console.log(game);
-
+      
       this.gameForm.patchValue({
         hour: game.hour,
         tournament: game.tournament,
@@ -298,14 +292,13 @@ export class DateManagementComponent {
     
     this.gameForm.markAsUntouched();
     this.gameForm.markAsPristine();
-    
     this.showGameModal = true;
   }
   
   closeGameModal() {
     this.showGameModal = false;
     this.gameForm.reset();
-    this.gamesLoading = false; // Ensure loading state is reset when closing the modal
+    this.gamesLoading = false;
   }
   
   saveGame() {
@@ -316,16 +309,14 @@ export class DateManagementComponent {
     }
     
     const formValues = this.gameForm.value;
-    
-    const team1 = formValues.team_1;
-    const team2 = formValues.team_2;
+    const { team_1: team1, team_2: team2 } = formValues;
     
     if (!team1 || !team2) {
       this.toastr.error('Equipos no encontrados');
       return;
     }
     
-    const gameData: Game[] = [{
+    const gameData: Game = {
       hour: formValues.hour,
       date: this.selectedDate.id,
       tournament: formValues.tournament,
@@ -335,37 +326,37 @@ export class DateManagementComponent {
       observer: formValues.observer,
       referee: formValues.referee,
       result: null
-    }];
+    };
     
     this.gamesLoading = true;
     
     if (this.isEditingGame && this.currentGameId) {
-      const data = gameData[0];
-      this.dateService.updateGame(this.currentGameId, data).subscribe({
+      this.dateService.updateGame(this.currentGameId, gameData).subscribe({
         next: () => {
           this.toastr.success('Partido actualizado correctamente');
-          this.viewGames(this.selectedDate); 
+          this.viewGames(this.selectedDate);
           this.closeGameModal();
-          this.gamesLoading = false;
         },
         error: (err) => {
-          console.error('Error updating game:', err);
+          console.error('Error al actualizar el partido:', err);
           this.toastr.error('Error al actualizar el partido');
+        },
+        complete: () => {
           this.gamesLoading = false;
         }
       });
     } else {
-      // Create new game
-      this.dateService.createGame(gameData).subscribe({
+      this.dateService.createGame([gameData]).subscribe({
         next: () => {
           this.toastr.success('Partido creado correctamente');
-          this.viewGames(this.selectedDate); 
+          this.viewGames(this.selectedDate);
           this.closeGameModal();
-          this.gamesLoading = false;
         },
         error: (err) => {
-          console.error('Error creating game:', err);
+          console.error('Error al crear el partido:', err);
           this.toastr.error('Error al crear el partido');
+        },
+        complete: () => {
           this.gamesLoading = false;
         }
       });
@@ -376,18 +367,21 @@ export class DateManagementComponent {
     if (confirm('¿Está seguro que desea eliminar este partido?')) {
       this.gamesLoading = true;
       
-      this.dateService.deleteGame(gameId).subscribe({
-        next: () => {
-          this.toastr.success('Partido eliminado correctamente');
-          this.viewGames(this.selectedDate); 
-          this.gamesLoading = false;
-        },
-        error: (err) => {
-          console.error('Error deleting game:', err);
-          this.toastr.error('Error al eliminar el partido');
-          this.gamesLoading = false;
-        }
-      });
+      this.dateService.deleteGame(gameId)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => { this.gamesLoading = false; })
+        )
+        .subscribe({
+          next: () => {
+            this.toastr.success('Partido eliminado correctamente');
+            this.viewGames(this.selectedDate);
+          },
+          error: (err) => {
+            console.error('Error al eliminar el juego:', err);
+            this.toastr.error('Error al eliminar el partido');
+          }
+        });
     }
   }
   
@@ -396,7 +390,12 @@ export class DateManagementComponent {
     this.games = [];
   }
 
-  goBack() {
+  goBack(): void {
     this.router.navigate(['/admin']);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
