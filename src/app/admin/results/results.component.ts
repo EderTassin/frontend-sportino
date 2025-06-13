@@ -156,7 +156,8 @@ export class ResultsComponent {
   }
 
   async getMatches(){
-    this.matches = await this.tournamentService.getMatchesByDate(this.selectedDate);
+    const res = await this.tournamentService.getMatchesByDate(this.selectedDate);
+    this.matches = res.sort((a: any, b: any) => b.id! - a.id!).filter((match: any) => match.tournament == this.selectedTournament);
   }
 
   addGoal(matchId: number, teamNumber: number): void {
@@ -290,6 +291,8 @@ export class ResultsComponent {
         playerName = player ? player.full_name : 'Jugador desconocido';
       }
       
+
+
       const newSanction = {
         ...this.newSanctionTeam2,
         id: this.sanctionsTeam2.length + 1,
@@ -335,9 +338,13 @@ export class ResultsComponent {
 
       const newSanction = {
         ...sanction,
-        idPost: res.id
+        playerName: res.player.full_name,
+        idPost: res.id,
+        res: res
       }
       
+      console.log(newSanction);
+
       this.showNotification('Éxito', 'Sanción registrada correctamente', 'success');
 
       if (teamNumber === 1) {

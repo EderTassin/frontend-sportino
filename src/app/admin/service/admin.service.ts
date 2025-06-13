@@ -107,8 +107,8 @@ export class AdminService {
     });
   }
 
-  imprimirDocumentosGame(gameId: number): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}calendars/game-report-pdf/?date_id=${gameId}`, {
+  imprimirDocumentosGame(gameId: number, tournamentId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}calendars/game-report-pdf/?date_id=${gameId}&tournament_id=${tournamentId}`, {
       responseType: 'blob'
     });
   }

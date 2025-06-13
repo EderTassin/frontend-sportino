@@ -62,8 +62,8 @@ export class ImprimirDocumentosComponent implements OnInit {
   }
 
   descargarPDFGame(){
-    if (this.gameSelected) {
-      this.adminService.imprimirDocumentosGame(this.gameSelected).subscribe({
+    if (this.gameSelected && this.tournamentSelectedDate) {
+      this.adminService.imprimirDocumentosGame(this.gameSelected, this.tournamentSelectedDate).subscribe({
         next: (response: any) => {
           const blob = new Blob([response], { type: 'application/pdf' });
           const url = window.URL.createObjectURL(blob);

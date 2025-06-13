@@ -49,7 +49,9 @@ export class SanctionsComponent implements OnInit {
   tournaments: Tournament[] = [];
   categories: Category[] = [];
   teams: Team[] = [];
+  dates: any[] = [];
   filteredTeams: Team[] = [];
+  sactionTournament: number | null = null;
   teamSearchText: string = '';
   filterTeamSearchText: string = '';
   
@@ -167,7 +169,8 @@ export class SanctionsComponent implements OnInit {
       this.selectedCategory || undefined
     ).subscribe({
       next: (data) => {
-        this.sanctions = data;
+        this.sanctions = data.sort((a, b) => b.id! - a.id!);
+
         this.loading = false;
       },
       error: (err) => {
@@ -206,15 +209,29 @@ export class SanctionsComponent implements OnInit {
     this.showForm = true;
   }
 
-  loadGames(tournamentId: number): void {
+  loadGames(dateId: number): void {
     this.loading = true;
     this.games = [];
-    this.tournamentService.getGamesByTournament(tournamentId).then((data) => {
-      this.games = data;
+    this.tournamentService.getMatchesByDate(dateId).then((data) => {
+      this.games = data.filter((game: any) => game.tournament == this.sactionTournament);
       this.loading = false;
     }).catch((err) => {
       console.error('Error loading games:', err);
       this.showSnackBar('Error loading games', 'error');
+      this.loading = false;
+    });
+  }
+
+  loadDates(tournamentId: number): void {
+    this.loading = true;
+    this.sactionTournament = tournamentId;
+    this.dates = [];
+    this.tournamentService.getDatesByTournament(tournamentId).then((data) => {
+      this.dates = data;
+      this.loading = false;
+    }).catch((err) => {
+      console.error('Error loading dates:', err);
+      this.showSnackBar('Error loading dates', 'error');
       this.loading = false;
     });
   }
