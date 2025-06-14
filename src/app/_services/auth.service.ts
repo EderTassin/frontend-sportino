@@ -11,7 +11,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(localStorage.getItem('isAuthenticated') === 'true');
   private timeoutHandle: any;
-  private readonly TIMEOUT_DURATION = 50 * 60 * 1000;
+  private readonly TIMEOUT_DURATION = 240 * 60 * 1000;
 
   private apiUrl = environment.apiEndpoint;
   authStatus = this.isAuthenticated.asObservable();
