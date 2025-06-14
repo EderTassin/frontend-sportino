@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 export interface Player {
@@ -19,7 +20,7 @@ export interface Player {
   medical_certificate: boolean;
   date_certificate: string;
   date: string;
-  team?: Team;
+  team?: any;
   team_name?: string;
   position?: string;
   jersey_number?: number;
@@ -73,30 +74,39 @@ export class PlayersService {
     const url = `${this.apiUrl}players/`;
     const formData = new FormData();
     
-    if (player.full_name) formData.append('full_name', player.full_name);
-    if (player.birthday) formData.append('birthday', player.birthday);
-    if (player.id_card) formData.append('id_card', player.id_card);
-    if (player.year) formData.append('year', player.year);
-    if (player.street) formData.append('street', player.street);
-    if (player.number) formData.append('number', player.number);
-    if (player.neighborhood) formData.append('neighborhood', player.neighborhood);
-    if (player.phone) formData.append('phone', player.phone);
-    if (player.cell_phone) formData.append('cell_phone', player.cell_phone);
-    if (player.email) formData.append('email', player.email);
-    if (player.date_certificate) formData.append('date_certificate', player.date_certificate);
-    if (player.date) formData.append('date', player.date);
-    if (player.team) formData.append('team', player.team.id.toString());
-    if (player.position) formData.append('position', player.position);
-    if (player.jersey_number) formData.append('jersey_number', player.jersey_number.toString());
-    
-    formData.append('medical_certificate', player.medical_certificate ? 'true' : 'false');
-    formData.append('active', player.active ? 'true' : 'false');
-    
-    if (pictureFile) {
-      formData.append('picture_file', pictureFile);
+    try {
+      if (player.full_name) formData.append('full_name', player.full_name);
+      if (player.birthday) formData.append('birthday', player.birthday);
+      if (player.id_card) formData.append('id_card', player.id_card);
+      if (player.year) formData.append('year', player.year);
+      if (player.street) formData.append('street', player.street);
+      if (player.number) formData.append('number', player.number);
+      if (player.neighborhood) formData.append('neighborhood', player.neighborhood);
+      if (player.phone) formData.append('phone', player.phone);
+      if (player.cell_phone) formData.append('cell_phone', player.cell_phone);
+      if (player.email) formData.append('email', player.email);
+      if (player.date_certificate) formData.append('date_certificate', player.date_certificate);
+      if (player.date) formData.append('date', player.date);
+      if (player.team) formData.append('team', player.team);
+      if (player.position) formData.append('position', player.position);
+      if (player.jersey_number) formData.append('jersey_number', player.jersey_number.toString());
+
+      formData.append('medical_certificate', player.medical_certificate ? 'true' : 'false');
+      formData.append('active', player.active ? 'true' : 'false');
+
+      if (pictureFile) {
+        formData.append('picture_file', pictureFile);
+      }
+
+    } catch (error: any) {
+      return throwError(() => error);
     }
-    
-    return this.http.post<Player>(url, formData);
+
+    console.log(formData);
+
+    return this.http.post<Player>(url, formData).pipe(
+      catchError((error: any) => throwError(() => error))
+    );
   }
 
   updatePlayer(id: number, player: Player, pictureFile?: File): Observable<Player> {

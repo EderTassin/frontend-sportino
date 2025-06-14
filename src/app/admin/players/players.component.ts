@@ -200,7 +200,6 @@ export class PlayersComponent implements OnInit {
   }
 
   savePlayer(): void {
-
     if (this.playerForm.invalid) {
       this.playerForm.markAllAsTouched();
       return;
@@ -210,7 +209,6 @@ export class PlayersComponent implements OnInit {
     this.loading = true;
     
     if (this.isEditMode && this.currentPlayerId) {
-      // Actualizar jugador con foto en una sola operación
       this.playersService.updatePlayer(this.currentPlayerId, player, this.photoFile || undefined).subscribe({
         next: () => {
           this.finishSave();
@@ -222,12 +220,11 @@ export class PlayersComponent implements OnInit {
         }
       });
     } else {
-      // Crear jugador con foto en una sola operación
-      this.playersService.createPlayer(player, this.photoFile || undefined).subscribe({
+       this.playersService.createPlayer(player, this.photoFile || undefined).subscribe({
         next: () => {
           this.finishSave();
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = 'Error creating player';
           console.error(err);
           this.loading = false;
