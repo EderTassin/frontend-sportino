@@ -135,19 +135,32 @@ export class ResultsComponent {
     this.goalsTeam2 = [];
     this.sanctionsTeam1 = [];
     this.sanctionsTeam2 = [];
+
+    const filterGoalsTeam1 = match.goals.filter((goal: any) => goal.team.id == match.team_1.id);
+    const filterGoalsTeam2 = match.goals.filter((goal: any) => goal.team.id == match.team_2.id);
     
     this.managerService.getTeam(match.team_1.id).subscribe((res: any) => {
       this.playersTeam1 = res.players;
       this.newGoalTeam1.teamId = match.team_1.id;
       this.newSanctionTeam1.teamId = match.team_1.id;
+
+      this.goalsTeam1 =filterGoalsTeam1.map((goal: any) => ({
+        playerName: this.playersTeam1.find((p: any) => p.id == goal.player).full_name,
+        goals: goal.goal_number,
+      }));
     });
     
     this.managerService.getTeam(match.team_2.id).subscribe((res: any) => {
       this.playersTeam2 = res.players;
       this.newGoalTeam2.teamId = match.team_2.id;
       this.newSanctionTeam2.teamId = match.team_2.id;
-    });
 
+      this.goalsTeam2 = filterGoalsTeam2.map((goal: any) => ({
+        goals: goal.goal_number,
+        playerName: this.playersTeam2.find((p: any) => p.id == goal.player).full_name,
+      }));
+    });
+    
     this.selectedMatchId = this.selectedMatchId === match.id ? null : match.id;
   }
 
@@ -343,8 +356,6 @@ export class ResultsComponent {
         res: res
       }
       
-      console.log(newSanction);
-
       this.showNotification('Éxito', 'Sanción registrada correctamente', 'success');
 
       if (teamNumber === 1) {
@@ -425,7 +436,8 @@ export class ResultsComponent {
       return;
     }
     
+    this.tournamentService.saveChangesGame(this.selectedMatchId);
+
     this.showNotification('Éxito', 'Resultados guardados correctamente', 'success');
-    // Aquí se podría implementar una lógica adicional para guardar todo el resultado
   }
 }

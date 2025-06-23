@@ -79,4 +79,11 @@ export class TournamentService {
   async getFields(): Promise<any> {
     return await firstValueFrom(this.http.get(`${this.apiUrl}calendars/fields/`));
   }
+
+  async saveChangesGame(id: number){
+    const data = {
+      game_id: id
+    }
+    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/manual-result-update/`, data));
+  }
 }
