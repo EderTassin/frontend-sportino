@@ -64,7 +64,6 @@ export class SanctionsComponent implements OnInit {
   games: any[] = [];
   players: any[] = [];
   
-  // Filter values
   selectedTournament: number | null = null;
   selectedTeam: number | null = null;
   selectedCategory: number | null = null;
@@ -93,7 +92,6 @@ export class SanctionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Solo cargamos las opciones de filtrado, no las sanciones
     this.loadFilterOptions();
   }
 

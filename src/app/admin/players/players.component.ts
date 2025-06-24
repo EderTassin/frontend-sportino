@@ -25,11 +25,9 @@ export class PlayersComponent implements OnInit {
   error = '';
   apiUrl = `${environment.apiEndpoint}`;
 
-  // Filtros
   filterForm: FormGroup;
   isSearching = false;
   
-  // Pagination properties
   currentPage = 1;
   totalItems = 0;
   totalPages = 0;
@@ -66,7 +64,6 @@ export class PlayersComponent implements OnInit {
       active_sanctions: [false]
     });
 
-    // Inicializar el formulario de filtros
     this.filterForm = this.fb.group({
       full_name: [''],
       team_name: ['']
@@ -87,13 +84,11 @@ export class PlayersComponent implements OnInit {
   loadPlayers(page: number = 1): void {
     this.loading = true;
     
-    // Obtener los valores del formulario de filtros
     const filters = {
       full_name: this.filterForm.get('full_name')?.value || '',
       team_name: this.filterForm.get('team_name')?.value || ''
     };
     
-    // Si hay filtros activos, marcar como búsqueda
     this.isSearching = !!(filters.full_name || filters.team_name);
     
     this.playersService.getAllPlayers(page, this.isSearching ? filters : undefined).subscribe({
@@ -101,7 +96,6 @@ export class PlayersComponent implements OnInit {
         this.players = data.results;
         this.filteredPlayers = [...this.players];
         
-        // Store these players in our all loaded players array if not already there
         const newPlayerIds = data.results.map(player => player.id);
         this.allLoadedPlayers = [
           ...this.allLoadedPlayers.filter(player => !newPlayerIds.includes(player.id)),
@@ -190,7 +184,6 @@ export class PlayersComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.photoFile = input.files[0];
       
-      // Create preview
       const reader = new FileReader();
       reader.onload = () => {
         this.photoPreview = reader.result as string;
@@ -239,7 +232,6 @@ export class PlayersComponent implements OnInit {
       return;
     }
 
-    // Este método ahora es más simple ya que usamos PATCH para actualizar solo la foto
     this.playersService.uploadPlayerPhoto(playerId, this.photoFile).subscribe({
       next: () => {
         this.finishSave();
@@ -298,7 +290,6 @@ export class PlayersComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
   
-  // Método para aplicar filtros
   applyFilters(): void {
     const fullName = this.filterForm.get('full_name')?.value?.trim();
     const teamName = this.filterForm.get('team_name')?.value?.trim();
@@ -308,19 +299,16 @@ export class PlayersComponent implements OnInit {
       return;
     }
     
-    // Recargar los jugadores con los filtros aplicados
-    this.currentPage = 1; // Volver a la primera página
+    this.currentPage = 1; 
     this.loadPlayers(1);
   }
   
-  // Limpiar filtros
   clearFilters(): void {
     this.filterForm.reset();
     this.isSearching = false;
     this.loadPlayers(1);
   }
   
-  // Pagination methods
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages || page === this.currentPage) {
       return;

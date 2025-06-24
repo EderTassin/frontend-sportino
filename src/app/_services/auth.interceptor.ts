@@ -11,10 +11,9 @@ import { AuthService } from './auth.service';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Lista de rutas públicas que no requieren autenticación
   private publicRoutes: string[] = [
     'api-token-auth',
-    'calendars/',  // Todas las rutas que comienzan con calendars/
+    'calendars/',
     'players/teams',
     'match-statistics',
     'players/players',
@@ -22,7 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
     'players/managers'
   ];
   
-  // Lista de componentes que no requieren autenticación
   private publicComponents: string[] = [
     '/home',
     '/tournament',
@@ -34,30 +32,23 @@ export class AuthInterceptor implements HttpInterceptor {
     '/players/players'
   ];
 
-  // Verifica si una URL es pública (no requiere autenticación)
   private isPublicUrl(url: string): boolean {
-    // Verificar si la URL pertenece a una ruta pública de la API
     if (this.publicRoutes.some(route => url.includes(route))) {
       return true;
     }
     
-    // Verificar si la solicitud proviene de un componente público
-    // Esto se hace verificando el encabezado Referer
     const referer = window.location.pathname;
     return this.publicComponents.some(component => referer.startsWith(component));
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Permitir solicitudes a rutas públicas sin verificar autenticación
     if (this.isPublicUrl(req.url)) {
       return next.handle(req);
     }
 
-    // Para todas las demás solicitudes, verificar autenticación
-    return this.authService.checkAuth().pipe(
+    return this.authService.checkAuth().pipe(   
       switchMap(isAuthenticated => {
         if (!isAuthenticated) {
-          // No redirigir automáticamente para evitar ciclos infinitos
           return throwError(() => new Error('No autenticado'));
         }
         

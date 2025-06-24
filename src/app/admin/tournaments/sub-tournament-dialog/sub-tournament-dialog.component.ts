@@ -23,7 +23,6 @@ export class SubTournamentDialogComponent implements OnInit {
   ) {
     this.parentTournament = data.parentTournament;
     
-    // Initialize form with parent tournament data as defaults
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: [this.parentTournament.description || ''],
@@ -32,7 +31,6 @@ export class SubTournamentDialogComponent implements OnInit {
       category: [this.parentTournament.category || [], Validators.required]
     });
     
-    // Set selected categories from parent tournament
     if (this.parentTournament.category && Array.isArray(this.parentTournament.category)) {
       this.selectedCategories = [...this.parentTournament.category];
     }

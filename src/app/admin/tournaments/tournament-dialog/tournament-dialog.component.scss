@@ -9,7 +9,6 @@
   overflow: hidden;
 }
 
-// Custom form styling
 input[type="text"],
 input[type="date"],
 textarea {
@@ -21,12 +20,9 @@ textarea {
   }
 }
 
-// Checkbox styling
 input[type="checkbox"] {
   cursor: pointer;
 }
-
-// Button hover effects
 button {
   transition: all 0.2s;
   
@@ -35,7 +31,6 @@ button {
   }
 }
 
-// Loading spinner animation
 .animate-spin {
   animation: spin 1s linear infinite;
 }

@@ -75,7 +75,6 @@ export class AuthService {
       }
     } catch (error) {
       console.error('Error decoding token:', error);
-      // Token is invalid, clear it
       this.logout();
     }
     

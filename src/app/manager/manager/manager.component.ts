@@ -79,26 +79,21 @@ export class ManagerComponent implements OnInit {
   getTeam(){
     this.managerService.getTeam(this.teamId).subscribe((res: any) => {
       this.team = res;
-      // Mapea los datos del backend para alinear con el nuevo diseño de estados.
-      // El backend envía 'active: boolean', pero el frontend ahora usa 'status: string'.
-      // TODO: Idealmente, el backend debería enviar 'status' directamente.
       this.players = res.players.map((player: any) => {
-        let status = 'pending';
-        if (player.active === true) {
-          status = 'active';
-        } else if (player.active === false) {
-          status = 'inactive';
-        }
-        // Aquí se podrían añadir más estados como 'suspended' si la data estuviera disponible.
-        return { ...player, status };
+        const status = player.active ? 'active' : 'inactive';
+        return {
+          ...player,
+          status,
+          birthDate: new Date(player.birthday)
+        };
       });
-      this.filteredPlayers = this.players; // Inicializa la lista filtrada
+      this.filteredPlayers = this.players;
     });
   }
 
   openModalPlayer() {
     if (this.team.manager.active) {
-      this.newPlayer = { status: 'active' } as Player; // Inicializa con un estado por defecto
+      this.newPlayer = { status: 'active' } as Player;
       this.previewImage = null;
       this.selectedFile = null;
       this.showModal = true;
@@ -115,24 +110,36 @@ export class ManagerComponent implements OnInit {
   onSubmit() {
     this.newPlayer.birthDate = new Date(this.newPlayer.birthDate);
 
-    // Prepara el payload para el backend, convirtiendo 'status' a 'active'.
+    if (isNaN(this.newPlayer.birthDate.getTime())) {
+      this.newPlayer.birthDate = new Date();
+    }
+
+    if (!this.newPlayer.email) {
+      this.newPlayer.email = "default@gmail.com";
+    }
+
+    if (!this.newPlayer.dni) {
+      this.newPlayer.dni = "default";
+    }
+
     const payload: any = { ...this.newPlayer };
+  
     payload.active = this.newPlayer.status === 'active';
-    delete payload.status; // Elimina 'status' para que no se envíe al backend.
+    delete payload.status;
+    delete payload.birthday;
 
     this.managerService.addPlayer(payload, this.teamId, this.selectedFile).subscribe(
       (response) => {
-        // Al recibir la respuesta, convierte 'active' de nuevo a 'status' para el frontend.
         const newPlayerWithStatus: Player = { 
           ...response, 
           status: response.active ? 'active' : 'inactive' 
         };
         this.players.push(newPlayerWithStatus);
-        this.filteredPlayers = this.players; // Actualiza la lista filtrada
+        this.filteredPlayers = this.players; 
         this.closeModal();
       },
       (error) => {
-        console.error('Error adding player:', error);
+        console.error('Error al agregar jugador', error);
       }
     );
   }
@@ -146,7 +153,7 @@ export class ManagerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.players = this.players.filter(player => player.id !== playerId);
-        this.filteredPlayers = this.players; // Actualiza la lista filtrada
+        this.filteredPlayers = this.players; 
       }
     });
   }
@@ -182,29 +189,35 @@ export class ManagerComponent implements OnInit {
   }
 
   onSubmitEdit() {
-    this.selectedPlayer.birthDate = new Date(this.selectedPlayer.birthday);
-    
-    // Prepara el payload para el backend, convirtiendo 'status' a 'active'.
+    this.selectedPlayer.birthDate = new Date(this.selectedPlayer.birthDate);
+
+    if (isNaN(this.selectedPlayer.birthDate.getTime())) {
+      this.selectedPlayer.birthDate = new Date();
+    }
+
     const payload: any = { ...this.selectedPlayer };
     payload.active = this.selectedPlayer.status === 'active';
-    delete payload.status; // Elimina 'status' para que no se envíe al backend.
+    payload.birthday = this.selectedPlayer.birthDate.toISOString().split('T')[0];
+    
+    delete payload.status;
+    delete payload.birthDate;
 
     this.managerService.updatePlayer(payload, this.selectedFile).subscribe(
       (response) => {
-        // Al recibir la respuesta, convierte 'active' de nuevo a 'status' para el frontend.
         const updatedPlayerWithStatus: Player = { 
           ...response, 
-          status: response.active ? 'active' : 'inactive' 
+          status: response.active ? 'active' : 'inactive',
+          birthDate: new Date(response.birthday)
         };
-        const index = this.players.findIndex(player => player.id === this.selectedPlayer.id);
+        const index = this.players.findIndex(p => p.id === this.selectedPlayer.id);
         if (index !== -1) {
           this.players[index] = updatedPlayerWithStatus;
         }
-        this.filteredPlayers = this.players; // Actualiza la lista filtrada
+        this.filteredPlayers = this.players;
         this.closeEditModal();
       },
       (error) => {
-        console.error('Error updating player:', error);
+        console.error('Error al actualizar jugador', error);
       }
     );
   }

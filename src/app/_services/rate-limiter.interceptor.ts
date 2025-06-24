@@ -18,7 +18,6 @@ export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
   const timestamps = requests.get(requestKey);
   
   if (timestamps) {
-    // Removemos los timestamps que excedieron el intervalo de 60 segundos
     while (timestamps.length > 0 && currentTime - timestamps[0] > RATE_LIMIT_INTERVAL) {
       timestamps.shift();
     }
@@ -31,7 +30,6 @@ export const RateLimitingInterceptor: HttpInterceptorFn = (req, next) => {
       }));
     }
 
-    // Se registra el timestamp del request actual
     timestamps.push(currentTime);
   }
 

@@ -32,7 +32,6 @@ export class ManagerImgPortadaComponent implements OnInit {
         catchError(error => {
           console.error('Error loading images:', error);
           
-          // Handle specific error codes
           if (error.status === 0) {
             Swal.fire({
               icon: 'error',
@@ -46,7 +45,7 @@ export class ManagerImgPortadaComponent implements OnInit {
               text: 'No se pudieron cargar las imágenes de portada'
             });
           }
-          return of([]); // Return empty array to avoid breaking the component
+          return of([]); 
         }),
         finalize(() => this.isLoading = false)
       )
@@ -60,7 +59,6 @@ export class ManagerImgPortadaComponent implements OnInit {
     if (input.files && input.files.length) {
       const file = input.files[0];
       
-      // Check file size
       const fileSizeMB = file.size / (1024 * 1024);
       if (fileSizeMB > this.maxFileSizeMB) {
         Swal.fire({
@@ -73,7 +71,6 @@ export class ManagerImgPortadaComponent implements OnInit {
       
       this.selectedFile = file;
       
-      // Create preview
       const reader = new FileReader();
       reader.onload = () => {
         this.previewUrl = reader.result as string;
@@ -82,7 +79,6 @@ export class ManagerImgPortadaComponent implements OnInit {
     }
   }
 
-  // Compress image to reduce file size
   private compressImage(file: File, maxSizeKB: number = 800): Promise<File> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -112,19 +108,16 @@ export class ManagerImgPortadaComponent implements OnInit {
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
           
-          // Start with high quality
           let quality = 0.8;
           let compressedFile: File;
           
           const compressWithQuality = (q: number) => {
-            // Convert to blob with specified quality
             canvas.toBlob((blob) => {
               if (!blob) {
                 reject(new Error('Canvas to Blob conversion failed'));
                 return;
               }
               
-              // Create new file from blob
               compressedFile = new File([blob], file.name, {
                 type: 'image/jpeg',
                 lastModified: Date.now()
@@ -132,7 +125,6 @@ export class ManagerImgPortadaComponent implements OnInit {
               
               console.log(`Compressed size with quality ${q}: ${compressedFile.size / 1024} KB`);
               
-              // If still too large and quality can be reduced further, try again
               if (compressedFile.size > maxSizeKB * 1024 && q > 0.3) {
                 compressWithQuality(q - 0.1);
               } else {
@@ -208,7 +200,7 @@ export class ManagerImgPortadaComponent implements OnInit {
               text: 'No se pudo subir la imagen de portada'
             });
           }
-          return of(null); // Return observable that completes
+          return of(null); 
         }),
         finalize(() => {
           this.isUploading = false;
@@ -229,10 +221,8 @@ export class ManagerImgPortadaComponent implements OnInit {
   }
 
   toggleImageStatus(image: FrontPageImage): void {
-    // Toggle the active status locally first for immediate UI feedback
     const newActiveStatus = !image.active;
     
-    // Show loading indicator
     const loadingToast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -250,16 +240,13 @@ export class ManagerImgPortadaComponent implements OnInit {
       title: 'Actualizando estado...'
     });
     
-    // Call the service to update on the server using PATCH
     this.managerImgService.toggleFrontPageImageStatus(image.id, newActiveStatus)
       .pipe(
         catchError(error => {
           console.error('Error toggling image status:', error);
           
-          // Revert the local change since the server update failed
           image.active = !newActiveStatus;
           
-          // Show error message
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -270,17 +257,14 @@ export class ManagerImgPortadaComponent implements OnInit {
         })
       )
       .subscribe(updatedImage => {
-        // Close the loading toast
         Swal.close();
         
         if (updatedImage) {
-          // Update the local image with the server response
           const index = this.images.findIndex(img => img.id === updatedImage.id);
           if (index !== -1) {
             this.images[index] = updatedImage;
           }
           
-          // Show success message
           const successToast = Swal.mixin({
             toast: true,
             position: 'top-end',

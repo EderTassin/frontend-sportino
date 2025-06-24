@@ -38,7 +38,6 @@ export class TournamentsComponent implements OnInit {
       const tournaments = await this.tournamentsService.getTournaments();
       
       const sortedTournaments = tournaments.sort((a: any, b: any) => b.id - a.id);
-      // Reset maps
       this.tournamentMap.clear();
       this.subTournaments.clear();
       
@@ -137,12 +136,7 @@ export class TournamentsComponent implements OnInit {
     });
   }
 
-  /**
-   * Opens a dialog to create a sub-tournament for the specified parent tournament
-   * @param parentId The ID of the parent tournament
-   */
   createSubTournament(parentId: number) {
-    // Get the parent tournament data to pre-populate some fields
     const parentTournament = this.tournamentMap.get(parentId);
     
     if (!parentTournament) {
@@ -160,7 +154,6 @@ export class TournamentsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
         try {
-          // Create the sub-tournament with the parent ID
           const subTournamentData: Partial<Tournament> = {
             name: result.name,
             description: result.description || parentTournament.description,
@@ -174,7 +167,6 @@ export class TournamentsComponent implements OnInit {
           
           this.toastr.success(`Sub-torneo "${result.name}" creado con éxito`);
           
-          // Refresh the tournaments list
           this.getTournaments();
         } catch (error) {
           console.error('Error creating sub-tournament:', error);
@@ -184,21 +176,11 @@ export class TournamentsComponent implements OnInit {
     });
   }
   
-  /**
-   * Checks if a tournament has sub-tournaments
-   * @param tournamentId The ID of the tournament to check
-   * @returns True if the tournament has sub-tournaments, false otherwise
-   */
   hasSubTournaments(tournamentId: number): boolean {
     return this.subTournaments.has(tournamentId) && 
            this.subTournaments.get(tournamentId)!.length > 0;
   }
   
-  /**
-   * Gets the sub-tournaments for a specific tournament
-   * @param tournamentId The ID of the parent tournament
-   * @returns An array of sub-tournaments
-   */
   getSubTournaments(tournamentId: number): any[] {
     return this.subTournaments.get(tournamentId) || [];
   }

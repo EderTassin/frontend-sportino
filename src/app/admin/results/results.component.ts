@@ -409,7 +409,6 @@ export class ResultsComponent {
     this.router.navigate(['/admin']);
   }
 
-  // Método para mostrar notificaciones con SweetAlert2
   showNotification(title: string, message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
     Swal.fire({
       title,
@@ -423,13 +422,11 @@ export class ResultsComponent {
     });
   }
   
-  // Método para calcular el total de goles de un equipo
   getTotalGoals(goals: Goal[]): number {
     if (!goals || goals.length === 0) return 0;
     return goals.reduce((total, goal) => total + goal.goals, 0);
   }
 
-  // Método para guardar resultados
   saveResults(): void {
     if (!this.selectedMatchId) {
       this.showNotification('Advertencia', 'Debe seleccionar un partido para guardar resultados', 'warning');

@@ -52,7 +52,6 @@ export class PlayersService {
   getAllPlayers(page: number = 1, filters?: {full_name?: string, team_name?: string}): Observable<PlayerResponse> {
     let url = `${this.apiUrl}players/?page=${page}`;
     
-    // Añadir filtros si están presentes
     if (filters) {
       if (filters.full_name) {
         url += `&full_name=${encodeURIComponent(filters.full_name)}`;

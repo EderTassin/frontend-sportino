@@ -20,7 +20,6 @@ export class ManagerImgService {
 
   constructor(private http: HttpClient) { }
 
-  // Original team image upload method
   uploadImage(teamId: number, image: File): Observable<any> {
     const formData = new FormData();
     formData.append('teamId', teamId.toString());
@@ -28,7 +27,6 @@ export class ManagerImgService {
     return this.http.post<any>(`${environment.apiEndpoint}manager/img`, formData);
   }
 
-  // Front page images methods
   getFrontPageImages(): Observable<FrontPageImage[]> {
     return this.http.get<FrontPageImage[]>(`${environment.apiEndpoint}gallerys/FrontPageImages/`);
   }

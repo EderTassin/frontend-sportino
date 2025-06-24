@@ -38,7 +38,6 @@ export class SanctionsService {
 
   constructor(private http: HttpClient) { }
 
-  // Sanctions CRUD operations
   getAllSanctions(): Observable<Sanction[]> {
     return this.http.get<Sanction[]>(`${this.apiUrl}`);
   }
@@ -59,7 +58,6 @@ export class SanctionsService {
     return this.http.delete(`${this.apiUrl}/${id}/`);
   }
 
-  // Filter sanctions
   filterSanctions(tournamentId?: number, teamId?: number, categoryId?: number): Observable<Sanction[]> {
     let url = `${this.filterApiUrl}/?`;
     
@@ -78,7 +76,6 @@ export class SanctionsService {
     return this.http.get<Sanction[]>(url);
   }
 
-  // Get filter options
   getTournaments(): Observable<Tournament[]> {
     return this.http.get<Tournament[]>(`${this.tournamentsUrl}`);
   }
