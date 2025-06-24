@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ManagerService } from '../manager.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ export interface Player {
   goals: number;
   assists: number;
   penalties: number;
+  status: string; // Reemplaza a 'active' para soportar más estados.
   active: boolean;
   street: string;
   year: string;
@@ -42,7 +43,10 @@ export interface Team {
 })
 export class ManagerComponent implements OnInit {
 
+  openMenuPlayerId: number | null = null;
   players: Player[] = [];
+  filteredPlayers: Player[] = [];
+  searchTerm: string = '';
   teamId: number = 0;
   team: any;
   showModal: boolean = false;
@@ -74,28 +78,57 @@ export class ManagerComponent implements OnInit {
 
   getTeam(){
     this.managerService.getTeam(this.teamId).subscribe((res: any) => {
-      this.players = res.players;
       this.team = res;
+      // Mapea los datos del backend para alinear con el nuevo diseño de estados.
+      // El backend envía 'active: boolean', pero el frontend ahora usa 'status: string'.
+      // TODO: Idealmente, el backend debería enviar 'status' directamente.
+      this.players = res.players.map((player: any) => {
+        let status = 'pending';
+        if (player.active === true) {
+          status = 'active';
+        } else if (player.active === false) {
+          status = 'inactive';
+        }
+        // Aquí se podrían añadir más estados como 'suspended' si la data estuviera disponible.
+        return { ...player, status };
+      });
+      this.filteredPlayers = this.players; // Inicializa la lista filtrada
     });
   }
 
   openModalPlayer() {
     if (this.team.manager.active) {
+      this.newPlayer = { status: 'active' } as Player; // Inicializa con un estado por defecto
+      this.previewImage = null;
+      this.selectedFile = null;
       this.showModal = true;
     }
   }
 
   closeModal() {
     this.showModal = false;
+    this.newPlayer = {} as Player;
+    this.previewImage = null;
+    this.selectedFile = null;
   }
 
   onSubmit() {
     this.newPlayer.birthDate = new Date(this.newPlayer.birthDate);
-    this.managerService.addPlayer(this.newPlayer, this.teamId, this.selectedFile).subscribe(
+
+    // Prepara el payload para el backend, convirtiendo 'status' a 'active'.
+    const payload: any = { ...this.newPlayer };
+    payload.active = this.newPlayer.status === 'active';
+    delete payload.status; // Elimina 'status' para que no se envíe al backend.
+
+    this.managerService.addPlayer(payload, this.teamId, this.selectedFile).subscribe(
       (response) => {
-        this.players.push(response);
-        this.newPlayer = {} as Player;
-        this.selectedFile = null;
+        // Al recibir la respuesta, convierte 'active' de nuevo a 'status' para el frontend.
+        const newPlayerWithStatus: Player = { 
+          ...response, 
+          status: response.active ? 'active' : 'inactive' 
+        };
+        this.players.push(newPlayerWithStatus);
+        this.filteredPlayers = this.players; // Actualiza la lista filtrada
         this.closeModal();
       },
       (error) => {
@@ -113,6 +146,7 @@ export class ManagerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.players = this.players.filter(player => player.id !== playerId);
+        this.filteredPlayers = this.players; // Actualiza la lista filtrada
       }
     });
   }
@@ -150,11 +184,23 @@ export class ManagerComponent implements OnInit {
   onSubmitEdit() {
     this.selectedPlayer.birthDate = new Date(this.selectedPlayer.birthday);
     
-    this.managerService.updatePlayer(this.selectedPlayer, this.selectedFile).subscribe(
+    // Prepara el payload para el backend, convirtiendo 'status' a 'active'.
+    const payload: any = { ...this.selectedPlayer };
+    payload.active = this.selectedPlayer.status === 'active';
+    delete payload.status; // Elimina 'status' para que no se envíe al backend.
+
+    this.managerService.updatePlayer(payload, this.selectedFile).subscribe(
       (response) => {
+        // Al recibir la respuesta, convierte 'active' de nuevo a 'status' para el frontend.
+        const updatedPlayerWithStatus: Player = { 
+          ...response, 
+          status: response.active ? 'active' : 'inactive' 
+        };
         const index = this.players.findIndex(player => player.id === this.selectedPlayer.id);
-        this.players[index] = response;
-        this.selectedPlayer = {} as Player;
+        if (index !== -1) {
+          this.players[index] = updatedPlayerWithStatus;
+        }
+        this.filteredPlayers = this.players; // Actualiza la lista filtrada
         this.closeEditModal();
       },
       (error) => {
@@ -165,6 +211,9 @@ export class ManagerComponent implements OnInit {
 
   closeEditModal() {
     this.showEditModal = false;
+    this.selectedPlayer = {} as Player;
+    this.previewImage = null;
+    this.selectedFile = null;
   }
 
   openEditTeamModal() {
@@ -209,5 +258,29 @@ export class ManagerComponent implements OnInit {
         console.error('Error al actualizar el equipo:', error);
       }
     );
+  }
+
+  filterPlayers(): void {
+    const searchTermLower = this.searchTerm.toLowerCase().trim();
+    if (!searchTermLower) {
+      this.filteredPlayers = this.players;
+      return;
+    }
+
+    this.filteredPlayers = this.players.filter(player =>
+      player.full_name.toLowerCase().includes(searchTermLower) ||
+      (player.email && player.email.toLowerCase().includes(searchTermLower)) ||
+      (player.id_card && player.id_card.toLowerCase().includes(searchTermLower))
+    );
+  }
+
+  togglePlayerMenu(event: MouseEvent, playerId: number): void {
+    event.stopPropagation();
+    this.openMenuPlayerId = this.openMenuPlayerId === playerId ? null : playerId;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.openMenuPlayerId = null;
   }
 }

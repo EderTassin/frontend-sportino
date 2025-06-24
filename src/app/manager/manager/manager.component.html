@@ -1,125 +1,141 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-    <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
-      <div class="flex flex-col sm:flex-row items-center gap-4">
-        <div class="relative">
-          <img [src]="urlEnvironment + team?.logo_file" alt="Logo del equipo" 
-               class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-gray-200" 
-               (error)="defaultImage($event)">
-        </div>
-        <div class="text-center sm:text-left">
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 ">{{team?.name}}</h1>
-          <p class="text-lg text-gray-600">{{team?.category?.name}}</p>
+<div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Encabezado del Equipo (más compacto) -->
+  <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <img [src]="urlEnvironment + team?.logo_file" alt="Logo del equipo"
+             class="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+             (error)="defaultImage($event)">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">{{team?.name}}</h1>
+          <p class="text-md text-gray-600">{{team?.category?.name}}</p>
         </div>
       </div>
-      
-      <div class="sm:text-right flex items-center gap-2">
-        <h2 class="text-xl sm:text-2xl font-semibold text-gray-700" style="margin-bottom: 0px;">Gestión de Jugadores</h2>
+      <div class="items-center gap-2 justify-center md:justify-start">
+        <h2 class="text-lg font-semibold text-gray-700 hidden md:block">Gestión de Jugadores</h2>
         <button (click)="openEditTeamModal()"
-          class="text-gray-500 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-gray-100"
-          title="Editar información del equipo">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
+                class="text-gray-500 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-gray-100"
+                title="Editar información del equipo">
+          Editar Equipo
+          <span class="material-symbols-outlined">edit</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="flex justify-end mb-4">
-    <button 
-      class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition flex items-center gap-2"
-      (click)="openModalPlayer()"
-      [disabled]="!team?.manager?.active"
-    >
-      <span class="material-symbols-outlined">add</span>
-      <span>Agregar Jugador</span>
-    </button>
-  </div>
-
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="p-4 border-b border-gray-200">
-      <div class="relative w-full sm:w-64">
-        <input 
-          type="text" 
-          placeholder="Buscar jugador..." 
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-gray-400"
-        />
-        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+  <!-- Contenedor de Acciones y Búsqueda -->
+  <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <!-- Barra de Búsqueda -->
+      <div class="relative w-full md:w-auto md:flex-grow max-w-xs">
+        <input type="text"
+               placeholder="Buscar jugador..."
+               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-gray-400"
+               [(ngModel)]="searchTerm"
+               (input)="filterPlayers()" />
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <span class="material-symbols-outlined text-gray-400">search</span>
         </div>
       </div>
+
+      <!-- Botón Agregar Jugador -->
+      <button (click)="openModalPlayer()"
+              [disabled]="!team?.manager?.active"
+              class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">add</span>
+        <span>Agregar Jugador</span>
+      </button>
     </div>
-    
-    <div class="overflow-x-auto">
+  </div>
+
+  <!-- Tabla de Jugadores -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto" style="min-height: 400px;">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Email</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">DNI</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-            <th scope="col" class="relative px-6 py-3">
-              <span class="sr-only">Acciones</span>
-            </th>
+            <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let player of players" class="hover:bg-gray-50 transition">
-            <td class="px-3 py-4 whitespace-nowrap">
-              <div class="flex-shrink-0 h-10 w-10">
-                <img 
-                  [src]="urlEnvironment + player.picture_file" 
-                  (error)="defaultImage($event)" 
-                  alt="Foto del jugador" 
-                  class="h-10 w-10 rounded-full object-cover border border-gray-200"
-                >
+          <tr *ngFor="let player of filteredPlayers" class="hover:bg-gray-50 transition-colors duration-150">
+            <!-- Columna Nombre y Avatar -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <img [src]="urlEnvironment + player.picture_file" (error)="defaultImage($event)" alt="Foto del jugador" class="h-10 w-10 rounded-full object-cover border border-gray-200">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">{{player.full_name}}</div>
+                  <div class="text-xs text-gray-500 lg:hidden">{{player.id_card}}</div>
+                </div>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm font-medium text-gray-900">{{player.full_name}}</div>
-              <div class="text-xs text-gray-500 md:hidden">{{player.email}}</div>
-            </td>
+            <!-- Columna Email -->
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">{{player.email}}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{player.id_card}}</td>
+            <!-- Columna DNI -->
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">{{player.id_card}}</td>
+            <!-- Columna Estado -->
             <td class="px-6 py-4 whitespace-nowrap">
-              <span *ngIf="player.active" class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                Activo
-              </span>
-              <span *ngIf="!player.active" class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                Inactivo
-              </span>
+              <ng-container [ngSwitch]="player.status">
+                <span *ngSwitchCase="'active'" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Activo</span>
+                <span *ngSwitchCase="'inactive'" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactivo</span>
+                <span *ngSwitchCase="'suspended'" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Suspendido</span>
+                <span *ngSwitchDefault class="px-2.5 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+              </ng-container>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <button mat-icon-button [matMenuTriggerFor]="menu" class="focus:outline-none">
-                <span class="material-symbols-outlined text-gray-500 hover:text-gray-700">more_vert</span>
-              </button>
-              
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="openModalEditPlayer(player)" class="flex items-center space-x-2">
-                  <span class="material-symbols-outlined text-blue-500">edit</span>
-                  <span>Editar</span>
+            <!-- Columna Acciones -->
+            <td class="py-4 whitespace-nowrap text-sm font-medium">
+              <div class="relative inline-block text-left">
+                <!-- Botón de tres puntos -->
+                <button (click)="togglePlayerMenu($event, player.id)" type="button" class="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                  <span class="material-symbols-outlined">more_vert</span>
                 </button>
-                <button mat-menu-item (click)="deletePlayer(player.id)" class="flex items-center space-x-2">
-                  <span class="material-symbols-outlined text-red-500">delete</span>
-                  <span>Eliminar</span>
-                </button>
-              </mat-menu>
+
+                <!-- Menú desplegable -->
+                <div *ngIf="openMenuPlayerId === player.id"
+                     (click)="$event.stopPropagation()"
+                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                  <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <a (click)="openModalEditPlayer(player); togglePlayerMenu($event, player.id)"
+                       class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+                      <span class="material-symbols-outlined text-base">edit</span>
+                      <span>Editar</span>
+                    </a>
+                    <a (click)="deletePlayer(player.id); togglePlayerMenu($event, player.id)"
+                       class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer" role="menuitem">
+                      <span class="material-symbols-outlined text-base">delete</span>
+                      <span>Eliminar</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
+          <!-- Estado: Sin jugadores en el equipo -->
           <tr *ngIf="players.length === 0">
-            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
-              <div class="flex flex-col items-center justify-center">
-                <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">person_off</span>
-                <p>No hay jugadores registrados</p>
-                <button 
-                  class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  (click)="openModalPlayer()"
-                >
-                  Agregar jugador
+            <td colspan="5" class="px-6 py-16 text-center text-gray-500">
+              <div class="flex flex-col items-center">
+                <span class="material-symbols-outlined text-5xl text-gray-400 mb-2">group_off</span>
+                <h3 class="text-lg font-semibold text-gray-700">No hay jugadores registrados</h3>
+                <p class="text-sm text-gray-500 mt-1">Comienza agregando el primer jugador a tu equipo.</p>
+                <button (click)="openModalPlayer()" class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Agregar Jugador
                 </button>
+              </div>
+            </td>
+          </tr>
+          <!-- Estado: Búsqueda sin resultados -->
+          <tr *ngIf="players.length > 0 && filteredPlayers.length === 0">
+            <td colspan="5" class="px-6 py-16 text-center text-gray-500">
+              <div class="flex flex-col items-center">
+                <span class="material-symbols-outlined text-5xl text-gray-400 mb-2">search_off</span>
+                <h3 class="text-lg font-semibold text-gray-700">No se encontraron resultados</h3>
+                <p class="text-sm text-gray-500 mt-1">Intenta con otro término de búsqueda.</p>
               </div>
             </td>
           </tr>
@@ -200,15 +216,29 @@
         </div>
         
         <div>
-          <label for="dni" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+          <label for="id_card" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
           <input 
             type="text" 
-            id="dni" 
-            name="dni" 
+            id="id_card" 
+            name="id_card" 
             [(ngModel)]="newPlayer.id_card" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           >
+        </div>
+
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+          <select 
+            id="status" 
+            name="status" 
+            [(ngModel)]="newPlayer.status"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
+          >
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+            <option value="pending">Pendiente</option>
+          </select>
         </div>
         
         <div>
@@ -251,17 +281,6 @@
               </label>
             </div>
           </div>
-        </div>
-        
-        <div class="flex items-center">
-          <input 
-            type="checkbox" 
-            id="active" 
-            name="active" 
-            [(ngModel)]="newPlayer.active"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          >
-          <label for="active" class="ml-2 block text-sm text-gray-700">Jugador activo</label>
         </div>
       </div>
       
@@ -355,15 +374,29 @@
         </div>
         
         <div>
-          <label for="edit_dni" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+          <label for="edit_id_card" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
           <input 
             type="text" 
-            id="edit_dni" 
+            id="edit_id_card" 
             name="id_card" 
             [(ngModel)]="selectedPlayer.id_card" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           >
+        </div>
+
+        <div>
+          <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+          <select 
+            id="edit_status" 
+            name="edit_status" 
+            [(ngModel)]="selectedPlayer.status"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
+          >
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+            <option value="pending">Pendiente</option>
+          </select>
         </div>
         
         <div>
@@ -406,17 +439,6 @@
               </label>
             </div>
           </div>
-        </div>
-        
-        <div class="flex items-center">
-          <input 
-            type="checkbox" 
-            id="edit_active" 
-            name="active" 
-            [(ngModel)]="selectedPlayer.active"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          >
-          <label for="edit_active" class="ml-2 block text-sm text-gray-700">Jugador activo</label>
         </div>
       </div>
       
