@@ -14,6 +14,7 @@ export interface Sanction {
   team?: number;
   player?: number;
   missed_points: number;
+  tournament: number;
 }
 
 export interface Tournament {

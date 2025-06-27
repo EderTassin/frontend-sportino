@@ -236,7 +236,6 @@ export class TeamComponent implements OnInit {
     
     try {
       const res = await this.adminService.updateTeam(formData);
-      console.log(res);
     } catch (error: any) {
       console.error('Error updating team:', error.message);
     } finally {

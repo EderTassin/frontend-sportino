@@ -145,6 +145,7 @@ export class ResultsComponent {
       this.newSanctionTeam1.teamId = match.team_1.id;
 
       this.goalsTeam1 =filterGoalsTeam1.map((goal: any) => ({
+        ...goal,
         playerName: this.playersTeam1.find((p: any) => p.id == goal.player).full_name,
         goals: goal.goal_number,
       }));
@@ -154,8 +155,8 @@ export class ResultsComponent {
       this.playersTeam2 = res.players;
       this.newGoalTeam2.teamId = match.team_2.id;
       this.newSanctionTeam2.teamId = match.team_2.id;
-
       this.goalsTeam2 = filterGoalsTeam2.map((goal: any) => ({
+        ...goal,
         goals: goal.goal_number,
         playerName: this.playersTeam2.find((p: any) => p.id == goal.player).full_name,
       }));
@@ -369,21 +370,13 @@ export class ResultsComponent {
     }
   }
 
-  removeGoal(goal: Goal, teamNumber: number): void {
+    removeGoal(goal: any): void {
 
-    if (teamNumber === 1) {
-      if (goal.idPost) {
-        this.tournamentService.deleteGoal(goal.idPost);
-      }
-
-      this.goalsTeam1 = this.goalsTeam1.filter(g => g !== goal);
-    } else {
-      if (goal.idPost) {
-        this.tournamentService.deleteGoal(goal.idPost);
-      }
-
-      this.goalsTeam2 = this.goalsTeam2.filter(g => g !== goal);
+    if (goal.id) {
+      this.tournamentService.deleteGoal(goal.id);
     }
+
+    this.goalsTeam1 = this.goalsTeam1.filter(g => g !== goal);
     
     this.showNotification('Éxito', 'Gol eliminado correctamente', 'success');
   }

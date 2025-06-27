@@ -100,9 +100,6 @@ export class PlayersService {
     } catch (error: any) {
       return throwError(() => error);
     }
-
-    console.log(formData);
-
     return this.http.post<Player>(url, formData).pipe(
       catchError((error: any) => throwError(() => error))
     );

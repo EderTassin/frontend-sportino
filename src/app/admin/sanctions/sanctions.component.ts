@@ -100,7 +100,6 @@ export class SanctionsComponent implements OnInit {
     this.sanctionsService.getAllSanctions().subscribe({
       next: (data) => {
         this.sanctions = data.sort((a, b) => b.id! - a.id!);
-        console.log(this.sanctions);
         this.loading = false;
       },
       error: (err) => {
@@ -308,6 +307,7 @@ export class SanctionsComponent implements OnInit {
     }
 
     const sanction: Sanction = this.sanctionForm.value;
+    sanction.tournament = this.sactionTournament || 0;
 
     if (this.isEditMode && this.currentSanctionId) {
       this.sanctionsService.updateSanction(this.currentSanctionId, sanction).subscribe({

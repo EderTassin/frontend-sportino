@@ -235,7 +235,7 @@
                 <div class="item-list space-y-2">
                   <div *ngFor="let goal of goalsTeam1" class="item flex items-center justify-between bg-gray-50 p-3 rounded-md">
                     <span>{{ goal.playerName }} - {{ goal.goals }} {{ goal.goals === 1 ? 'gol' : 'goles' }}</span>
-                    <button class="remove-btn text-red-500 hover:text-red-700 focus:outline-none" (click)="removeGoal(goal, 1)">
+                    <button class="remove-btn text-red-500 hover:text-red-700 focus:outline-none" (click)="removeGoal(goal)">
                       <span class="material-icons">delete_outline</span>
                     </button>
                   </div>
@@ -286,7 +286,7 @@
                 <div class="item-list space-y-2">
                   <div *ngFor="let goal of goalsTeam2" class="item flex items-center justify-between bg-gray-50 p-3 rounded-md">
                     <span>{{ goal.playerName }} - {{ goal.goals }} {{ goal.goals === 1 ? 'gol' : 'goles' }}</span>
-                    <button class="remove-btn text-red-500 hover:text-red-700 focus:outline-none" (click)="removeGoal(goal, 2)">
+                    <button class="remove-btn text-red-500 hover:text-red-700 focus:outline-none" (click)="removeGoal(goal)">
                       <span class="material-icons">delete_outline</span>
                     </button>
                   </div>

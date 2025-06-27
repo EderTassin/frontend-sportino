@@ -33,8 +33,6 @@ export class ManagerImgService {
 
   uploadFrontPageImage(image: File, active: boolean = true): Observable<FrontPageImage> {
     const token = localStorage.getItem('token');
-    console.log('Token available:', !!token);
-    
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
