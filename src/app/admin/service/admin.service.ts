@@ -58,6 +58,10 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
 
+  updateDelegadoPassword(managerId: number, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}&password=${password}`, null);
+  }
+
   async getTournaments(): Promise<any> {
     return await lastValueFrom(this.http.get<any>(`${this.apiUrl}calendars/tournament/`));
   }

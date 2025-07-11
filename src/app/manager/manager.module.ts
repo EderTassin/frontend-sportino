@@ -8,8 +8,7 @@ import { UserGuard } from '../_services/auth-guard.service';
 import { ManagerComponent } from './manager/manager.component';
 import { MatMenuModule } from '@angular/material/menu';
 const routes: Routes = [
-    //{ path: '', component: ManagerComponent, canActivate: [UserGuard] },
-    { path: ':id', component: ManagerComponent, canActivate: [UserGuard]},
+    { path: ':id', component: ManagerComponent, canActivate: [UserGuard]}
   ];
   
   @NgModule({

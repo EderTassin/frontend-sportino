@@ -11,18 +11,23 @@ import { AdminService } from '../service/admin.service';
 export class DelegadosComponent {
 
   @ViewChild('modalDelete') modalDelete!: ElementRef;
+  @ViewChild('modalPassword') modalPassword!: ElementRef;
   
   delegados: any[] = [];
   originalDelegados: any[] = [];
   delegadoDelete: any;
+  delegadoPassword: any = {};
+  passwordFieldType: string = 'password';
   filter: string = '';
   showModal: boolean = false;
+  showPasswordModal: boolean = false;
 
   constructor(private adminService: AdminService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadDelegados();
     this.modalDelete?.nativeElement.classList.add('block');
+    this.modalPassword?.nativeElement.classList.add('block');
   }
 
   async loadDelegados() {
@@ -89,5 +94,28 @@ export class DelegadosComponent {
 
       this.loadDelegados();
     });
+  }
+
+  handlePassword(delegado: any) {
+    this.delegadoPassword = delegado;
+    this.showPasswordModal = true;
+  }
+
+  closePasswordModal() {
+    this.showPasswordModal = false;
+  }
+
+  onConfirmPasswordReset() {
+    try {
+    this.adminService.updateDelegadoPassword(this.delegadoPassword.id, this.delegadoPassword.password).subscribe((res) => { 
+      this.closePasswordModal();
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

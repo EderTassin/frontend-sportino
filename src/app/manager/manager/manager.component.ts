@@ -153,6 +153,9 @@ export class ManagerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.players = this.players.filter(player => player.id !== playerId);
+        this.managerService.deletePlayer(playerId).subscribe(() => {
+          this.getTeam();
+        });
         this.filteredPlayers = this.players; 
       }
     });

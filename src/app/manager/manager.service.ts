@@ -110,7 +110,7 @@ export class ManagerService {
   }
 
   deletePlayer(playerId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/players/${playerId}`);
+    return this.http.delete(`${this.apiUrl}players/players/${playerId}/`);
   }
 
   updatePlayerMedicalCertificate(player: any): Observable<any> {
