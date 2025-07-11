@@ -107,7 +107,7 @@ export class DelegadosComponent {
 
   onConfirmPasswordReset() {
     try {
-    this.adminService.updateDelegadoPassword(this.delegadoPassword.id, this.delegadoPassword.password).subscribe((res) => { 
+    this.adminService.updateDelegadoPassword(this.delegadoPassword.id, this.delegadoPassword).subscribe((res) => { 
       this.closePasswordModal();
     });
   } catch (error) {

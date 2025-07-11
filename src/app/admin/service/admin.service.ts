@@ -58,8 +58,12 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}`, null);
   }
 
-  updateDelegadoPassword(managerId: number, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}users/confirmation/?manager_id=${managerId}&password=${password}`, null);
+  updateDelegadoPassword(managerId: number, delegadoPassword: any): Observable<any> {
+    const data = {
+      email: delegadoPassword.email,
+      password: delegadoPassword.password
+    };
+    return this.http.put<any>(`${this.apiUrl}players/managers/${managerId}/`, data);
   }
 
   async getTournaments(): Promise<any> {
