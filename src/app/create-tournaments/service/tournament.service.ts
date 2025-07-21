@@ -81,9 +81,6 @@ export class TournamentService {
   }
 
   async saveChangesGame(id: number){
-    const data = {
-      game_id: id
-    }
-    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/manual-result-update/`, data));
+    return await firstValueFrom(this.http.post(`${this.apiUrl}calendars/manual-result-update/?game_id=${id}`, {}));
   }
 }
