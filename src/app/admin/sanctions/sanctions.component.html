@@ -337,6 +337,14 @@
           <td mat-cell *matCellDef="let sanction">{{ sanction.reason }}</td>
         </ng-container>
 
+        <!-- Points Column -->
+        <ng-container matColumnDef="points">
+          <th mat-header-cell *matHeaderCellDef>Puntos</th>
+          <td mat-cell *matCellDef="let sanction">
+            {{ convertPoints(sanction.missed_points) }}
+          </td>
+        </ng-container>
+
         <!-- Missed Dates Column -->
         <ng-container matColumnDef="missed_dates">
           <th mat-header-cell *matHeaderCellDef>Fechas Perdidas</th>

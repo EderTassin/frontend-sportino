@@ -68,7 +68,7 @@ export class SanctionsComponent implements OnInit {
   selectedTeam: number | null = null;
   selectedCategory: number | null = null;
   
-  displayedColumns: string[] = ['id', 'sanction_for', 'reason', 'missed_dates', 'yellow_cards', 'red_card', 'game', 'player', 'actions']
+  displayedColumns: string[] = ['id', 'sanction_for', 'reason', 'points','missed_dates', 'yellow_cards', 'red_card', 'game', 'player', 'actions']
   
   constructor(
     private sanctionsService: SanctionsService,
@@ -167,7 +167,6 @@ export class SanctionsComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         this.sanctions = data.sort((a, b) => b.id! - a.id!);
-
         this.loading = false;
       },
       error: (err) => {
@@ -375,5 +374,15 @@ export class SanctionsComponent implements OnInit {
       'C': 'Coach'
     };
     return options[code] || code;
+  }
+
+  convertPoints(points: number): string {
+    if (points === 0 || points === null || points === undefined) {
+      return '0 pts';
+    } else if (points < 0) {
+      return '+' + Math.abs(points) + ' pts';
+    } else {
+      return '-' + points + ' pts';
+    }
   }
 }
