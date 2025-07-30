@@ -1,10 +1,8 @@
 <div class="container mx-auto px-4 py-8">
   <!-- Back button -->
   <div class="p-4">
-    <button
-      (click)="goBack()"
-      class="flex items-center gap-2 px-4 py-2 text-white bg-gray-600 rounded-lg shadow transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-    >
+    <button (click)="goBack()"
+      class="flex items-center gap-2 px-4 py-2 text-white bg-gray-600 rounded-lg shadow transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
       <mat-icon>arrow_back</mat-icon>
       <span>Volver</span>
     </button>
@@ -12,24 +10,15 @@
 
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-800">Gestionar Sanciones</h1>
-    <button
-      (click)="openCreateForm()"
-      color="primary"
-      mat-raised-button
-      *ngIf="!showForm"
-      class="flex items-center bg-primary text-white"
-    >
+    <button (click)="openCreateForm()" color="primary" mat-raised-button *ngIf="!showForm"
+      class="flex items-center bg-primary text-white">
       <mat-icon>add</mat-icon>
       Nueva Sanción
     </button>
   </div>
 
   <!-- Alert for errors -->
-  <div
-    *ngIf="error"
-    class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
-    role="alert"
-  >
+  <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
     <p>{{ error }}</p>
   </div>
 
@@ -41,15 +30,10 @@
           <mat-label>Torneo</mat-label>
           <mat-select [(ngModel)]="selectedTournament">
             <mat-option [value]="null">Todos</mat-option>
-            <mat-option
-              *ngFor="let tournament of tournaments"
-              [value]="tournament.id"
-            >
+            <mat-option *ngFor="let tournament of tournaments" [value]="tournament.id">
               {{ tournament.name }}
             </mat-option>
-            <mat-error *ngIf="sanctionForm.get('tournament')?.invalid"
-              >Campo requerido</mat-error
-            >
+            <mat-error *ngIf="sanctionForm.get('tournament')?.invalid">Campo requerido</mat-error>
           </mat-select>
         </mat-form-field>
 
@@ -57,10 +41,7 @@
           <mat-label>Categoría</mat-label>
           <mat-select [(ngModel)]="selectedCategory">
             <mat-option [value]="null">Todas</mat-option>
-            <mat-option
-              *ngFor="let category of categories"
-              [value]="category.id"
-            >
+            <mat-option *ngFor="let category of categories" [value]="category.id">
               {{ category.name }}
             </mat-option>
           </mat-select>
@@ -70,15 +51,9 @@
           <mat-label>Equipo</mat-label>
           <mat-select [(ngModel)]="selectedTeam">
             <div class="p-2 sticky top-0 bg-white z-10">
-              <input
-                type="text"
-                placeholder="Buscar equipo..."
-                class="w-full p-2 border border-gray-300 rounded"
-                [(ngModel)]="filterTeamSearchText"
-                (input)="filterTeamsInFilters()"
-                [ngModelOptions]="{ standalone: true }"
-                (click)="$event.stopPropagation()"
-              />
+              <input type="text" placeholder="Buscar equipo..." class="w-full p-2 border border-gray-300 rounded"
+                [(ngModel)]="filterTeamSearchText" (input)="filterTeamsInFilters()"
+                [ngModelOptions]="{ standalone: true }" (click)="$event.stopPropagation()" />
             </div>
             <mat-option [value]="null">Todos</mat-option>
             <mat-option *ngFor="let team of filteredTeams" [value]="team.id">
@@ -100,9 +75,7 @@
   <!-- Sanction Form -->
   <mat-card *ngIf="showForm" class="mb-8">
     <mat-card-header>
-      <mat-card-title
-        >{{ isEditMode ? "Editar" : "Crear" }} Sanción</mat-card-title
-      >
+      <mat-card-title>{{ isEditMode ? "Editar" : "Crear" }} Sanción</mat-card-title>
     </mat-card-header>
 
     <mat-card-content class="p-4">
@@ -116,40 +89,25 @@
               <mat-option value="T">Equipo</mat-option>
               <mat-option value="C">Entrenador</mat-option>
             </mat-select>
-            <mat-error *ngIf="sanctionForm.get('sanction_for')?.invalid"
-              >Campo requerido</mat-error
-            >
+            <mat-error *ngIf="sanctionForm.get('sanction_for')?.invalid">Campo requerido</mat-error>
           </mat-form-field>
 
           <!-- Reason -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Razón</mat-label>
             <input matInput formControlName="reason" />
-            <mat-error *ngIf="sanctionForm.get('reason')?.invalid"
-              >Campo requerido</mat-error
-            >
+            <mat-error *ngIf="sanctionForm.get('reason')?.invalid">Campo requerido</mat-error>
           </mat-form-field>
 
           <!-- Missed Dates -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Fechas Perdidas</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="missed_dates"
-              min="0"
-            />
-            <mat-error *ngIf="sanctionForm.get('missed_dates')?.invalid"
-              >Campo requerido</mat-error
-            >
+            <input matInput type="number" formControlName="missed_dates" min="0" />
+            <mat-error *ngIf="sanctionForm.get('missed_dates')?.invalid">Campo requerido</mat-error>
           </mat-form-field>
 
           <!-- Yellow Cards -->
-          <mat-form-field
-            appearance="outline"
-            class="w-full"
-            *ngIf="sanctionForm.get('sanction_for')?.value == 'P'"
-          >
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value == 'P'">
             <mat-label>Tarjetas Amarillas</mat-label>
             <mat-select formControlName="yellow_cards">
               <mat-option [value]="null">Seleccionar</mat-option>
@@ -159,127 +117,86 @@
           </mat-form-field>
 
           <!-- Red Card -->
-          <mat-form-field
-            appearance="outline"
-            class="w-full"
-            *ngIf="sanctionForm.get('sanction_for')?.value == 'P'"
-          >
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value == 'P'">
             <mat-label>Tarjeta Roja</mat-label>
             <mat-select formControlName="red_card">
               <mat-option [value]="null">Seleccionar</mat-option>
               <mat-option [value]="1">1</mat-option>
             </mat-select>
           </mat-form-field>
-            <!-- Tournament -->
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Torneo</mat-label>
-              <mat-select formControlName="tournament" (selectionChange)="loadDates($event.value)">
-                <mat-option [value]="null">Todos</mat-option>
-                <mat-option *ngFor="let tournament of tournaments" [value]="tournament.id">
-                  {{ tournament.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <!-- Date -->
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Fecha</mat-label>
-              <mat-select
-                formControlName="date"
-                (selectionChange)="loadGames($event.value)"
-              >
-                <mat-option [value]="null">Todos</mat-option>
-                <mat-option *ngFor="let date of dates" [value]="date.id">
-                  {{ date.date }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <!-- Game -->
-            <mat-form-field
-              appearance="outline"
-              class="w-full"
-              *ngIf="sanctionForm.get('sanction_for')?.value == 'P'"
-            >
-              <mat-label>Partido</mat-label>
-              <mat-select formControlName="game">
-                <mat-option [value]="null">Todos</mat-option>
-                <mat-option *ngFor="let game of games" [value]="game.id">
-                  {{ game.date }} - {{ game.team_1?.name }} vs
-                  {{ game.team_2?.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="sanctionForm.get('game')?.invalid"
-                >Campo requerido</mat-error
-              >
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Equipo</mat-label>
-              <mat-select formControlName="team" (selectionChange)="onTeamChange($event)">
-                <div class="p-2 sticky top-0 bg-white z-10">
-                  <input
-                    type="text"
-                    placeholder="Buscar equipo..."
-                    class="w-full p-2 border border-gray-300 rounded"
-                    [(ngModel)]="teamSearchText"
-                    (input)="filterTeams()"
-                    [ngModelOptions]="{ standalone: true }"
-                    (click)="$event.stopPropagation()"
-                  />
-                </div>
-                <mat-option [value]="null">Todos</mat-option>
-                <mat-option
-                  *ngFor="let team of filteredTeams"
-                  [value]="team.id"
-                >
-                  {{ team.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="sanctionForm.get('team')?.invalid"
-                >Campo requerido</mat-error
-              >
-            </mat-form-field>
-
-            <!-- Player -->
-            <mat-form-field
-              appearance="outline"
-              class="w-full"
-              *ngIf="sanctionForm.get('sanction_for')?.value === 'P'"
-            >
-              <mat-label>Jugador</mat-label>
-              <mat-select formControlName="player">
-                <mat-option [value]="null">Todos</mat-option>
-                <mat-option *ngFor="let player of players" [value]="player.id">
-                  {{ player.full_name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="sanctionForm.get('player')?.invalid"
-                >Campo requerido</mat-error
-              >
-            </mat-form-field>
-          </div>
-          <mat-form-field
-            appearance="outline"
-            class="w-full"
-            *ngIf="sanctionForm.get('sanction_for')?.value === 'T'"
-          >
-            <mat-label>Puntos a restar</mat-label>
-            <input matInput formControlName="missed_points" />
-            <mat-error *ngIf="sanctionForm.get('missed_points')?.invalid"
-              >Campo requerido</mat-error
-            >
+          <!-- Tournament -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Torneo</mat-label>
+            <mat-select formControlName="tournament" (selectionChange)="loadDates($event.value)">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let tournament of tournaments" [value]="tournament.id">
+                {{ tournament.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
+
+          <!-- Date -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Fecha</mat-label>
+            <mat-select formControlName="date" (selectionChange)="loadGames($event.value)">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let date of dates" [value]="date.id">
+                {{ date.date }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Game -->
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value == 'P'">
+            <mat-label>Partido</mat-label>
+            <mat-select formControlName="game">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let game of games" [value]="game.id">
+                {{ game.date }} - {{ game.team_1?.name }} vs
+                {{ game.team_2?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sanctionForm.get('game')?.invalid">Campo requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Equipo</mat-label>
+            <mat-select formControlName="team" (selectionChange)="onTeamChange($event)">
+              <div class="p-2 sticky top-0 bg-white z-10">
+                <input type="text" placeholder="Buscar equipo..." class="w-full p-2 border border-gray-300 rounded"
+                  [(ngModel)]="teamSearchText" (input)="filterTeams()" [ngModelOptions]="{ standalone: true }"
+                  (click)="$event.stopPropagation()" />
+              </div>
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let team of filteredTeams" [value]="team.id">
+                {{ team.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sanctionForm.get('team')?.invalid">Campo requerido</mat-error>
+          </mat-form-field>
+
+          <!-- Player -->
+          <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value === 'P'">
+            <mat-label>Jugador</mat-label>
+            <mat-select formControlName="player">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let player of players" [value]="player.id">
+                {{ player.full_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sanctionForm.get('player')?.invalid">Campo requerido</mat-error>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="w-full" *ngIf="sanctionForm.get('sanction_for')?.value === 'T'">
+          <mat-label>Puntos a restar</mat-label>
+          <input matInput formControlName="missed_points" />
+          <mat-error *ngIf="sanctionForm.get('missed_points')?.invalid">Campo requerido</mat-error>
+        </mat-form-field>
         <div class="mt-6 flex justify-end space-x-3">
           <button type="button" mat-stroked-button (click)="cancelForm()">
             Cancelar
           </button>
-          <button
-            type="submit"
-            mat-raised-button
-            color="primary"
-            [disabled]="sanctionForm.invalid || loading"
-          >
+          <button type="submit" mat-raised-button color="primary" [disabled]="sanctionForm.invalid || loading">
             {{ isEditMode ? "Actualizar" : "Crear" }}
           </button>
         </div>
@@ -288,14 +205,8 @@
   </mat-card>
 
   <!-- Sanctions Table -->
-  <div
-    *ngIf="!loading && !showForm"
-    class="bg-white shadow-md rounded-lg overflow-hidden"
-  >
-    <div
-      *ngIf="sanctions.length === 0 && !selectedTournament"
-      class="p-6 text-center text-gray-500"
-    >
+  <div *ngIf="!loading && !showForm" class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div *ngIf="sanctions.length === 0 && !selectedTournament" class="p-6 text-center text-gray-500">
       <div class="flex flex-col items-center justify-center py-8">
         <span class="material-symbols-outlined text-5xl text-gray-400 mb-4">
           sports_soccer
@@ -308,10 +219,7 @@
       </div>
     </div>
 
-    <div
-      *ngIf="sanctions.length === 0 && selectedTournament"
-      class="p-6 text-center text-gray-500"
-    >
+    <div *ngIf="sanctions.length === 0 && selectedTournament" class="p-6 text-center text-gray-500">
       No se encontraron sanciones para el torneo seleccionado. ¡Crea la primera!
     </div>
 
@@ -327,7 +235,12 @@
         <ng-container matColumnDef="sanction_for">
           <th mat-header-cell *matHeaderCellDef>Tipo</th>
           <td mat-cell *matCellDef="let sanction">
-            {{ getSanctionForLabel(sanction.sanction_for) }}
+            <span class="font-medium" *ngIf="sanction.sanction_for === 'P'">
+              Jugador
+            </span>
+            <span class="font-medium" *ngIf="sanction.sanction_for === 'T'">
+              Equipo
+            </span>
           </td>
         </ng-container>
 
@@ -377,25 +290,22 @@
 
         <!-- Player Column -->
         <ng-container matColumnDef="player">
-          <th mat-header-cell *matHeaderCellDef>Jugador</th>
+          <th mat-header-cell *matHeaderCellDef>Jugador/Equipo</th>
           <td mat-cell *matCellDef="let sanction">
-            {{ sanction?.player?.full_name }}
+            <span class="font-medium" *ngIf="sanction?.sanction_for === 'P'">
+              {{ sanction?.player?.full_name }}
+            </span>
+            <span class="font-medium" *ngIf="sanction?.sanction_for === 'T'">
+              {{ sanction?.team?.name }}
+            </span>
           </td>
         </ng-container>
 
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="text-right"></th>
-          <td
-            mat-cell
-            *matCellDef="let sanction; let i = index"
-            class="text-right relative"
-          >
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="actionMenu"
-              matTooltip="Opciones"
-            >
+          <td mat-cell *matCellDef="let sanction; let i = index" class="text-right relative">
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu" matTooltip="Opciones">
               <mat-icon>more_vert</mat-icon>
             </button>
 
@@ -414,11 +324,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          class="hover:bg-gray-50"
-        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="hover:bg-gray-50"></tr>
       </table>
     </div>
   </div>
