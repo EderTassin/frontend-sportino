@@ -60,7 +60,6 @@ export class AdminService {
 
   updateDelegadoPassword(managerId: number, delegadoPassword: any): Observable<any> {
     const data = {
-      email: delegadoPassword.email,
       password: delegadoPassword.password
     };
     return this.http.put<any>(`${this.apiUrl}players/managers/${managerId}/`, data);

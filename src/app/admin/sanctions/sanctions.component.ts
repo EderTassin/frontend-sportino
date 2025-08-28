@@ -168,7 +168,7 @@ export class SanctionsComponent implements OnInit {
       next: (data) => {
         this.sanctions = data.sort((a, b) => b.id! - a.id!);
         this.loading = false;
-      },
+      },   
       error: (err) => {
         this.error = 'Error al filtrar sanciones';
         console.error(err);
