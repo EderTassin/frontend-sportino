@@ -15,12 +15,17 @@ import { AdminService } from '../service/admin.service';
 })
 export class PlayersComponent implements OnInit {
   players: Player[] = [];
+  playersToDelete: Player[] = [];
   filteredPlayers: Player[] = [];
   allLoadedPlayers: Player[] = [];
+  selectedPlayerIds: Set<number> = new Set();
   playerForm: FormGroup;
+  deleteForm: FormGroup;
+
   isEditMode = false;
   currentPlayerId: number | null = null;
   showForm = false;
+  showDeleteModal = false;
   loading = false;
   error = '';
   apiUrl = `${environment.apiEndpoint}`;
@@ -62,6 +67,10 @@ export class PlayersComponent implements OnInit {
       date: [''],
       active: [true],
       active_sanctions: [false]
+    });
+
+    this.deleteForm = this.fb.group({
+      fromDate: ['', [Validators.required]]
     });
 
     this.filterForm = this.fb.group({
@@ -269,6 +278,58 @@ export class PlayersComponent implements OnInit {
     }
   }
 
+  deleteVariosPlayers(players: number[]): void {
+    if (players.length === 0) return;
+    
+    if (confirm(`¿Está seguro de que desea eliminar ${players.length} jugador(es)?`)) {
+      this.playersService.inactivePlayers(players).subscribe({
+        next: () => {
+          this.selectedPlayerIds.clear();
+          this.loadPlayers();
+        },   
+        error: (err) => {
+          console.error('Error deleting player:', err);
+          this.error = 'Error al eliminar jugador';
+        }
+      });
+    }
+  }
+
+  toggleSelectAll(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.playersToDelete.forEach(player => {
+        if (player.id) {
+          this.selectedPlayerIds.add(player.id);
+        }
+      });
+    } else {
+      this.selectedPlayerIds.clear();
+    }
+  }
+
+  togglePlayerSelection(playerId: number, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedPlayerIds.add(playerId);
+    } else {
+      this.selectedPlayerIds.delete(playerId);
+    }
+  }
+
+  clearSelection(): void {
+    this.selectedPlayerIds.clear();
+  }
+
+  deleteSelectedPlayers(): void {
+    const selectedIds = Array.from(this.selectedPlayerIds);
+    this.deleteVariosPlayers(selectedIds);
+  }
+
+  trackByPlayerId(index: number, player: Player): number {
+    return player.id || index;
+  }
+
   calculateAge(birthDateString: string): number {
     if (!birthDateString) return 0;
     
@@ -284,6 +345,10 @@ export class PlayersComponent implements OnInit {
     }
     
     return age;
+  }
+
+  mathMin(a: number, b: number): number {
+    return Math.min(a, b);
   }
 
   goBack() {
@@ -344,5 +409,47 @@ export class PlayersComponent implements OnInit {
     }
     
     return pages;
+  }
+
+  openDeleteModal(): void {
+    this.deleteForm.reset();
+    this.showDeleteModal = true;
+  }
+
+  searchPlayer(formData: any): void {
+    const dateValue = formData.fromDate;
+    
+    if (!dateValue) {
+      this.error = 'Please select a date';
+      return;
+    }
+
+    let formattedDate: string;
+    if (typeof dateValue === 'string') {
+      formattedDate = dateValue;
+    } else if (dateValue instanceof Date) {
+      formattedDate = dateValue.toISOString().split('T')[0];
+    } else {
+      this.error = 'Invalid date format';
+      return;
+    }
+
+    this.playersService.getPlayerInactive(formattedDate).subscribe({
+      next: (players: any) => {
+        this.playersToDelete = players.results;
+      },
+      error: (err) => {
+        this.error = 'Error fetching players';
+        console.error(err);
+      }
+    });
+  }
+
+  orderByDate(field: string): void {
+    this.playersToDelete.sort((a, b) => {
+      const dateA = new Date(a[field as keyof Player]);
+      const dateB = new Date(b[field as keyof Player]);
+      return dateB.getTime() - dateA.getTime();
+    });
   }
 }

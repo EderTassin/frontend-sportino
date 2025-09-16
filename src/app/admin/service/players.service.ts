@@ -26,6 +26,7 @@ export interface Player {
   jersey_number?: number;
   active: boolean;
   photo_url?: string;
+  last_game_date?: string;
   active_sanctions: boolean;
 }
 
@@ -161,4 +162,15 @@ export class PlayersService {
     formData.append('picture_file', photo);
     return this.http.patch<any>(url, formData);
   }
+
+  getPlayerInactive(date: string): Observable<any> {
+    const url = `${this.apiUrl}players-by-date/?date=${date}`;
+    return this.http.get<any>(url);
+  }
+
+  inactivePlayers(idPlayers: number[]): Observable<any> {
+    const url = `${this.apiUrl}players/soft-delete-players/`;
+    return this.http.post<any>(url, {player_ids: idPlayers}, {headers: {'Content-Type': 'application/json'}});
+  }
 }
+
