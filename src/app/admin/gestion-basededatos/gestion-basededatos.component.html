@@ -1,0 +1,132 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <!-- Header Section -->
+   <div class="p-4 mt-4">
+        <button (click)="goBack()" class="flex items-center gap-2 px-4 py-2 text-white bg-gray-600 rounded-lg shadow transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <span class="material-icons">arrow_back</span>
+            <span>Volver</span>
+        </button>
+    </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-6 py-12">
+    <!-- Page Title -->
+    <div class="text-center mb-12 flex flex-col items-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7c0-2.21 1.79-4 4-4h8c2.21 0 4 1.79 4 4M4 7h16m-4-4v4m-8-4v4"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-slate-800 mb-2">Gestión de Base de Datos</h1>
+      <p class="text-slate-600 max-w-2xl mx-auto">Administra los respaldos de tu base de datos de forma segura. Descarga, crea nuevos backups o restaura desde un archivo existente.</p>
+    </div>
+
+    <!-- Action Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      
+      <!-- Download Backup Card -->
+      <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-2">Descargar Backup</h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Descarga una copia de seguridad actual de la base de datos sin afectar los datos existentes.</p>
+          <button 
+            (click)="downloadBackup()" 
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white font-medium rounded-lg shadow-sm transition-all duration-200 hover:bg-green-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            Descargar Backup
+          </button>
+        </div>
+      </div>
+
+      <!-- Create New Backup Card -->
+      <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex items-center justify-center w-12 h-12 bg-amber-100 rounded-lg mb-4">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-2">Crear Nuevo Backup</h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Elimina la base de datos después de generar el respaldo (NO borra usuarios)</p>
+          <button 
+            (click)="createBackup()" 
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-amber-600 text-white font-medium rounded-lg shadow-sm transition-all duration-200 hover:bg-amber-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Eliminar y Crear Backup
+          </button>
+        </div>
+      </div>
+
+      <!-- Upload Backup Card -->
+      <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-2">Subir Backup</h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Restaura la base de datos desde un archivo de backup existente. Selecciona un archivo .json válido.</p>
+          <label 
+            for="file-upload" 
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Seleccionar Archivo
+          </label>
+          <input 
+            type="file" 
+            id="file-upload" 
+            (change)="subirBackup($event)" 
+            accept=".json"
+            class="hidden">
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Section -->
+    <div class="mt-16 max-w-4xl mx-auto">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-blue-900 mb-2">Información Importante</h4>
+            <ul class="text-blue-800 space-y-2 text-sm">
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Los backups se descargan automáticamente con la fecha actual en el nombre del archivo.
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                La opción "Crear Nuevo Backup" eliminará permanentemente todos los datos actuales. Pero NO borrara usuarios.
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Solo se aceptan archivos de backup válido (.json).
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

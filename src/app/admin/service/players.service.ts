@@ -169,7 +169,7 @@ export class PlayersService {
   }
 
   inactivePlayers(idPlayers: number[]): Observable<any> {
-    const url = `${this.apiUrl}players/soft-delete-players/`;
+    const url = `${this.apiUrl}soft-delete-players/`;
     return this.http.post<any>(url, {player_ids: idPlayers}, {headers: {'Content-Type': 'application/json'}});
   }
 }

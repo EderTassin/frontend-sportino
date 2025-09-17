@@ -35,6 +35,7 @@ import { PlayersComponent } from './players/players.component';
 import { ManagerImgPortadaComponent } from './manager-img-portada/manager-img-portada.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GestionBasededatosComponent } from './gestion-basededatos/gestion-basededatos.component';
 
 const routes: Routes = [
   { path: '', component: HomeAdminComponent, canActivate: [AuthGuard] },
@@ -54,7 +55,8 @@ const routes: Routes = [
   { path: 'quitar-puntos', component: RemovePointsComponent, canActivate: [AuthGuard] },
   { path: 'players', component: PlayersComponent, canActivate: [AuthGuard] },
   { path: 'administrar-jugadores', component: PlayersComponent, canActivate: [AuthGuard] },
-  { path: 'manager-img-portada', component: ManagerImgPortadaComponent, canActivate: [AuthGuard] }
+  { path: 'manager-img-portada', component: ManagerImgPortadaComponent, canActivate: [AuthGuard] },
+  { path: 'backup', component: GestionBasededatosComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -72,7 +74,8 @@ const routes: Routes = [
     SubTournamentDialogComponent,
     TournamentDialogComponent,
     TournamentPreviewComponent,
-    ManagerImgPortadaComponent
+    ManagerImgPortadaComponent,
+    GestionBasededatosComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

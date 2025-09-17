@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AdminService } from '../service/admin.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-players',
@@ -41,12 +43,14 @@ export class PlayersComponent implements OnInit {
   photoFile: File | null = null;
   photoPreview: string | null = null;
   teams: Team[] = [];
+  currentSearchDate: string | null = null;
 
   constructor(
     private playersService: PlayersService,
     private adminService: AdminService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.playerForm = this.fb.group({
       full_name: ['', [Validators.required]],
@@ -262,37 +266,74 @@ export class PlayersComponent implements OnInit {
   }
 
   deletePlayer(id: number): void {
-    if (confirm('Are you sure you want to delete this player?')) {
-      this.loading = true;
-      this.playersService.deletePlayer(id).subscribe({
-        next: () => {
-          this.loadPlayers();
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = 'Error deleting player';
-          console.error(err);
-          this.loading = false;
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: '¿Está seguro que desea ELIMINAR este jugador?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.playersService.deletePlayer(id).subscribe({
+          next: () => {
+            this.loadPlayers();
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Error deleting player';
+            console.error(err);
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteSoftPlayer(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: '¿Está seguro que desea INHABILITAR este jugador?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.playersService.inactivePlayers([id]).subscribe({
+          next: () => {
+            this.playersToDelete = [];
+            this.loading = false;
+            this.searchPlayer(this.deleteForm.value);
+          },
+          error: (err) => {
+            this.error = 'Error deleting player';
+            console.error(err);
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   deleteVariosPlayers(players: number[]): void {
     if (players.length === 0) return;
     
-    if (confirm(`¿Está seguro de que desea eliminar ${players.length} jugador(es)?`)) {
-      this.playersService.inactivePlayers(players).subscribe({
-        next: () => {
-          this.selectedPlayerIds.clear();
-          this.loadPlayers();
-        },   
-        error: (err) => {
-          console.error('Error deleting player:', err);
-          this.error = 'Error al eliminar jugador';
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `¿Está seguro de que desea INHABILITAR ${players.length} jugador(es)?` }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.playersService.inactivePlayers(players).subscribe({
+          next: () => {
+            this.playersToDelete = [];
+            this.selectedPlayerIds.clear();
+            this.searchPlayer(this.deleteForm.value);
+          },   
+          error: (err) => {
+            console.error('Error deleting player:', err);
+            this.error = 'Error al eliminar jugador';
+          }
+        });
+      }
+    });
   }
 
   toggleSelectAll(event: Event): void {
@@ -378,7 +419,13 @@ export class PlayersComponent implements OnInit {
     if (page < 1 || page > this.totalPages || page === this.currentPage) {
       return;
     }
-    this.loadPlayers(page);
+    
+    // Check if we're in search mode (inactive players)
+    if (this.currentSearchDate) {
+      this.loadInactivePlayers(this.currentSearchDate, page);
+    } else {
+      this.loadPlayers(page);
+    }
   }
   
   goToNextPage(): void {
@@ -419,6 +466,9 @@ export class PlayersComponent implements OnInit {
   searchPlayer(formData: any): void {
     const dateValue = formData.fromDate;
     
+    this.currentPage = 1;
+    this.playersToDelete = [];
+
     if (!dateValue) {
       this.error = 'Please select a date';
       return;
@@ -434,13 +484,34 @@ export class PlayersComponent implements OnInit {
       return;
     }
 
-    this.playersService.getPlayerInactive(formattedDate).subscribe({
+    this.currentSearchDate = formattedDate;
+    this.loadInactivePlayers(formattedDate, 1);
+  }
+
+  loadInactivePlayers(date: string, page: number = 1): void {
+    this.loading = true;
+    
+    this.playersService.getPlayerInactive(date).subscribe({
       next: (players: any) => {
+        this.totalItems = players.count;
+        this.allLoadedPlayers = players.results;
         this.playersToDelete = players.results;
+        
+        // Calculate pagination properties
+        const itemsPerPage = players.results.length || 10; // Default to 10 if no results
+        this.totalPages = Math.ceil(this.totalItems / itemsPerPage);
+        this.currentPage = page;
+        
+        // Set pagination URLs based on API response
+        this.nextPageUrl = players.next || null;
+        this.previousPageUrl = players.previous || null;
+        
+        this.loading = false;
       },
       error: (err) => {
         this.error = 'Error fetching players';
         console.error(err);
+        this.loading = false;
       }
     });
   }

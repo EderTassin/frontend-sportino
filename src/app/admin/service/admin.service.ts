@@ -128,9 +128,15 @@ export class AdminService {
     return this.http.delete<any>(`${this.apiUrl}players/teams/${id}/`);
   }
   
-  async getBackupData(): Promise<any> {
-    return await lastValueFrom(this.http.get(`${this.apiUrl}users/dbdump/dump/`, {
+  async getBackupData(force: boolean = false): Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.apiUrl}users/dbdump/dump/?delete=${force}`, {
       responseType: 'json'
     }));
+  }
+
+  async uploadBackup(backup: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('backup', backup);
+    return await lastValueFrom(this.http.post(`${this.apiUrl}/users/dbdump/restore/`, formData));
   }
 }
